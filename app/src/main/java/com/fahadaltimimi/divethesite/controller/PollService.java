@@ -427,7 +427,7 @@ public class PollService extends IntentService {
                 // Store date searched and location searched
                 PreferenceManager.getDefaultSharedPreferences(this)
                     .edit().putLong(DiveSiteManager.PREF_SETTING_LAST_NEAR_DIVE_SITE_CHECK_TIMESTAMP,
-                            (new Date()).getTime()).commit();
+                            (new Date()).getTime()).apply();
 
             }
 
@@ -509,7 +509,7 @@ public class PollService extends IntentService {
                 // Store date searched and location searched
                 PreferenceManager.getDefaultSharedPreferences(this)
                     .edit().putLong(DiveSiteManager.PREF_SETTING_LAST_NEAR_SCHEDULED_DIVE_CHECK_TIMESTAMP,
-                            (lastNearScheduledDiveCheck).getTime()).commit();
+                            (lastNearScheduledDiveCheck).getTime()).apply();
 
             }
         } catch (Exception e) {
@@ -748,7 +748,7 @@ public class PollService extends IntentService {
 		PreferenceManager.getDefaultSharedPreferences(context)
 			.edit()
 			.putBoolean(PREF_IS_ALARM_ON, isOn)
-			.commit();
+			.apply();
 	}
 	
 	private Location getLastCheckLocation() {
@@ -780,17 +780,17 @@ public class PollService extends IntentService {
 		if (location != null) {
 			PreferenceManager.getDefaultSharedPreferences(this)
 				.edit().putString(DiveSiteManager.PREF_SETTING_LAST_NEAR_ITEM_CHECK_LATITUDE, 
-						String.valueOf(location.getLatitude())).commit();
+						String.valueOf(location.getLatitude())).apply();
 			PreferenceManager.getDefaultSharedPreferences(this)
 				.edit().putString(DiveSiteManager.PREF_SETTING_LAST_NEAR_ITEM_CHECK_LONGITUDE, 
-						String.valueOf(location.getLongitude())).commit();
+						String.valueOf(location.getLongitude())).apply();
 		} else {
 			PreferenceManager.getDefaultSharedPreferences(this)
 			.edit().putString(DiveSiteManager.PREF_SETTING_LAST_NEAR_ITEM_CHECK_LATITUDE, 
-					"").commit();
+					"").apply();
 		PreferenceManager.getDefaultSharedPreferences(this)
 			.edit().putString(DiveSiteManager.PREF_SETTING_LAST_NEAR_ITEM_CHECK_LONGITUDE, 
-					"").commit();
+					"").apply();
 		}
 	}
 	

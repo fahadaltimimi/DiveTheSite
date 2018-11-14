@@ -669,7 +669,7 @@ public class HomeFragment extends Fragment implements
 		getActivity()
 			.getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE)
 			.edit()
-			.putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).commit();
+			.putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).apply();
 		
 		Intent i = new Intent(getActivity(), DiveSiteActivity.class);
 		i.putExtra(DiveSiteManager.EXTRA_DIVE_SITE, diveSite);

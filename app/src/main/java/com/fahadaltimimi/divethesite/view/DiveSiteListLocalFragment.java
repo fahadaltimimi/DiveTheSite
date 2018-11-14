@@ -503,7 +503,7 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 			mPrefs.edit()
 					.putBoolean(
 							DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-							true).commit();
+							true).apply();
 
 			// Add a new dive site and switch to Dive Site view
 			DiveSite diveSite = mDiveSiteManager.insertDiveSite();
@@ -921,7 +921,7 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 						.edit()
 						.putBoolean(
 								DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-								false).commit();
+								false).apply();
 
 				// Get dive site from tag
 				openDiveSite((DiveSite) v.getTag());

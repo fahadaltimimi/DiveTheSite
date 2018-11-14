@@ -695,10 +695,10 @@ public class DiveSiteManager {
 
     public void saveLoggedInDiverProfileImage(Bitmap profileImage) {
         if (profileImage == null) {
-            mPrefs.edit().putString(PREF_CURRENT_PROFILEIMAGE + getLoggedInDiverId(), "").commit();
+            mPrefs.edit().putString(PREF_CURRENT_PROFILEIMAGE + getLoggedInDiverId(), "").apply();
         } else {
             String filePath = saveImageInternalStorage(profileImage, DIVER_PROFILE_IMAGE + getLoggedInDiverId());
-            mPrefs.edit().putString(PREF_CURRENT_PROFILEIMAGE + getLoggedInDiverId(), filePath).commit();
+            mPrefs.edit().putString(PREF_CURRENT_PROFILEIMAGE + getLoggedInDiverId(), filePath).apply();
         }
     }
 	
@@ -732,8 +732,8 @@ public class DiveSiteManager {
 	}
 	
 	public void saveLastLocation(Location location) {
-        mPrefs.edit().putLong(PREF_LAST_LOCATION_LATITUDE_LONG, Double.doubleToLongBits(location.getLatitude())).commit();
-        mPrefs.edit().putLong(PREF_LAST_LOCATION_LONGITUDE_LONG, Double.doubleToLongBits(location.getLongitude())).commit();
+        mPrefs.edit().putLong(PREF_LAST_LOCATION_LATITUDE_LONG, Double.doubleToLongBits(location.getLatitude())).apply();
+        mPrefs.edit().putLong(PREF_LAST_LOCATION_LONGITUDE_LONG, Double.doubleToLongBits(location.getLongitude())).apply();
 	}
 
 	public void showNotification(int notificationId, String ticker, String contentTitle,
