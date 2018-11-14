@@ -218,7 +218,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 						.equals(filterTitle)) {
 					mPrefs.edit().putString(
 						DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE,
-						filterTitle).commit();
+						filterTitle).apply();
 					filterScheduledDiveList();
 				}
 			}
@@ -255,7 +255,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY,
-									filterCountry).commit();
+									filterCountry).apply();
 
 					filterScheduledDiveList();
 				}
@@ -281,7 +281,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_STATE,
-									filterState).commit();
+									filterState).apply();
 					filterScheduledDiveList();
 				}
 			}
@@ -311,7 +311,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_CITY,
-									filterCity).commit();
+									filterCity).apply();
 					filterScheduledDiveList();
 				}
 			}
@@ -341,7 +341,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_PREVIOUSDAYS,
-									filterPreviousDays).commit();
+									filterPreviousDays).apply();
 					filterScheduledDiveList();
 				}
 			}
@@ -371,7 +371,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_NEXTDAYS,
-									filterNextDays).commit();
+									filterNextDays).apply();
 					filterScheduledDiveList();
 				}
 			}
@@ -401,7 +401,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 							mPrefs.edit()
 									.putBoolean(
 											DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_SHOW_PUBLISHED,
-											isChecked).commit();
+											isChecked).apply();
 							filterScheduledDiveList();
 						}
 					}
@@ -421,7 +421,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 							mPrefs.edit()
 									.putBoolean(
 											DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_SHOW_UNPUBLISHED,
-											isChecked).commit();
+											isChecked).apply();
 							filterScheduledDiveList();
 						}
 					}
@@ -730,7 +730,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 
     protected void openDiveSite(DiveSite diveSite) {
         // Open the dive site with edit mode set to false
-        mPrefs.edit().putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).commit();
+        mPrefs.edit().putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).apply();
         Intent intent = new Intent(getActivity(), DiveSiteActivity.class);
         intent.putExtra(DiveSiteManager.EXTRA_DIVE_SITE, diveSite);
         startActivity(intent);

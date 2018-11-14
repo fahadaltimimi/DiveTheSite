@@ -349,7 +349,7 @@ public abstract class DiveSitePageFragment extends Fragment implements
 		mEditMode = editMode;
 		mPrefs.edit()
 				.putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-						mEditMode).commit();
+						mEditMode).apply();
 	}
 
 	protected void setDiveSiteAvailable(DiveSite diveSite) {
