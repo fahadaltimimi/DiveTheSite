@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:DiveTheSite="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dive_action_menu" >
+    
+    <item android:id="@+id/menu_item_refresh_scheduleddive"
+        DiveTheSite:showAsAction="always"
+    	android:icon="@drawable/ic_menu_refresh"
+    	android:title="@string/refresh" />
+    
+    <item android:id="@+id/menu_item_add_scheduleddive"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_add"
+        android:title="@string/new_entry" />
+    
+    <item android:id="@+id/menu_item_filter_scheduleddive_list"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_sort_by_size"
+        android:title="@string/filter_list_title" />
+</menu>

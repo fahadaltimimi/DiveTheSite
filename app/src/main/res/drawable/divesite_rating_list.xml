@@ -1,0 +1,8 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item android:id="@android:id/background"
+	      android:drawable="@drawable/rate_star_off_divesite" />
+	<item android:id="@android:id/secondaryProgress"
+	      android:drawable="@drawable/rate_star_half_divesite" />
+	<item android:id="@android:id/progress"
+	      android:drawable="@drawable/rate_star_on_divesite" />
+</layer-list>

@@ -1,0 +1,18 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$GeneralPreferenceFragment"
+        android:title="@string/pref_header_general" />
+    <header
+        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$DiveSitePreferenceFragment"
+        android:title="@string/pref_header_divesites" />
+    <header
+        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$DiveLogPreferenceFragment"
+        android:title="@string/pref_header_divelogs" />
+    <header
+        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$ScheduledDivePreferenceFragment"
+        android:title="@string/pref_header_scheduleddives" />
+
+</preference-headers>

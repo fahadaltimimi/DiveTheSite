@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fahadaltimimi.view.ObservableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+	android:fillViewport="true" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >
+        
+        <LinearLayout
+	        android:id="@+id/diver_info_progress_bar"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:gravity="center"
+	        android:orientation="vertical" >
+	        
+		    <ProgressBar
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+                android:indeterminateDrawable ="@drawable/divesite_progress" >
+		    </ProgressBar>
+	    </LinearLayout>
+
+        <TextView style="@style/DiverProfileFieldNameHeading"
+            android:id="@+id/diver_no_info_available"
+            android:gravity="center"
+            android:text="@string/diver_profile_no_info_available"
+            android:visibility="gone" >
+        </TextView>
+        
+	    <LinearLayout
+		    android:id="@+id/diver_info_view_container"
+	    	android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:visibility="gone"  >		        
+	            	                		         	       
+	        <LinearLayout
+	            android:layout_width="match_parent"
+		     	android:layout_height="wrap_content"
+		     	android:layout_marginLeft="10dp"
+	        	android:orientation="vertical" >
+
+	            <LinearLayout
+			        android:id="@+id/diver_picture_progress_bar"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:gravity="center"
+			        android:orientation="vertical" >
+			        
+				    <ProgressBar
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+                        android:indeterminateDrawable ="@drawable/divesite_progress" >
+				    </ProgressBar>
+			    </LinearLayout>
+	            
+	            <ImageView
+	                android:id="@+id/diver_profile_image"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"	          
+				    android:layout_marginBottom="5dp"          
+	                android:contentDescription="@string/ProfileImage" >
+	            </ImageView>	            	
+	            
+	            <TextView style="@style/DiverProfileFieldNameHeading"
+				    android:id="@+id/diver_name"
+				    android:gravity="center"
+				    android:layout_marginBottom="5dp" >
+				</TextView>
+				
+				<TextView style="@style/DiverProfileFieldNameText"
+		        	android:id="@+id/diver_email"
+		        	android:gravity="center" >
+		        </TextView>
+				            
+				<TextView style="@style/DiverProfileFieldNameText"
+				    android:id="@+id/diver_city_state_country"
+				    android:gravity="center" >
+				</TextView>
+		
+	     	</LinearLayout>
+        
+		    <TextView style="@style/DiverProfileFieldNameText"
+		        android:id="@+id/diver_bio"
+		        android:layout_marginTop="10dp" >
+		    </TextView>
+	    
+	    </LinearLayout>
+	       
+	    <TableLayout
+	        android:id="@+id/diver_info_edit_container"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:visibility="gone" >
+		   
+	       <Button style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/diver_profile_no_image_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"      
+                android:text="@string/diver_profile_change_picture" >
+            </Button>
+           
+           <ImageButton style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/diver_profile_image_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"      
+                android:contentDescription="@string/ProfileImage" >
+            </ImageButton>					           	
+           
+            <TableRow 
+                android:gravity="center" >
+				
+                <TextView style="@style/DiverProfileFieldLabels"
+		    		android:text="@string/diver_profile_name" />
+            
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:orientation="horizontal" >	     
+	                             
+	                <EditText style="@style/DiverProfileFieldNameText"
+					    android:id="@+id/diver_first_name_edit"
+					    android:hint="@string/diver_profile_first_name_hint"
+					    android:layout_width="0dp"
+					    android:layout_weight="1" >
+					</EditText>
+					
+		            <EditText style="@style/DiverProfileFieldNameText"
+					    android:id="@+id/diver_last_name_edit" 
+						android:hint="@string/diver_profile_last_name_hint"
+						android:layout_width="0dp"
+					    android:layout_weight="1" >
+					</EditText>
+	                
+	            </LinearLayout>
+            </TableRow>
+            
+            <TableRow 
+                android:gravity="center" >	 
+                
+	            <TextView style="@style/DiverProfileFieldLabels"
+			    	android:text="@string/diver_profile_username"/>
+	                	            
+	            <EditText style="@style/DiverProfileFieldNameText"
+				    android:id="@+id/diver_username_edit" 
+					android:hint="@string/diver_profile_username_hint"
+					android:layout_width="0dp"
+					android:layout_weight="1" >
+				</EditText>
+			</TableRow>
+			
+            <TableRow 
+                android:gravity="center">
+                
+	            <TextView style="@style/DiverProfileFieldLabels"
+			    	android:text="@string/diver_profile_email" />
+
+	            <EditText style="@style/DiverProfileFieldNameText"
+		        	android:id="@+id/diver_email_edit" 
+					android:hint="@string/diver_profile_email_hint"
+					android:layout_width="0dp"
+					android:layout_weight="1" >
+		        </EditText>
+		    </TableRow>
+	     	
+	     	<TableRow 
+                android:gravity="center">
+		    
+	     	    <TextView style="@style/DiverProfileFieldLabels"
+		    		android:text="@string/diver_profile_location" />
+	     	    
+			    <LinearLayout
+			        android:layout_width="0dp"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+			        android:orientation="horizontal" >								        
+			        
+					<EditText style="@style/DiverProfileFieldNameText"
+					    android:id="@+id/diver_city_edit" 
+						android:hint="@string/diver_profile_city_hint"
+						android:layout_width="0dp"
+					    android:layout_weight="1" >
+					</EditText>
+					
+					<EditText style="@style/DiverProfileFieldNameText"
+					    android:id="@+id/diver_province_edit" 
+						android:hint="@string/diver_profile_province_hint"
+						android:layout_width="0dp"
+					    android:layout_weight="1" >
+					</EditText>
+					
+					<EditText style="@style/DiverProfileFieldNameText"
+					    android:id="@+id/diver_country_edit" 
+						android:hint="@string/diver_profile_country_hint"
+						android:layout_width="0dp"
+					    android:layout_weight="1" >
+					</EditText>
+				</LinearLayout>
+			</TableRow>
+			
+		    <TableRow 
+                android:gravity="center" >
+				
+			    <TextView style="@style/DiverProfileFieldLabels"
+			    	android:text="@string/diver_profile_bio" />
+			    
+			    <EditText style="@style/DiverProfileFieldNameText"
+				    android:id="@+id/diver_bio_edit" 
+					android:hint="@string/diver_profile_bio_hint"
+					android:layout_marginTop="10dp"
+					android:layout_width="0dp"
+					android:layout_weight="1" >
+				</EditText>
+			</TableRow>					
+		    
+		</TableLayout>
+
+		<LinearLayout
+		    android:id="@+id/diver_certifications_container"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical" >
+
+		    <TextView style="@style/DiverProfileFieldLabels"
+                android:id="@+id/diver_certs_list_label"
+		    	android:text="@string/diver_profile_certifications"
+		    	android:layout_width="match_parent"
+		    	android:layout_marginLeft="0dp"
+		    	android:layout_marginTop="10dp"
+		    	android:gravity="center" />
+
+		    <LinearLayout
+			    android:id="@+id/diver_certs_list"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="10dp"
+			    android:orientation="vertical" >
+
+			</LinearLayout>
+		</LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mapHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView style="@style/DiverProfileFieldLabels"
+                android:id="@+id/diver_profile_log_map_label"
+                android:text="@string/diver_profile_log_map"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/diver_diveLog_map_progress_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:animateLayoutChanges="true" >
+
+                    <ProgressBar
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:indeterminateDrawable ="@drawable/divesite_progress" >
+                    </ProgressBar>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/diver_diveLog_mapView_snapShot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:visibility="gone"/>
+
+                <com.google.android.gms.maps.MapView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:map="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/diver_diveLog_mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:clickable="true"
+                    map:uiCompass="true"
+                    map:uiZoomControls="true"
+                    android:background="#FFFFFFFF"
+                    android:visibility="gone" >
+                </com.google.android.gms.maps.MapView>
+
+            </FrameLayout>
+
+        </LinearLayout>
+	</LinearLayout>
+</com.fahadaltimimi.view.ObservableScrollView>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:background="@drawable/background_activated" 
+    android:paddingBottom="20dp">
+    
+    <View
+	    android:layout_width="fill_parent"
+	    android:layout_height="1dp"
+	    android:background="@color/LightGrey"/>
+
+    <TableRow 
+        android:gravity="center" >
+        
+        <TextView style="@style/DiverProfileFieldLabels"
+	    	android:text="@string/diver_profile_cert_title" />
+        
+	    <EditText style="@style/DiverProfileCertFieldNameHeading"
+	        android:id="@+id/diver_cert_title"
+	        android:layout_marginBottom="5dp" 
+	        android:hint="@string/diver_profile_cert_title_hint"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:layout_weight="1"
+	    />
+    </TableRow>
+    
+    <TableRow 
+        android:gravity="center" >
+        
+        <TextView style="@style/DiverProfileFieldLabels"
+	    	android:text="@string/diver_profile_cert_number" />
+        
+	    <EditText style="@style/DiverProfileCertFieldNameText"
+	        android:id="@+id/diver_cert_number"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="@string/diver_profile_cert_number_hint" 
+	        android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:layout_weight="1"
+	    />
+    
+	</TableRow>
+	
+    <TableRow 
+        android:gravity="center" >
+        
+        <TextView style="@style/DiverProfileFieldLabels"
+	    	android:text="@string/diver_profile_cert_date" />        
+	        
+        <EditText style="@style/DiverProfileCertFieldNameText" 
+            android:id="@+id/diver_cert_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/diver_profile_cert_date_hint"
+            android:focusable="true"
+			android:focusableInTouchMode="true"
+        />
+        
+    </TableRow>
+        
+    <TableRow 
+        android:gravity="center" >
+        
+        <TextView style="@style/DiverProfileFieldLabels"
+	    	android:text="@string/diver_profile_cert_location" /> 
+        
+        <EditText style="@style/DiverProfileCertFieldNameText" 
+            android:id="@+id/diver_cert_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/diver_profile_cert_location_hint"
+            android:focusable="true"
+			android:focusableInTouchMode="true"
+        />
+        
+	</TableRow>
+	
+    <TableRow 
+        android:gravity="center" >
+        
+        <TextView style="@style/DiverProfileFieldLabels"
+	    	android:text="@string/diver_profile_cert_primary" /> 
+        
+        <CheckBox style="@style/DiverProfileCertFieldNameText" 
+            android:id="@+id/diver_cert_primary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="true"
+			android:focusableInTouchMode="true"
+        />
+        
+	</TableRow>
+	    	
+</TableLayout>

@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:orientation="vertical"
+    android:animateLayoutChanges="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/home_ndbc_list_item_station"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="left|center_vertical"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/Black" />
+
+        <TextView
+            android:id="@+id/home_ndbc_list_item_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="right"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/Black" />
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_air_temp_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_air_temp_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_air_temp"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_air_temp_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_air_temp_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_air_temp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_air_temp_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_air_temp"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_water_temp_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_water_temp_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_water_temp"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_water_temp_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_water_temp_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_water_temp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_water_temp_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_water_temp"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_tide_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_tide_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_tide"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_tide_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_tide_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_tide"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_tide_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_tide"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wind_direction_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_direction_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wind_direction"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_direction_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_direction_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_direction"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_direction_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_direction"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wind_speed_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_speed_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wind_speed"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_speed_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_speed_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_speed"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_speed_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_speed"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wind_gust_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_gust_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wind_gust"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_gust_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_gust_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_gust"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_gust_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_gust"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_swell_height_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_swell_height_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_swell_height"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_swell_height_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_swell_height_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_swell_height"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_swell_height_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_swell_height"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_swell_period_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_swell_period_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_swell_period"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_swell_period_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_swell_period_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_swell_period"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_swell_period_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_swell_period"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_swell_direction_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_swell_direction_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_swell_direction"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_swell_direction_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_swell_direction_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_swell_direction"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_swell_directon_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_swell_direction"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wave_height_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wave_height_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wave_height"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wave_height_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wave_height_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wave_height"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wave_height_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wave_height"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_dominant_wave_direction_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_direction_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_dominant_wave_direction"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_direction_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_direction_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_dominant_wave_direction"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_direction_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_dominant_wave_direction"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_dominant_wave_period_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_period_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_dominant_wave_period"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_period_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_period_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_dominant_wave_period"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_dominant_wave_period_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_dominant_wave_period"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_average_wave_period_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_average_wave_period_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_average_wave_period"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_average_wave_period_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_average_wave_period_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_average_wave_period"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_average_wave_period_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_average_wave_period"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wave_steepness_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wave_steepness_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wave_steepness"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wave_steepness_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wave_steepness_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wave_steepness"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wave_steepness_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wave_steepness"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wind_wave_height_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_wave_height_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wind_wave_height"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_wave_height_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_wave_height_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_wave_height"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_wave_height_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_wave_height"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wind_wave_period_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_wave_period_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wind_wave_period"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_wave_period_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_wave_period_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_wave_period"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_wave_period_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_wave_period"
+                android:visibility="gone" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/home_ndbc_list_item_wind_wave_direction_container"
+            android:visibility="gone"
+            android:animateLayoutChanges="true" >
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_wave_direction_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:text="@string/ndbc_station_data_wind_wave_direction"
+                android:textColor="@color/Black" />
+
+            <TextView
+                android:id="@+id/home_ndbc_list_item_wind_wave_direction_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/Black" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_wave_direction_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_wave_direction"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/home_ndbc_list_item_wind_wave_direction_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_down_blue"
+                android:contentDescription="@string/ndbc_station_data_wind_wave_direction"
+                android:visibility="gone" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/home_item_ndbc_data_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDrawable ="@drawable/divesite_progress" >
+        </ProgressBar>
+    </LinearLayout>
+    
+</LinearLayout>

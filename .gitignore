@@ -1,0 +1,6 @@
+/build/
+/.gradle/
+/app/build/
+/.idea/
+.idea/.name
+app/src/main/res/values/secrets.xml

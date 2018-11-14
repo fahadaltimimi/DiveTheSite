@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/DiveLogItemViewItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingRight="10dp"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants" >
+       
+    <ImageButton style="?android:attr/buttonBarButtonStyle"
+    	android:id="@+id/scheduleddive_site_remove"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center"
+    	android:visibility="gone"
+	 	android:focusableInTouchMode="false"
+		android:clickable="false"
+		android:focusable="false"
+    	android:src="@drawable/ic_menu_close_clear_cancel"
+        android:background="@android:color/transparent"
+    	android:contentDescription="@string/remove" />
+    
+    <TextView style="@style/ScheduledDiveItemViewItem" 
+        android:id="@+id/scheduleddive_site_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+	 	android:focusableInTouchMode="false"
+		android:clickable="false"
+		android:focusable="false"
+        android:textSize="14sp"
+        android:textStyle="bold" >
+    </TextView>
+    
+    <TextView style="@style/ScheduledDiveItemViewItem" 
+        android:id="@+id/scheduleddive_site_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+	 	android:focusableInTouchMode="false"
+		android:clickable="false"
+		android:focusable="false"
+        android:textSize="12sp" >
+    </TextView>
+    
+    <TextView style="@style/ScheduledDiveItemViewItem" 
+        android:id="@+id/scheduleddive_site_vote_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+	 	android:focusableInTouchMode="false"
+		android:clickable="false"
+		android:focusable="false"
+    	android:visibility="gone"
+        android:textSize="12sp" >
+    </TextView>
+    
+</LinearLayout>

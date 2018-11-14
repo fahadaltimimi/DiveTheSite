@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:orientation="vertical" >
+       
+    <ImageButton style="?android:attr/buttonBarButtonStyle"
+    	android:id="@+id/divelog_buddy_remove"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center"
+    	android:src="@drawable/ic_menu_close_clear_cancel"
+    	android:contentDescription="@string/remove" />
+
+    <ImageButton style="?android:attr/buttonBarButtonStyle"
+        android:id="@+id/divelog_buddy_button"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/dive_log_buddy_picture"
+        android:scaleType="centerInside"
+        android:src="@drawable/logo_symbol" >
+    </ImageButton>
+    
+    <EditText 
+        android:id="@+id/divelog_buddy_name_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:inputType="text"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:hint="@string/divelog_buddy_hint" >
+    </EditText>
+</LinearLayout>

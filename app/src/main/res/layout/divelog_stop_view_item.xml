@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/DiveLogItemViewItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingRight="10dp"
+    android:orientation="vertical" >
+       
+    <TextView style="@style/DiveLogItemViewItem" 
+        android:id="@+id/divelog_stop_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="12sp"
+        android:textStyle="bold" >
+    </TextView>
+    
+    <TextView style="@style/DiveLogItemViewItem"
+        android:id="@+id/divelog_stop_depth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:textSize="12sp"
+        android:textStyle="bold" >
+    </TextView>
+    
+</LinearLayout>

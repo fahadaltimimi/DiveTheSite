@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/DiveLogItemViewItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingRight="10dp"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants" >
+       
+    <ImageButton style="?android:attr/buttonBarButtonStyle"
+    	android:id="@+id/scheduleddive_user_remove"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center"
+    	android:visibility="gone"
+    	android:src="@drawable/ic_menu_close_clear_cancel"
+    	android:contentDescription="@string/remove" />
+    
+    <ImageButton
+        android:id="@+id/scheduleddive_user_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/dive_log_buddy_picture"
+        android:scaleType="centerInside"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:background="@android:color/transparent"
+        android:src="@drawable/logo_symbol" >
+    </ImageButton>
+    
+</LinearLayout>

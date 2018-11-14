@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/divesite_pictures_view_container"
+    android:layout_width="match_parent"
+	android:layout_height="fill_parent"
+	android:fillViewport="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="#FFFFFF"
+    android:animateLayoutChanges="true" 
+    android:orientation="vertical" >
+
+    <FrameLayout
+    	android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3" >        
+	    
+	    <ImageView
+	        android:id="@+id/divesite_selected_image"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"	        
+	        android:paddingTop="10dp"
+	        android:paddingBottom="10dp"
+	        android:animateLayoutChanges="true" 
+	        android:contentDescription="@string/divesite_pictures_title"
+	        android:visibility="visible" >	  
+	    </ImageView>
+	    
+	    <ImageButton style="?android:attr/buttonBarButtonStyle"
+	    	android:id="@+id/delete_dive_site_picture"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="right"
+	    	android:src="@drawable/ic_menu_close_clear_cancel"
+	    	android:contentDescription="@string/delete"
+	    	android:visibility="invisible" />
+	    
+	    <LinearLayout
+	        android:id="@+id/divesite_picture_progress_bar"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:gravity="center"
+	        android:orientation="vertical"
+	        android:visibility="invisible" >
+	        
+		    <ProgressBar
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+                android:indeterminateDrawable ="@drawable/divesite_progress" >
+		    </ProgressBar>
+	    </LinearLayout>
+    </FrameLayout>
+
+    <HorizontalScrollView 
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"  
+		android:measureAllChildren="false" >
+              
+      	    <LinearLayout
+      			android:id="@+id/divesite_image_gallery"
+      	    	android:layout_width="wrap_content"
+      	    	android:layout_height="wrap_content"
+      	    	android:layout_gravity="left"
+      	    	android:orientation="horizontal"
+      	    	android:animateLayoutChanges="true" >         	    	      	          
+      	    </LinearLayout>
+       	    
+      	</HorizontalScrollView>
+ 	
+    <LinearLayout style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+        <Button style="?android:attr/buttonBarButtonStyle"
+	        android:id="@+id/divesite_add_picture_gallery"
+	        android:gravity="center"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/dive_site_add_picture_gallery" >
+	    </Button>
+	    
+	    <Button style="?android:attr/buttonBarButtonStyle"
+	        android:id="@+id/divesite_add_picture_camera"
+	        android:gravity="center"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"	
+	        android:text="@string/dive_site_add_picture_camera" >
+	    </Button>
+	 
+    </LinearLayout>
+</LinearLayout>

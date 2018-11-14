@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item type="id" name="scheduleddive_local_id_tag"/> 
+	<item type="id" name="scheduleddive_local_view_tag"/>  
+</resources>

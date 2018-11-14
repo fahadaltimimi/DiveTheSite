@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" 
+    android:animateLayoutChanges="true" 
+	android:background="@color/defaultBackground"
+	android:showDividers="middle"
+    android:divider="?android:dividerHorizontal" >
+    
+    <LinearLayout
+        android:id="@+id/divesite_list_filter_notification_container"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+		android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+	    android:orientation="horizontal"
+	    android:background="@color/filterNotificationBackground"
+	    android:visibility="gone" >
+	    
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"	 
+	        android:textColor="@color/filterNotificationTextColor"
+	        android:textStyle="bold"
+	        android:text="@string/active_filter" /> 
+	        
+	    <TextView
+	        android:id="@+id/divesite_list_filter_notification"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="5dp"
+	        android:layout_weight="1"
+	        android:textColor="@color/filterNotificationTextColor" />
+	    
+	</LinearLayout>
+
+    <ImageView
+        android:id="@+id/divelog_list_item_mapView_snapShot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:visibility="invisible"/>
+
+    <com.google.android.gms.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/divelog_list_item_mapView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:focusableInTouchMode="true"
+        android:clickable="true"
+        android:focusable="true"
+        map:uiCompass="true"
+        map:uiZoomControls="true" >
+    </com.google.android.gms.maps.MapView>
+   
+	<ListView
+	    android:id="@android:id/list"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:animateLayoutChanges="true" >
+	</ListView>
+</LinearLayout>

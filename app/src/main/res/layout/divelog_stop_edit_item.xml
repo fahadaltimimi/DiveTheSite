@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/DiveLogItemViewItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+       
+    <TableRow >
+        <ImageButton style="?android:attr/buttonBarButtonStyle"
+	    	android:id="@+id/divelog_stop_remove"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="center"
+	    	android:layout_span="2"
+	    	android:src="@drawable/ic_menu_close_clear_cancel"
+	    	android:contentDescription="@string/remove" />
+    </TableRow>
+    <TableRow >
+	    <EditText 
+	        android:id="@+id/divelog_stop_time"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:inputType="number"
+	        android:hint="@string/divelog_stop_time_hint"
+	        android:textSize="14sp"
+	        android:textStyle="bold" >
+	    </EditText>
+	    
+	    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"		            
+            android:gravity="left"
+            android:layout_marginLeft="12dp"
+            android:textSize="14sp"
+	        android:textStyle="bold"
+            android:text="@string/unit_minutes" />
+	</TableRow>
+    
+    <TableRow 
+	    android:layout_marginTop="5dp">
+	    
+	    <EditText
+	        android:id="@+id/divelog_stop_depth"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"	        
+	        android:inputType="numberDecimal"
+	        android:hint="@string/divelog_stop_depth_hint"
+	        android:textSize="14sp"
+	        android:textStyle="bold" >
+	    </EditText>
+	    
+	    <Spinner
+            android:id="@+id/divelog_stop_depth_units"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/units_depth_array"
+	        android:textStyle="bold" />
+	</TableRow>
+    
+</TableLayout>

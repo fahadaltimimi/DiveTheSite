@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.fahadaltimimi.view.ObservableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:fillViewport="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="#FFFFFF" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+        <LinearLayout
+	        android:id="@+id/divesite_info_progress_bar"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:orientation="vertical"
+	        android:visibility="visible" >
+	        
+		    <ProgressBar
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+                android:indeterminateDrawable ="@drawable/divesite_progress" >
+		    </ProgressBar>
+	    </LinearLayout>
+	    
+        <TableLayout 
+		    android:id="@+id/divesite_view_page1"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:visibility="gone" >
+		    
+		    <FrameLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" >
+			    <EditText style="@style/DiveSiteShortText"
+					android:id="@+id/divesite_name_editing"
+					android:gravity="center"
+				    android:layout_width="match_parent"
+				  	android:layout_height="wrap_content"
+				    android:hint="@string/dive_site_title_hint"
+				    android:visibility="gone"
+                    android:textColor="@color/Black" >
+			    </EditText>
+		    </FrameLayout>
+		    <TableRow style="@style/DiveSiteTableRow" >
+		        <RatingBar style="@style/ratingbar_divesite"         
+			        android:id="@+id/divesite_rating"      
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"        
+			        android:numStars="5"
+			        android:rating="0"
+			        android:stepSize="0.5"
+			        android:isIndicator="true" >
+		        </RatingBar>
+		    </TableRow>
+		    
+		    <TableRow style="@style/DiveSiteTableRow" >
+		    	<FrameLayout
+		    	    android:layout_gravity="top"
+		            android:gravity="center"
+		    	    android:layout_width="0dp"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:layout_marginRight="2dp"   >
+		            
+			        <RelativeLayout 
+			            android:id="@+id/divesite_location_viewing_container"
+			            android:layout_gravity="center|top"
+			            android:gravity="center|top"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content" >
+			            
+			            <TextView
+			                android:id="@+id/divesite_location_title_viewing"
+						   	android:layout_width="match_parent"
+						   	android:layout_height="wrap_content"
+						   	android:gravity="center"
+						   	android:text="@string/divesite_location_title"
+                            android:textColor="@color/Black"
+						   	style="?android:listSeparatorTextViewStyle" >
+					    </TextView>
+			            
+			            <RelativeLayout
+			                android:id="@+id/divesite_city_province_holder_viewing"
+			                android:gravity="center"
+			                android:layout_width="match_parent"
+			                android:layout_height="wrap_content" 
+			                android:layout_below="@id/divesite_location_title_viewing" >
+			                
+				            <TextView style="@style/DiveSiteLongText"
+				                android:id="@+id/divesite_city_viewing"
+				                android:layout_width="wrap_content"
+				                android:layout_height="wrap_content" />
+			
+				            <TextView style="@style/DiveSiteLongText"
+				                android:id="@+id/divesite_city_province_comma"
+				                android:layout_width="wrap_content"
+				                android:layout_height="wrap_content"
+				                android:layout_toRightOf="@id/divesite_city_viewing"
+				                android:text="@string/comma_space_separator"
+				                android:visibility="gone" />
+			 
+				            <TextView style="@style/DiveSiteLongText"			                
+				                android:id="@+id/divesite_province_viewing"
+				                android:layout_width="wrap_content"
+				                android:layout_height="wrap_content"
+				                android:layout_marginLeft="5dp"
+				                android:layout_toRightOf="@id/divesite_city_province_comma" />   
+				        </RelativeLayout>     
+				        
+			            <TextView style="@style/DiveSiteLongText"
+			                android:id="@+id/divesite_country_viewing"
+			                android:gravity="center"
+			                android:layout_width="match_parent"
+			                android:layout_height="wrap_content"
+			                android:layout_marginTop="5dp"
+			                android:layout_below="@id/divesite_city_province_holder_viewing" >
+				        </TextView>     
+			                
+			        </RelativeLayout>
+			        
+			        <RelativeLayout 
+			            android:id="@+id/divesite_location_editing_container"
+			            android:layout_gravity="center|top"
+			            android:gravity="center|top"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:visibility="invisible" >
+		            
+			            <TextView
+			                android:id="@+id/divesite_location_title_editing"
+						   	android:layout_width="match_parent"
+						   	android:layout_height="wrap_content"
+						   	android:gravity="center"
+						   	android:text="@string/divesite_location_title"
+                            android:textColor="@color/Black"
+						   	style="?android:listSeparatorTextViewStyle" >
+					    </TextView>
+				    
+			            <LinearLayout
+			                android:id="@+id/divesite_city_province_holder_editing"
+			                android:gravity="center"
+			                android:layout_width="match_parent"
+			                android:layout_height="wrap_content"
+			                android:layout_below="@id/divesite_location_title_editing" >
+				            
+				            <EditText style="@style/DiveSiteLongText"
+				                android:id="@+id/divesite_city_editing"
+				                android:gravity="center"
+				                android:layout_width="0dp"
+					            android:layout_height="wrap_content"    
+					            android:layout_weight="1"   
+				                android:hint="@string/dive_site_city_hint" >
+				            </EditText>   
+				                           
+				            <EditText style="@style/DiveSiteLongText"
+				                android:id="@+id/divesite_province_editing"
+				                android:gravity="center"
+				                android:layout_width="0dp"
+					            android:layout_height="wrap_content"    
+					            android:layout_weight="1"   
+				                android:hint="@string/dive_site_province_hint" >
+				            </EditText>      
+				                
+				        </LinearLayout>     
+				        		            			        
+			            <Spinner style="@style/DiveSiteLongText"
+					        android:id="@+id/divesite_country_editing"
+					        android:paddingLeft="0dp"
+					        android:gravity="center"
+			                android:layout_width="match_parent"
+			                android:layout_height="wrap_content"
+			                android:layout_below="@id/divesite_city_province_holder_editing"   
+					        android:entries="@array/countries_array"
+					        android:prompt="@string/register_country" >		         
+			            </Spinner>
+			            
+			        </RelativeLayout>
+		        
+		        </FrameLayout>
+		        <RelativeLayout
+		            android:layout_gravity="top"
+		            android:gravity="center"
+		            android:layout_width="0dp"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:layout_marginLeft="2dp" >
+		            
+			        <TextView
+			            android:id="@+id/divesite_difficulty_title"
+					   	android:layout_width="match_parent"
+					   	android:layout_height="wrap_content"
+					   	android:gravity="center"
+					   	android:text="@string/divesite_difficulty_title"
+                        android:textColor="@color/Black"
+					   	style="?android:listSeparatorTextViewStyle" >
+				    </TextView>
+				    
+			        <FrameLayout 
+			            android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+			        	android:layout_below="@id/divesite_difficulty_title" >
+				        <TextView style="@style/DiveSiteLongText"
+				            android:id="@+id/divesite_difficulty_viewing"
+				            android:gravity="center"
+				            android:layout_width="match_parent"
+				            android:layout_height="wrap_content" >
+				        </TextView>
+					    <Button style="@style/DiveSiteLongText"
+				            android:id="@+id/divesite_difficulty_editing"
+				            android:gravity="center"
+				            android:layout_width="match_parent"
+				            android:layout_height="match_parent"
+				            android:visibility="invisible" >
+				        </Button>
+				    </FrameLayout>
+				</RelativeLayout>	    
+			</TableRow>
+			
+		   
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal"
+	            android:layout_marginTop="10dp"
+	            android:gravity="center" >
+		    	
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isSalt"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_weight="1"
+			    	android:contentDescription="@string/divesite_isSalt"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_salt_disabled_icon" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isFresh"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_weight="1"
+			    	android:contentDescription="@string/divesite_isFresh"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_fresh_disabled_icon" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isShore"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_weight="1"
+			    	android:contentDescription="@string/divesite_isShore"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_shore_disabled_icon" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isBoat"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_weight="1"
+			    	android:contentDescription="@string/divesite_isBoat"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_boat_disabled_icon" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isWreck"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_weight="1"
+			    	android:contentDescription="@string/divesite_isWreck"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_wreck_disabled_icon" />
+		    </LinearLayout>
+		 
+	        <LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical" >
+		    
+	            <TextView
+		            android:id="@+id/divesite_description_title"
+				   	android:layout_width="match_parent"
+				   	android:layout_height="wrap_content"
+				   	android:gravity="center"
+				   	android:layout_marginTop="3dp"
+				   	android:text="@string/divesite_description_title"
+                    android:textColor="@color/Black"
+				   	style="?android:listSeparatorTextViewStyle" >
+			    </TextView>
+			    
+		        <FrameLayout
+			       	android:layout_width="match_parent"
+				    android:layout_height="wrap_content" >
+		            
+			        <TextView style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_description_viewing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"    
+			            android:layout_marginTop="6dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp" >
+			        </TextView>
+			        
+			        <EditText style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_description_editing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:inputType="textMultiLine"
+			            android:visibility="invisible" >
+				    </EditText>
+			    </FrameLayout>
+			    
+		        <TextView
+		            android:id="@+id/divesite_directions_title"
+				   	android:layout_width="match_parent"
+				   	android:layout_height="wrap_content"
+				   	android:gravity="center"
+				   	android:text="@string/divesite_directions_title"
+                    android:textColor="@color/Black"
+				   	style="?android:listSeparatorTextViewStyle" >
+			    </TextView>
+			   
+			    <FrameLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content" >
+			        
+			        <TextView style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_directions_viewing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:layout_marginTop="6dp"
+			            android:layout_marginLeft="12dp"
+			            android:layout_marginRight="12dp" >
+			        </TextView>
+			        <EditText style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_directions_editing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:inputType="textMultiLine"
+			            android:visibility="invisible" >
+			        </EditText>
+			    </FrameLayout>
+			    
+			    <TextView
+			        android:id="@+id/divesite_history_title"
+				   	android:layout_width="match_parent"
+				   	android:layout_height="wrap_content"
+				   	android:layout_marginTop="5dp"
+				   	android:gravity="center"
+				   	android:text="@string/divesite_history_title"
+                    android:textColor="@color/Black"
+				   	style="?android:listSeparatorTextViewStyle" >
+			    </TextView>
+			   
+			    <FrameLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content" >
+			        
+			        <TextView style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_history_viewing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:layout_marginTop="6dp"
+			            android:layout_marginLeft="12dp"
+			            android:layout_marginRight="12dp" >
+			        </TextView>
+			        <EditText style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_history_editing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:inputType="textMultiLine"
+			            android:visibility="invisible" >
+			        </EditText>
+			    </FrameLayout>
+			    
+			    <TextView
+			        android:id="@+id/divesite_notes_title"
+				   	android:layout_width="match_parent"
+				   	android:layout_height="wrap_content"
+				   	android:gravity="center"
+				   	android:layout_marginTop="5dp"
+				   	android:text="@string/divesite_notes_title"
+                    android:textColor="@color/Black"
+				   	style="?android:listSeparatorTextViewStyle" >
+			    </TextView>
+			    
+			    <FrameLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content" >
+			        
+			        <TextView style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_notes_viewing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:layout_marginTop="6dp"
+			            android:layout_marginLeft="12dp"
+			            android:layout_marginRight="12dp"
+                        android:textColor="@color/Black" >
+			        </TextView>
+			        <EditText style="@style/DiveSiteLongText"
+			        	android:id="@+id/divesite_notes_editing"
+			        	android:gravity="left"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:inputType="textMultiLine"
+			            android:visibility="invisible" >
+			        </EditText>
+			    </FrameLayout>
+			    
+			    <LinearLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="5dp"
+			        android:orientation="horizontal"
+			        android:baselineAligned="false" >
+			        
+			        <LinearLayout
+			            android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:layout_weight="1"
+			            android:layout_marginRight="2dp"
+			            android:orientation="vertical" >
+					    
+			            <TextView
+						   	android:layout_width="match_parent"
+						   	android:layout_height="wrap_content"
+						   	android:gravity="center"
+						   	android:text="@string/divesite_source_title"
+                            android:textColor="@color/Black"
+						   	style="?android:listSeparatorTextViewStyle" >
+					    </TextView>
+					    
+					    <FrameLayout
+					        android:layout_width="match_parent"
+					        android:layout_height="wrap_content" >
+					        
+					        <TextView style="@style/DiveSiteLongText"
+					        	android:id="@+id/divesite_source_viewing"
+					        	android:gravity="left"
+					            android:layout_width="match_parent"
+					            android:layout_height="wrap_content"
+					            android:layout_marginTop="6dp"
+					            android:layout_marginLeft="12dp"
+					            android:layout_marginRight="12dp" >
+					        </TextView>
+					        <EditText style="@style/DiveSiteLongText"
+					        	android:id="@+id/divesite_source_editing"
+					        	android:gravity="left"
+					            android:layout_width="match_parent"
+					            android:layout_height="wrap_content"
+					            android:visibility="invisible" >
+					        </EditText>
+					    </FrameLayout>
+			        </LinearLayout>
+			        <LinearLayout
+			            android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:layout_weight="1"
+			            android:layout_marginLeft="2dp"
+			            android:orientation="vertical" >
+
+			            <TextView
+						   	android:layout_width="match_parent"
+						   	android:layout_height="wrap_content"
+						   	android:gravity="center"
+						   	android:text="@string/divesite_submitter_title"
+                            android:textColor="@color/Black"
+						   	style="?android:listSeparatorTextViewStyle" >
+					    </TextView>
+					    
+					    <LinearLayout
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_gravity="center"
+                            android:orientation="vertical" >
+
+                            <ImageButton
+                                android:id="@+id/divesite_submitter_image"
+                                android:gravity="center_vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:contentDescription="@string/divesite_submitter_title"
+                                android:scaleType="centerInside"
+                                android:background="@android:color/transparent"
+                                android:src="@drawable/logo_symbol" >
+                            </ImageButton>
+					        
+					        <TextView style="@style/DiveSiteLongText"
+					        	android:id="@+id/divesite_submitter_viewing"
+					        	android:layout_gravity="center"
+					            android:layout_width="wrap_content"
+					            android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:textStyle="bold" >
+					        </TextView>
+					       
+					    </LinearLayout>
+			        </LinearLayout>
+			    </LinearLayout>
+	            
+	        </LinearLayout>
+	        
+			<RelativeLayout
+			    android:id="@+id/divesite_coordinates_edit_container"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:layout_marginTop="5dp"
+			    android:visibility="invisible" >
+		     
+		   		<TextView
+			        android:id="@+id/divesite_coordinates_title"
+				  	android:layout_width="match_parent"
+				  	android:layout_height="wrap_content"
+				  	android:gravity="center"
+				  	android:text="@string/divesite_coordinates_title"
+                    android:textColor="@color/Black"
+				  	style="?android:listSeparatorTextViewStyle" >
+			    </TextView>
+			   
+				<LinearLayout
+				    android:layout_width="match_parent"
+		       		android:layout_height="wrap_content"
+		       		android:orientation="vertical"
+		       		android:layout_below="@id/divesite_coordinates_title"  >
+		       		<LinearLayout
+		       		    android:layout_width="match_parent"
+		       		    android:layout_height="wrap_content"
+		       		    android:orientation="horizontal" >
+			            
+				        <EditText style="@style/DiveSiteShortText"
+				        	android:id="@+id/divesite_latitude_editing"
+				        	android:gravity="center"
+				            android:layout_width="0dp"
+				            android:layout_height="wrap_content"     
+				            android:layout_weight="1"
+				            android:text="@string/divesite_empty_latitude"
+				            android:hint="@string/dive_site_latitude_hint" >
+				        </EditText>
+				        
+				        <EditText style="@style/DiveSiteShortText"
+				        	android:id="@+id/divesite_longitude_editing"
+				        	android:gravity="center"
+				            android:layout_width="0dp"
+				            android:layout_height="wrap_content"
+				            android:layout_weight="1"
+				            android:text="@string/divesite_empty_longitude"
+			            	android:hint="@string/dive_site_longitude_hint" >
+				        </EditText>
+				    </LinearLayout>
+				    <Button style="@style/DiveSiteShortText"
+				    	android:id="@+id/divesite_getLatitudeLongitude"
+				        android:gravity="center"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:text="@string/dive_site_get_longitude_latitude_button" />
+				</LinearLayout>
+		    </RelativeLayout>
+		    
+			<FrameLayout
+			    android:layout_width="match_parent" 
+			    android:layout_height="fill_parent"
+			    android:animateLayoutChanges="true"
+			    android:background="@android:color/transparent" >
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/divesite_view_mapView_snapShot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:visibility="invisible"/>
+
+                    <com.google.android.gms.maps.MapView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:map="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/divesite_view_mapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:clickable="true"
+                        map:uiCompass="true"
+                        map:uiZoomControls="true"
+                        android:background="#FFFFFFFF" >
+                    </com.google.android.gms.maps.MapView>
+
+                </FrameLayout>
+			    
+			    <RelativeLayout
+			   	    android:layout_width="match_parent"
+			   	    android:layout_height="fill_parent"
+			   	    android:paddingRight="50dp"
+			   	    android:orientation="vertical" >							        
+				    
+			        <LinearLayout
+				   	    android:id="@+id/diveSite_map_data_toolbar"
+				   	    android:layout_width="match_parent"
+				   	    android:layout_height="wrap_content"
+				   	    android:layout_alignParentBottom="true"
+				   	    android:visibility="gone"
+				   	    android:orientation="horizontal"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginBottom="12dp">
+				   	    
+				   	    <Button
+				   	        android:id="@+id/diveSite_map_meteorological"
+				   	        android:layout_width="0dp"
+				   	        android:layout_height="wrap_content"
+				   	        android:layout_weight="1"
+				   	    	android:layout_gravity="bottom"
+                            android:text="Meteorological"
+                            android:layout_marginRight="3dp"
+                            android:textAllCaps="true"
+                            android:background="@color/diveSiteBlue"
+                            android:textColor="@color/White" >
+				   	    </Button>
+				   	    
+				   	    <Button
+				   	        android:id="@+id/diveSite_map_wave"
+				   	        android:layout_width="0dp"
+				   	        android:layout_height="wrap_content"
+				   	        android:layout_weight="1"
+				   	    	android:layout_gravity="bottom"
+				   	        android:text="Wave"
+                            android:layout_marginLeft="3dp"
+                            android:textAllCaps="true"
+                            android:background="@color/diveSiteBlue"
+                            android:textColor="@color/White" >
+				   	    </Button>
+				   	    
+				   	</LinearLayout>	
+				   	
+			        <LinearLayout
+				        android:id="@+id/diveSite_map_data_view_container"
+				        android:layout_width="match_parent"
+				   	    android:layout_height="wrap_content"
+				   	    android:layout_above="@id/diveSite_map_data_toolbar"
+				   	    android:paddingRight="5dp"
+				   	    android:orientation="vertical"
+				   	    android:animateLayoutChanges="true" >
+				    </LinearLayout>
+			        
+			    </RelativeLayout>			    			    			    			   			   				
+			   	
+			</FrameLayout>
+		    			
+		</TableLayout>
+        
+    </LinearLayout>
+
+</com.fahadaltimimi.view.ObservableScrollView>

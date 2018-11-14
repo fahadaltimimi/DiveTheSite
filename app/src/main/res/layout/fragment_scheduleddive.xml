@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:fillViewport="true"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="#FFFFFF" 
+    android:orientation="vertical"
+    android:paddingTop="?attr/actionBarSize" >
+    
+	<TableLayout style="?android:attr/buttonBarStyle"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:stretchColumns="1"
+	    android:divider="@null" >
+	    
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+	        
+	        <EditText style="@style/ScheduledDiveItemTextViewHeadingItem"
+	           	android:id="@+id/scheduleddive_set_title"
+	           	android:layout_width="match_parent"
+		        android:layout_height="match_parent" 
+	           	android:inputType="text"
+	           	android:focusableInTouchMode="true"
+				android:clickable="true"
+				android:focusable="true"
+	           	android:hint="@string/scheduleddive_title_hint" />
+		    
+		    <ImageButton style="?android:attr/buttonBarButtonStyle"
+		    	android:id="@+id/divelog_divesite_search"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:src="@drawable/ic_menu_search"
+		    	android:visibility="invisible"
+		    	android:contentDescription="@string/scheduleddive_title_hint" />			    	
+	        
+	    </LinearLayout>
+	    
+	    <TableRow >
+	        <TextView style="@style/ScheduledDiveItemFieldLabel"
+	           	android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="left|center_vertical"
+		        android:text="@string/scheduleddive_label_timestamp" />
+	         
+		    <Button style="@style/ScheduledDiveItemButtonField"
+		        android:id="@+id/scheduleddive_set_timestamp"	        
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_span="2"
+	            android:gravity="center_horizontal|center_vertical"
+	            android:hint="@string/scheduleddive_timestamp_hint" />
+	    </TableRow>
+	    
+	    <TableRow
+	        android:layout_marginBottom="20dp" >
+	        	      
+	        <TextView style="@style/ScheduledDiveItemFieldLabel"
+	           	android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:gravity="left|center_vertical"
+		        android:text="@string/scheduleddive_label_comments" />
+	        
+	        <EditText style="@style/ScheduledDiveItemFieldValue"
+	            android:id="@+id/scheduleddive_set_comments"
+	            android:layout_width="0dp"
+		        android:layout_weight="1"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/scheduleddive_comments_hint"
+	            android:inputType="textMultiLine" />
+	    </TableRow>   	    
+	    
+	    <TableRow 
+	        android:layout_width="match_parent" >
+	        
+	        <TextView style="@style/ScheduledDiveItemFieldLabel"
+	           	android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:gravity="center"
+		        android:text="@string/scheduleddive_label_divesites" />
+	    </TableRow>
+	    
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+	        
+	        <EditText style="@style/ScheduledDiveItemFieldValue"
+	           	android:id="@+id/scheduleddive_set_divesite"
+	           	android:layout_width="0dp"
+		        android:layout_height="match_parent"          	
+	           	android:layout_weight="2"
+	           	android:inputType="text"
+	           	android:focusableInTouchMode="true"
+				android:clickable="true"
+				android:focusable="true"
+	           	android:hint="@string/scheduleddive_sites_hint" />
+		    
+		    <ImageButton style="?android:attr/buttonBarButtonStyle"
+		    	android:id="@+id/scheduleddive_divesite_search"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:src="@drawable/ic_menu_search"
+		    	android:contentDescription="@string/divesite_search_divesite_list" />
+		    
+		    <ImageButton style="?android:attr/buttonBarButtonStyle"
+		    	android:id="@+id/scheduleddive_divesite_add"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:src="@drawable/ic_menu_add"
+		    	android:contentDescription="@string/divesite_add_divesite" />
+	        
+	    </LinearLayout>
+	    
+        <HorizontalScrollView 
+       		android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:fillViewport="true"
+			android:measureAllChildren="false" >
+               
+       	    <LinearLayout
+       	        android:id="@+id/scheduleddive_site_list"
+       	    	android:layout_width="wrap_content"
+       	    	android:layout_height="wrap_content"
+       	    	android:orientation="horizontal"
+       	    	android:animateLayoutChanges="true"  >   
+       	    </LinearLayout>		        	    
+       	</HorizontalScrollView> 
+	</TableLayout>
+</ScrollView>

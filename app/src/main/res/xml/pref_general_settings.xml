@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_sync_frequency_modes"
+        android:entryValues="@array/pref_sync_frequency_mode_values"
+        android:key="@string/PREF_SETTING_SYNC_CONDITION"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_sync_mode" />
+
+    <ListPreference
+        android:defaultValue="60"
+        android:entries="@array/pref_sync_frequency_titles"
+        android:entryValues="@array/pref_sync_frequency_values"
+        android:key="@string/PREF_SETTING_INTERVAL_CHECK_UPDATES_SEC"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_sync_frequency" />
+    
+</PreferenceScreen>

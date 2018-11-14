@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:DiveTheSite="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dive_action_menu">
+    
+    <item android:id="@+id/menu_item_showNDBCBuoys"
+        DiveTheSite:showAsAction="never"
+        android:title="@string/divesite_show_NDBCBuoys" />
+    
+    <item android:id="@+id/menu_item_hideNDBCBuoys"
+        DiveTheSite:showAsAction="never"
+        android:title="@string/divesite_hide_NDBCBuoys" />
+    
+    <item android:id="@+id/menu_item_showOnlineDiveSites"
+        DiveTheSite:showAsAction="never"
+        android:title="@string/divesite_show_online" />
+    
+    <item android:id="@+id/menu_item_hideOnlineDiveSites"
+        DiveTheSite:showAsAction="never"
+        android:title="@string/divesite_hide_online" />
+    
+    <item android:id="@+id/menu_item_showSavedDiveSites"
+        DiveTheSite:showAsAction="never"
+        android:title="@string/divesite_show_saved" />
+    
+    <item android:id="@+id/menu_item_hideSavedDiveSites"
+        DiveTheSite:showAsAction="never"
+        android:title="@string/divesite_hide_saved" />
+     
+    <item android:id="@+id/menu_item_search"
+        DiveTheSite:showAsAction="always"
+    	android:icon="@drawable/ic_menu_search"
+    	android:title="@string/divesite_search_divesite_list"
+        DiveTheSite:actionViewClass="android.widget.SearchView" />
+    
+    <item android:id="@+id/menu_item_refresh_divesites"
+        DiveTheSite:showAsAction="never"
+    	android:icon="@drawable/ic_menu_refresh"
+    	android:title="@string/refresh" />
+   
+</menu>

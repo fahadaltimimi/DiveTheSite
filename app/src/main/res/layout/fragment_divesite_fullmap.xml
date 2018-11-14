@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    android:animateLayoutChanges="true"
+    android:background="@android:color/transparent"
+    android:paddingTop="?attr/actionBarSize" >
+    
+    <com.google.android.gms.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/diveSite_fullMap_MapView"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        map:uiCompass="true"
+	    map:uiZoomControls="true"
+	    android:background="#00000000" />
+   	
+   	<LinearLayout
+   	    android:id="@+id/diveSite_fullMap_data_toolbar"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:visibility="gone"
+   	    android:layout_alignParentBottom="true"
+   	    android:paddingRight="50dp"
+   	    android:orientation="horizontal" >
+   	    
+   	    <Button
+   	        android:id="@+id/diveSite_fullMap_meteorological"
+   	        android:layout_width="0dp"
+   	        android:layout_height="wrap_content"
+   	        android:layout_weight="1"
+   	        android:text="Meteorological"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="2dp"
+            android:textAllCaps="true"
+            android:background="@color/diveSiteBlue"
+            android:textColor="@color/White">
+   	    </Button>
+   	    
+   	    <Button
+   	        android:id="@+id/diveSite_fullMap_wave"
+   	        android:layout_width="0dp"
+   	        android:layout_height="wrap_content"
+   	        android:layout_weight="1"
+   	        android:text="Wave"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="2dp"
+            android:textAllCaps="true"
+            android:background="@color/diveSiteBlue"
+            android:textColor="@color/White" >
+   	    </Button>
+   	    
+   	</LinearLayout>
+   	
+   	<LinearLayout
+        android:id="@+id/diveSite_fullMap_data_view_container"
+        android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_above="@id/diveSite_fullMap_data_toolbar"
+   	    android:paddingRight="55dp"
+   	    android:orientation="vertical"
+   	    android:animateLayoutChanges="true" >
+    </LinearLayout>
+   	
+</RelativeLayout>

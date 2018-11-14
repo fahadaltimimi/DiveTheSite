@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="PREF_SETTING_SYNC_CONDITION">DiveTheSite.Setting.syncCondition</string>
+	<string name="PREF_SETTING_INTERVAL_CHECK_UPDATES_SEC">DiveTheSite.Setting.intervalCheckUpdatesSec</string>
+	
+	<string name="PREF_SETTING_ENABLE_AUTO_DIVE_SITE_REFRESH_CHECK_NOTIFICATION">DiveTheSite.Setting.enableAutoDiveSiteRefreshCheckNotification</string>
+	<string name="PREF_SETTING_AUTO_REFRESH_DIVE_SITE">DiveTheSite.Setting.autoRefreshDiveSite</string>
+	<string name="PREF_SETTING_ENABLE_NEAR_DIVE_SITE_NOTIFICATION">DiveTheSite.Setting.enableNearDiveSiteNotification</string>
+	<string name="PREF_SETTING_NEAR_DIVE_SITE_DISTANCE">DiveTheSite.Setting.nearDiveSiteDistance</string>
+	
+	<string name="PREF_SETTING_ENABLE_AUTO_DIVE_LOG_REFRESH_CHECK_NOTIFICATION">DiveTheSite.Setting.enableAutoDiveLogRefreshCheckNotification</string>
+	<string name="PREF_SETTING_AUTO_REFRESH_DIVE_LOG">DiveTheSite.Setting.autoRefreshDiveLog</string>
+	
+	<string name="PREF_SETTING_ENABLE_AUTO_SCHEDULED_DIVE_REFRESH_CHECK_NOTIFICATION">DiveTheSite.Setting.enableAutoScheduledDiveRefreshCheckNotification</string>
+	<string name="PREF_SETTING_AUTO_REFRESH_SCHEDULED_DIVE">DiveTheSite.Setting.autoRefreshScheduledDive</string>
+	<string name="PREF_SETTING_ENABLE_NEAR_SCHEDULED_DIVE_NOTIFICATION">DiveTheSite.Setting.enableNearScheduledDiveNotification</string>
+	<string name="PREF_SETTING_NEAR_SCHEDULED_DIVE_DISTANCE">DiveTheSite.Setting.nearScheduledDiveDistance</string>
+	<string name="PREF_SETTING_NEAR_SCHEDULED_DIVE_DAYS_NOTICE">DiveTheSite.Setting.nearScheduledDiveDaysNotice</string>
+	
+</resources>

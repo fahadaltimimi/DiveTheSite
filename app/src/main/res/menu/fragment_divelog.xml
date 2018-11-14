@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:DiveTheSite="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dive_action_menu" >
+
+    <item android:id="@+id/menu_item_divelog_save"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_save"
+        android:title="@string/divelog_save"
+        android:visible="false" />
+    
+    <item android:id="@+id/menu_item_divelog_cancel"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_close_clear_cancel"
+        android:title="@string/cancel"
+        android:visible="false" />
+
+</menu>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/background_activated"
+    android:animateLayoutChanges="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/background_activated" >
+
+        <TextView
+            android:id="@+id/divesite_list_item_titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:layout_gravity="left"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:id="@+id/divesite_list_item_distanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingRight="2dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="@drawable/background_activated" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:focusableInTouchMode="false"
+			android:clickable="false"
+			android:focusable="false"
+			android:orientation="vertical" >
+		    
+		   	<TextView 
+		   	    android:id="@+id/divesite_list_item_locationTextView"
+		   	    android:layout_width="wrap_content"
+		   	    android:layout_height="wrap_content"		   	  		   	    
+		   	    android:focusableInTouchMode="false"
+				android:clickable="false"
+				android:focusable="false"
+		        android:textSize="14sp"
+		        android:paddingLeft="5dp"
+		        android:paddingBottom="5dp" />
+		   	
+		   	<LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"	
+	            android:focusableInTouchMode="false"
+				android:clickable="false"
+				android:focusable="false"            
+	            android:orientation="horizontal"
+	            android:layout_marginBottom="5dp" >
+	            
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isSalt"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_marginLeft="5dp"
+			    	android:contentDescription="@string/divesite_isSalt"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_salt_enabled_icon"
+                    android:focusableInTouchMode="false"
+                    android:clickable="false"
+                    android:focusable="false"
+			    	android:visibility="gone" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isFresh"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_marginLeft="5dp"
+			    	android:contentDescription="@string/divesite_isFresh"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_fresh_enabled_icon"
+                    android:focusableInTouchMode="false"
+                    android:clickable="false"
+                    android:focusable="false"
+			    	android:visibility="gone" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isShore"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_marginLeft="5dp"
+			    	android:contentDescription="@string/divesite_isShore"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_shore_enabled_icon"
+                    android:focusableInTouchMode="false"
+                    android:clickable="false"
+                    android:focusable="false"
+			    	android:visibility="gone" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isBoat"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_marginLeft="5dp"
+			    	android:contentDescription="@string/divesite_isBoat"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_boat_enabled_icon"
+                    android:focusableInTouchMode="false"
+                    android:clickable="false"
+                    android:focusable="false"
+			    	android:visibility="gone" />
+		    	<ImageButton
+			    	android:id="@+id/divesite_indicate_isWreck"
+			    	android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:layout_marginLeft="5dp"
+			    	android:contentDescription="@string/divesite_isWreck"
+			    	android:background="@android:color/transparent"
+			    	android:src="@drawable/divesite_wreck_enabled_icon"
+                    android:focusableInTouchMode="false"
+                    android:clickable="false"
+                    android:focusable="false"
+			    	android:visibility="gone" />
+		    </LinearLayout>
+		   	
+	   	</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_gravity="right"
+            android:gravity="bottom|right"
+            android:animateLayoutChanges="true" >
+
+            <ImageButton
+                android:id="@+id/divesite_indicate_isSaved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:contentDescription="@string/divesite_isSaved"
+                android:background="@android:color/transparent"
+                android:src="@drawable/download_icon"
+                android:focusableInTouchMode="false"
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/divesite_indicate_isPublished"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/divesite_isPublished"
+                android:background="@android:color/transparent"
+                android:src="@drawable/publish_icon"
+                android:focusableInTouchMode="false"
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/divesite_indicate_isUnpublished"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/divesite_isUnpublished"
+                android:background="@android:color/transparent"
+                android:src="@drawable/publish_warning_icon"
+                android:focusableInTouchMode="false"
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/divesite_indicate_refresh_required"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:contentDescription="@string/divesite_requiresRefresh"
+                android:background="@android:color/transparent"
+                android:src="@drawable/requires_refresh_button"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/divesite_indicate_updated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:contentDescription="@string/divesite_updated"
+                android:background="@android:color/transparent"
+                android:src="@drawable/refresh_icon"
+                android:focusableInTouchMode="false"
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/divesite_list_item_showDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingRight="2dp"
+                android:contentDescription="@string/divesite_details"
+                android:background="@android:color/transparent"
+                android:src="@drawable/show_details_divesite_button_local" />
+
+        </LinearLayout>
+	</LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/divesite_list_item_mapView_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true" >
+
+    </FrameLayout>
+</LinearLayout>

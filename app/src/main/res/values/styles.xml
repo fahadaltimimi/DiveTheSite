@@ -1,0 +1,284 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="Theme.DiveTheSiteTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Set AppCompat’s actionBarStyle -->
+        <!-- <item name="actionBarStyle">@style/MyActionBarStyle</item> -->
+
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorPrimary">@color/diveSiteBlue</item>
+        <item name="colorPrimaryDark">@color/diveSiteBlue</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:actionMenuTextColor">@color/White</item>
+        <item name="elevation">0dp</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="DiveSiteShortText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="DiveSiteLongText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+
+    <style name="DiveSiteTableRow">
+        <item name="android:layout_width">match_parent</item>   
+        <item name="android:layout_height">wrap_content</item>   
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">0</item>
+    </style>
+	
+    <style name="ratingbar_divesite" parent="@android:style/Widget.RatingBar">
+	    <item name="android:progressDrawable">@drawable/divesite_rating_list</item>
+	    <item name="android:minHeight">45dip</item>
+	    <item name="android:maxHeight">45dip</item>
+	</style>
+	
+    <style name="RegisterTextView">
+        
+    </style>
+    
+    <style name="RegisterEditText">
+        <item name="android:layout_width">match_parent</item>
+       	<item name="android:layout_height">wrap_content</item>
+       	<item name="android:layout_marginLeft">10dp</item>
+	   	<item name="android:layout_marginRight">10dp</item>
+	   	<item name="android:paddingTop">3dp</item>
+	   	<item name="android:paddingBottom">3dp</item>
+	   	<item name="android:paddingLeft">7dp</item>
+	   	<item name="android:paddingRight">7dp</item>
+       	<item name="android:background">@drawable/textlines</item>
+       	<item name="android:inputType">text</item>
+    </style>
+    
+    <style name="FilterItemLabel">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="FilterItemField">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="DiverProfileFieldNameHeading">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="DiverProfileFieldNameText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="DiverProfileCertFieldNameHeading">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="DiverProfileCertFieldNameText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="DiverProfileFieldLabels">
+        <item name="android:layout_width">wrap_content</item>
+    	<item name="android:layout_height">wrap_content</item>
+    	<item name="android:layout_marginLeft">5dp</item>
+    	<item name="android:textSize">14sp</item>
+    	<item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="NDBCStationDataHeaderText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="NDBCStationDataItemText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="DiveLogItemViewItem">
+        <item name="android:focusableInTouchMode">false</item>
+		<item name="android:clickable">false</item>
+		<item name="android:focusable">false</item>
+        <item name="android:textColor">@color/Black</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="DiveLogItemTextViewHeadingItem" parent="DiveLogItemViewItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="DiveLogItemButtonHeadingItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    
+    <style name="DiveLogItemTextViewSubHeadingItem" parent="DiveLogItemViewItem">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="DiveLogItemTextViewFieldItemLabel" parent="DiveLogItemViewItem">
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <style name="DiveLogItemTextViewFieldItemValue" parent="DiveLogItemViewItem">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="DiveLogItemTextViewSubFieldItem" parent="DiveLogItemViewItem">
+        <item name="android:textSize">12sp</item>
+    </style>
+    									
+    <style name="DiveLogItemButtonField">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+   		<item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="DiveLogItemFieldLabel">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+     <style name="DiveLogItemFieldValue">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="DiverItemViewItem">
+        <item name="android:focusableInTouchMode">false</item>
+		<item name="android:clickable">false</item>
+		<item name="android:focusable">false</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="DiverItemTextViewHeadingItem" parent="DiverItemViewItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DiverItemTextViewSubHeadingItem" parent="DiverItemViewItem">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="DiverItemTextViewFieldItem" parent="DiverItemViewItem">
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="ScheduledDiveItemViewItem">
+        <item name="android:focusableInTouchMode">false</item>
+		<item name="android:clickable">false</item>
+		<item name="android:focusable">false</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+    
+    <style name="ScheduledDiveItemTextViewSubHeadingItem" parent="ScheduledDiveItemViewItem">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="ScheduledDiveItemTextViewFieldItem" parent="ScheduledDiveItemViewItem">
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <style name="ScheduledDiveItemFieldLabel">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="ScheduledDiveItemButtonField">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+   		<item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="ScheduledDiveItemFieldValue">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="ScheduledDiveItemTextViewHeadingItem" parent="ScheduledDiveItemViewItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="HomeItemTitle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:minHeight">0dp</item>
+		<item name="android:minWidth">0dp</item>
+		<item name="android:layout_margin">2dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/home_title_button_selector</item>
+        <item name="android:textColor">@color/White</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="NavBarHeaderTextItem">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="NavBarTextItem">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="NavBarViewStyle">
+    </style>
+
+</resources>

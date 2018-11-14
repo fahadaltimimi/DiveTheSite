@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/background_activated"
+    android:animateLayoutChanges="true" >
+    
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+    	android:padding="5dp"
+        android:background="@drawable/background_activated"
+	    android:orientation="horizontal"
+        android:focusableInTouchMode="false"
+		android:clickable="false"
+		android:focusable="false" >
+	    
+        <LinearLayout
+   	    	android:layout_width="0dp"
+    	    android:layout_height="wrap_content"
+    	    android:layout_weight="1"
+   	        android:layout_gravity="center"
+            android:orientation="vertical"
+            android:focusableInTouchMode="false"
+			android:clickable="false"
+			android:focusable="false" >
+			
+	        <TextView style="@style/ScheduledDiveItemTextViewHeadingItem"
+	    	    android:id="@+id/scheduleddive_item_title"
+	    	    android:layout_width="match_parent"
+	    	    android:layout_height="wrap_content"	    	    
+	    	    android:layout_gravity="center" />
+       	    
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_gravity="center"
+	            android:orientation="horizontal"
+	            android:focusableInTouchMode="false"
+				android:clickable="false"
+				android:focusable="false" >
+	            
+	            <TextView style="@style/ScheduledDiveItemTextViewSubHeadingItem"
+		    	    android:id="@+id/scheduleddive_item_timestamp"
+		    	    android:layout_width="0dp"
+		    	    android:layout_height="wrap_content"
+		    	    android:layout_weight="1"
+		    	    android:layout_gravity="left|center_vertical" />
+	            
+	            <TextView style="@style/ScheduledDiveItemTextViewSubHeadingItem"
+		    	    android:id="@+id/scheduleddive_item_divercount"
+		    	    android:layout_width="wrap_content"
+		    	    android:layout_height="wrap_content"
+		    	    android:layout_gravity="right|center_vertical" />
+	            
+	        </LinearLayout>
+	      
+	    </LinearLayout>
+		
+   	</LinearLayout>
+   	    
+  	<RelativeLayout
+  		android:layout_width="match_parent"
+    	android:layout_height="0dp"
+    	android:layout_weight="1"
+    	android:paddingLeft="5dp"
+    	android:paddingRight="5dp"
+        android:background="@drawable/background_activated"
+        android:focusableInTouchMode="false"
+		android:clickable="false"
+		android:focusable="false" >
+     	    
+  	    <ImageButton style="?android:attr/buttonBarButtonStyle"
+	        android:id="@+id/scheduleddive_item_picture"
+	        android:layout_width="70dp"
+	        android:layout_height="match_parent"
+			android:layout_centerVertical="true"
+	        android:paddingTop="2dp"
+	        android:paddingBottom="2dp"
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/diver_profile"
+	        android:scaleType="centerInside"
+	        android:src="@drawable/logo_symbol" >
+	    </ImageButton>
+  	    
+  		<LinearLayout 
+  		    android:id="@+id/scheduleddive_item_buttons_container"
+			android:layout_width="wrap_content"
+  	        android:layout_height="match_parent"
+			android:layout_centerVertical="true"
+  	        android:layout_alignParentRight="true" >
+		    
+		    <Button style="@style/ScheduledDiveItemButtonField"
+		  	    android:id="@+id/scheduleddive_item_attend"
+	   	        android:layout_width="wrap_content"
+	  	        android:layout_height="match_parent"
+	  	        android:visibility="gone"
+	   	        android:text="@string/scheduleddive_attend_dive" />
+		  	
+		  	<Button style="@style/ScheduledDiveItemButtonField"
+		  	    android:id="@+id/scheduleddive_item_bail"
+	   	        android:layout_width="wrap_content"
+	  	        android:layout_height="match_parent"
+	  	        android:visibility="gone"
+	   	        android:text="@string/scheduleddive_bail_dive" />
+		  	
+		  	<Button style="@style/ScheduledDiveItemButtonField"
+		  	    android:id="@+id/scheduleddive_item_log"
+	   	        android:layout_width="wrap_content"
+	  	        android:layout_height="match_parent"
+	  	        android:visibility="gone"
+	   	        android:text="@string/scheduleddive_log_dive" />
+		    
+		</LinearLayout>
+  		
+  		<HorizontalScrollView 
+  		    android:id="@+id/scheduleddive_item_site_list_container"
+       		android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_centerVertical="true"
+			android:layout_toLeftOf="@id/scheduleddive_item_buttons_container"
+			android:layout_toRightOf="@id/scheduleddive_item_picture"
+			android:fillViewport="true"
+			android:measureAllChildren="false"
+		 	android:focusableInTouchMode="false"
+			android:clickable="false"
+			android:focusable="false" >
+               
+       	    <LinearLayout
+       	        android:id="@+id/scheduleddive_item_site_list"
+       	    	android:layout_width="wrap_content"
+       	    	android:layout_height="wrap_content"
+       	    	android:orientation="horizontal"
+			 	android:focusableInTouchMode="false"
+				android:clickable="false"
+				android:focusable="false" >
+       	    </LinearLayout>
+        	    
+       	</HorizontalScrollView>
+  		
+  	</RelativeLayout>  	
+  	
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+        android:background="@drawable/background_activated"
+	    android:orientation="horizontal"
+	    android:animateLayoutChanges="true"
+        android:focusableInTouchMode="false"
+		android:clickable="false"
+		android:focusable="false" >
+	  		       	
+   	    <TextView style="@style/ScheduledDiveItemTextViewFieldItem"
+   	        android:id="@+id/scheduleddive_comment"
+   	        android:layout_width="0dp"
+   	        android:layout_weight="1"
+   	        android:layout_height="wrap_content" />
+	       	    
+   	    <ImageButton
+	    	android:id="@+id/scheduleddive_indicate_isSaved"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:paddingRight="10dp"
+	    	android:contentDescription="@string/divesite_isSaved"
+	    	android:background="@android:color/transparent"
+	    	android:src="@drawable/download_icon"
+	    	android:visibility="gone"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" />
+           
+        <ImageButton
+	    	android:id="@+id/scheduleddive_indicate_isPublished"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:contentDescription="@string/divesite_isPublished"
+	    	android:background="@android:color/transparent"
+	    	android:src="@drawable/publish_icon"
+	    	android:visibility="gone"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" />
+           
+        <ImageButton
+	    	android:id="@+id/scheduleddive_indicate_isUnpublished"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:contentDescription="@string/divesite_isUnpublished"
+	    	android:background="@android:color/transparent"
+	    	android:src="@drawable/publish_warning_icon"
+	    	android:visibility="gone"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" />
+      	    
+        <ImageButton
+	    	android:id="@+id/scheduleddive_indicate_refresh_required"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:paddingLeft="10dp"
+	    	android:contentDescription="@string/divelog_requiresRefresh"
+	    	android:background="@android:color/transparent"
+	    	android:src="@drawable/requires_refresh_button"
+	    	android:visibility="gone" />
+           
+        <ImageButton
+	    	android:id="@+id/scheduleddive_indicate_updated"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:paddingLeft="10dp"
+	    	android:contentDescription="@string/divesite_updated"
+    		android:background="@android:color/transparent"
+	    	android:src="@drawable/refresh_icon"
+	    	android:visibility="gone"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" />
+	            
+	</LinearLayout>
+	
+    <LinearLayout
+        android:id="@+id/scheduleddive_item_secondary_view"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+        android:background="@drawable/background_activated"
+        android:paddingLeft="5dp"
+	    android:paddingTop="10dp"
+	    android:orientation="vertical"
+	    android:visibility="gone" >
+        
+        <HorizontalScrollView 
+       		android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:fillViewport="true"
+			android:measureAllChildren="false"
+		 	android:focusableInTouchMode="false"
+			android:clickable="false"
+			android:focusable="false" >
+               
+       	    <LinearLayout
+       	        android:id="@+id/scheduleddive_item_user_list"
+       	    	android:layout_width="wrap_content"
+       	    	android:layout_height="wrap_content"
+       	    	android:orientation="horizontal"
+			 	android:focusableInTouchMode="false"
+				android:clickable="false"
+				android:focusable="false" >   
+       	    </LinearLayout>
+        	    
+       	</HorizontalScrollView>
+
+        <FrameLayout
+            android:id="@+id/scheduleddive_list_item_mapView_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true" >
+        </FrameLayout>
+	    
+    </LinearLayout>
+    
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:DiveTheSite="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dive_action_menu" >
+
+    <item android:id="@+id/menu_item_publish_divesite"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_upload"
+        android:title="@string/publish" />
+    
+    <item android:id="@+id/menu_item_share_divesite"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_share"
+        android:title="@string/share" />
+    
+    <item android:id="@+id/menu_item_delete_local_divesite"
+        DiveTheSite:showAsAction="never"
+        android:icon="@drawable/ic_menu_delete"
+        android:title="@string/delete" />
+    
+    <item android:id="@+id/menu_item_archive_local_divesite"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_archive"
+        android:title="@string/archive_divesites" />
+    
+    <item android:id="@+id/menu_item_unarchive_local_divesite"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_unarchive"
+        android:title="@string/unarchive_divesites"
+        android:visible="false" />
+</menu>

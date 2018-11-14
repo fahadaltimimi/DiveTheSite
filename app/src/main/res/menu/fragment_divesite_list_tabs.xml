@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:DiveTheSite="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dive_action_menu" >
+    	
+    <item android:id="@+id/menu_item_select_divesite"
+        DiveTheSite:showAsAction="always"
+        android:title="@string/select" />
+    
+    <item android:id="@+id/menu_item_refresh_divesites"
+        DiveTheSite:showAsAction="always"
+    	android:icon="@drawable/ic_menu_refresh"
+    	android:title="@string/refresh" /> 
+    
+    <item android:id="@+id/menu_item_add_divesite"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_add"
+        android:title="@string/divesite_add_divesite" />
+     
+    <item android:id="@+id/menu_item_filter_divesite_list"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_sort_by_size"
+        android:title="@string/filter_list_title" />
+</menu>

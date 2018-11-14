@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" 
+    android:animateLayoutChanges="true" 
+	android:background="@color/defaultBackground"
+	android:showDividers="middle"
+    android:divider="?android:dividerHorizontal"
+    android:paddingTop="?attr/actionBarSize" >
+    
+    <LinearLayout
+        android:id="@+id/diver_list_filter_notification_container"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+		android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+	    android:orientation="horizontal"
+	    android:background="@color/filterNotificationBackground"
+	    android:visibility="gone" >
+	    
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"	 
+	        android:textColor="@color/filterNotificationTextColor"
+	        android:textStyle="bold"
+	        android:text="@string/active_filter" /> 
+	        
+	    <TextView
+	        android:id="@+id/diver_list_filter_notification"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="5dp"
+	        android:layout_weight="1"
+	        android:textColor="@color/filterNotificationTextColor" />
+	    
+	</LinearLayout>
+    
+    <LinearLayout
+	    android:id="@+id/diver_list_filter"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+	    android:orientation="vertical"
+	    android:visibility="gone" >
+	    
+        <LinearLayout
+            android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:orientation="horizontal" >
+	    	
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="16sp"
+	        	android:text="@string/filter_name" />    
+	        <EditText
+		        android:id="@+id/diver_list_filter_name"
+		        android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:inputType="text"
+	            android:textSize="16sp"
+	            android:hint="@string/filter_list_all" />
+		</LinearLayout>
+	 
+        <LinearLayout
+            android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:orientation="horizontal"
+            android:paddingBottom="10dp" >
+
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="16sp"
+	        	android:text="@string/filter_country" />    
+	        <Spinner
+		        android:id="@+id/diver_list_filter_country"
+		        android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1" />
+		</LinearLayout>
+		
+        <LinearLayout
+            android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:orientation="horizontal" >
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="0"
+	            android:textSize="16sp"
+	        	android:text="@string/filter_state" />    
+	        <EditText
+		        android:id="@+id/diver_list_filter_state"
+		        android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:inputType="text"
+	            android:textSize="16sp"
+	            android:hint="@string/filter_list_all" />
+	        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="0"
+	            android:textSize="16sp"
+	        	android:text="@string/filter_city" />    
+	        <EditText
+		        android:id="@+id/diver_list_filter_city"
+		        android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:inputType="text"
+	            android:textSize="16sp"
+	            android:hint="@string/filter_list_all" />
+		</LinearLayout>
+		
+        <LinearLayout style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+	        
+	        <Button style="?android:attr/buttonBarButtonStyle"
+		       	android:id="@+id/diver_list_clear_filter"
+		       	android:layout_width="0dp"
+		       	android:layout_height="wrap_content"
+		       	android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@color/Black"
+		       	android:text="@string/filter_list_clear_filter" />
+	        
+	        <Button style="?android:attr/buttonBarButtonStyle"
+		       	android:id="@+id/diver_list_close_filter"
+		       	android:layout_width="0dp"
+		       	android:layout_height="wrap_content"
+		       	android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@color/Black"
+		       	android:text="@string/filter_list_close" />
+	   </LinearLayout>
+	</LinearLayout>
+   
+	<ListView
+	    android:id="@android:id/list"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" >
+	</ListView>
+</LinearLayout>

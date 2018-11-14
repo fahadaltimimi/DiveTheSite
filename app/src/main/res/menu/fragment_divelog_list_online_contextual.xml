@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:DiveTheSite="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dive_action_menu" >
+
+    <item android:id="@+id/menu_item_save_divelog"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_save"
+        android:title="@string/save" /> 
+        
+    <item android:id="@+id/menu_item_share_divelog"
+        DiveTheSite:showAsAction="always"
+        android:icon="@drawable/ic_menu_share"
+        android:title="@string/share" />
+</menu>

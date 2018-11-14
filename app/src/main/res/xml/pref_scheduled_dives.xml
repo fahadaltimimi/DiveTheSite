@@ -1,0 +1,40 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/PREF_SETTING_ENABLE_AUTO_SCHEDULED_DIVE_REFRESH_CHECK_NOTIFICATION"
+        android:title="@string/pref_title_scheduled_dive_check_refresh"
+        android:summary="@string/pref_title_scheduled_dive_check_refresh_summary" />
+    
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/PREF_SETTING_AUTO_REFRESH_SCHEDULED_DIVE"
+        android:title="@string/pref_title_scheduled_dive_auto_refresh"
+        android:summary="@string/pref_title_scheduled_dive_auto_refresh_summary" />
+    
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/PREF_SETTING_ENABLE_NEAR_SCHEDULED_DIVE_NOTIFICATION"
+        android:title="@string/pref_title_scheduled_dive_check_nearby"
+        android:summary="@string/pref_title_scheduled_dive_check_nearby_summary" />
+    
+    <EditTextPreference
+        android:defaultValue="100"
+        android:inputType="number"
+        android:key="@string/PREF_SETTING_NEAR_SCHEDULED_DIVE_DISTANCE"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_scheduled_dive_nearby_distance"
+        android:summary="@string/pref_title_scheduled_dive_nearby_distance_summary" />
+    
+    <EditTextPreference
+        android:defaultValue="10"
+        android:inputType="number"
+        android:key="@string/PREF_SETTING_NEAR_SCHEDULED_DIVE_DAYS_NOTICE"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_scheduled_dive_days_notice" />
+
+</PreferenceScreen>

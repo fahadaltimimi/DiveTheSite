@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/background_activated"
+    android:animateLayoutChanges="true" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|center_vertical" >
+
+        <ImageButton style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/diver_item_picture"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/diver_profile"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_symbol" >
+        </ImageButton>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="left|center_vertical"
+        android:orientation="vertical"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:focusable="false" >
+
+        <TextView style="@style/DiverItemTextViewHeadingItem"
+            android:id="@+id/diver_item_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" >
+        </TextView>
+
+        <TextView style="@style/DiverItemTextViewSubHeadingItem"
+            android:id="@+id/diver_item_fullname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" >
+        </TextView>
+
+        <TextView style="@style/DiverItemTextViewFieldItem"
+            android:id="@+id/diver_item_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" >
+        </TextView>
+
+        <TextView style="@style/DiverItemTextViewFieldItem"
+            android:id="@+id/diver_item_primary_certification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:focusable="false" >
+        </TextView>
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center"
+        android:gravity="right"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:focusable="false" >
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:gravity="top|right" >
+
+            <TextView style="@style/DiverItemTextViewFieldItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="@string/diver_list_item_log_count" >
+            </TextView>
+
+            <TextView style="@style/DiverItemTextViewFieldItem"
+                android:id="@+id/diver_item_log_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginLeft="2dp" >
+            </TextView>
+        </TableRow>
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:gravity="top|right" >
+
+            <TextView style="@style/DiverItemTextViewFieldItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="@string/diver_list_item_submitted_dive_site_count" >
+            </TextView>
+
+            <TextView style="@style/DiverItemTextViewFieldItem"
+                android:id="@+id/diver_item_sites_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginLeft="2dp" >
+            </TextView>
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

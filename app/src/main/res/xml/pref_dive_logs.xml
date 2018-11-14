@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/PREF_SETTING_ENABLE_AUTO_DIVE_LOG_REFRESH_CHECK_NOTIFICATION"
+        android:title="@string/pref_title_dive_log_check_refresh"
+        android:summary="@string/pref_title_dive_log_check_refresh_summary" />
+    
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/PREF_SETTING_AUTO_REFRESH_DIVE_LOG"
+        android:title="@string/pref_title_dive_log_auto_refresh"
+        android:summary="@string/pref_title_dive_log_auto_refresh_summary" />
+
+</PreferenceScreen>
