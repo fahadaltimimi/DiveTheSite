@@ -458,9 +458,6 @@
     <string name="nav_logout">Logout</string>
     <string name="nav_settings">Settings</string>
 
-	<string name="title_location_permission">Location Required</string>
-	<string name="text_location_permission">DiveTheSite would like to know your location to show you information relevant to you</string>
-
     <string-array name="nav_drawer_items">
         <item>Home</item>
         <item>Divers</item>

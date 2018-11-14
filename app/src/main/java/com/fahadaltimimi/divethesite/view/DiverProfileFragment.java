@@ -215,11 +215,11 @@ public class DiverProfileFragment extends DiverPageFragment {
 		getActivity().getWindowManager().getDefaultDisplay()
 				.getMetrics(metrics);
 		int height = metrics.heightPixels;
-		mDiverProfileImage = view.findViewById(R.id.diver_profile_image);
+		mDiverProfileImage = (ImageView) view.findViewById(R.id.diver_profile_image);
 		mDiverProfileImage.getLayoutParams().height = height / 3;
 
-		mDiverName = view.findViewById(R.id.diver_name);
-		mDiverEmail = view.findViewById(R.id.diver_email);
+		mDiverName = (TextView) view.findViewById(R.id.diver_name);
+		mDiverEmail = (TextView) view.findViewById(R.id.diver_email);
 		mDiverEmail.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -234,15 +234,15 @@ public class DiverProfileFragment extends DiverPageFragment {
 			}
 		});
 
-		mDiverCityStateCountry = view
+		mDiverCityStateCountry = (TextView) view
 				.findViewById(R.id.diver_city_state_country);
-		mDiverBio = view.findViewById(R.id.diver_bio);
+		mDiverBio = (TextView) view.findViewById(R.id.diver_bio);
 
 		// Edit Fields
 		mDiverInfoEditContainer = view
 				.findViewById(R.id.diver_info_edit_container);
 
-		mDiverProfileImageEdit = view
+		mDiverProfileImageEdit = (ImageButton) view
 				.findViewById(R.id.diver_profile_image_edit);
 		mDiverProfileImageEdit.setOnClickListener(new View.OnClickListener() {
 
@@ -259,7 +259,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 			}
 		});
 
-		mDiverProfileNoImageEdit = view
+		mDiverProfileNoImageEdit = (Button) view
 				.findViewById(R.id.diver_profile_no_image_edit);
 		mDiverProfileNoImageEdit.setOnClickListener(new View.OnClickListener() {
 
@@ -276,23 +276,23 @@ public class DiverProfileFragment extends DiverPageFragment {
 			}
 		});
 
-		mDiverUsernameEdit = view
+		mDiverUsernameEdit = (EditText) view
 				.findViewById(R.id.diver_username_edit);
-		mDiverFirstNameEdit = view
+		mDiverFirstNameEdit = (EditText) view
 				.findViewById(R.id.diver_first_name_edit);
-		mDiverLastNameEdit = view
+		mDiverLastNameEdit = (EditText) view
 				.findViewById(R.id.diver_last_name_edit);
-		mDiverEmailEdit = view.findViewById(R.id.diver_email_edit);
-		mDiverCityEdit = view.findViewById(R.id.diver_city_edit);
-		mDiverProvinceEdit = view
+		mDiverEmailEdit = (EditText) view.findViewById(R.id.diver_email_edit);
+		mDiverCityEdit = (EditText) view.findViewById(R.id.diver_city_edit);
+		mDiverProvinceEdit = (EditText) view
 				.findViewById(R.id.diver_province_edit);
-		mDiverCountryEdit = view
+		mDiverCountryEdit = (EditText) view
 				.findViewById(R.id.diver_country_edit);
-		mDiverBioEdit = view.findViewById(R.id.diver_bio_edit);
+		mDiverBioEdit = (EditText) view.findViewById(R.id.diver_bio_edit);
 
 		// Certifications List
-        mDiverCertsLabel = view.findViewById(R.id.diver_certs_list_label);
-		mDiverCerts = view.findViewById(R.id.diver_certs_list);
+        mDiverCertsLabel = (TextView) view.findViewById(R.id.diver_certs_list_label);
+		mDiverCerts = (LinearLayout) view.findViewById(R.id.diver_certs_list);
 
 		mDiverInfoViewContainer.setVisibility(View.GONE);
 		mDiverInfoEditContainer.setVisibility(View.GONE);
@@ -306,9 +306,9 @@ public class DiverProfileFragment extends DiverPageFragment {
 
         mMapContainer = view.findViewById(R.id.mapHost);
 
-        mLogMapLabel = view.findViewById(R.id.diver_profile_log_map_label);
+        mLogMapLabel = (TextView) view.findViewById(R.id.diver_profile_log_map_label);
 
-        mDiverInfoUnavailable = view.findViewById(R.id.diver_no_info_available);
+        mDiverInfoUnavailable = (TextView) view.findViewById(R.id.diver_no_info_available);
 
         // Set height of map view to screen's size minus title bar after 2
         // second delay
@@ -640,7 +640,7 @@ public class DiverProfileFragment extends DiverPageFragment {
                             DiverCertification certificationSave = new DiverCertification(c);
                             view.setTag(certificationSave);
 
-                            EditText diverCertTitle = view.findViewById(R.id.diver_cert_title);
+                            EditText diverCertTitle = (EditText) view.findViewById(R.id.diver_cert_title);
                             diverCertTitle.setText(c.getCertifTitle());
                             diverCertTitle.addTextChangedListener(new CertificationFieldTextWatcher(
                                     view, diverCertTitle) {
@@ -658,7 +658,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
                             });
 
-                            EditText diverCertDate = view
+                            EditText diverCertDate = (EditText) view
                                     .findViewById(R.id.diver_cert_date);
                             diverCertDate.setText(c.getCertifDate());
                             diverCertDate.addTextChangedListener(new CertificationFieldTextWatcher(
@@ -677,7 +677,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
                             });
 
-                            EditText diverCertLocation = view.findViewById(R.id.diver_cert_location);
+                            EditText diverCertLocation = (EditText) view.findViewById(R.id.diver_cert_location);
                             diverCertLocation.setText(c.getCertifLocation());
                             diverCertLocation.addTextChangedListener(new CertificationFieldTextWatcher(
                                     view, diverCertLocation) {
@@ -695,7 +695,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
                             });
 
-                            EditText diverCertNumber = view.findViewById(R.id.diver_cert_number);
+                            EditText diverCertNumber = (EditText) view.findViewById(R.id.diver_cert_number);
                             diverCertNumber.setText(c.getCertifNumber());
                             diverCertNumber.addTextChangedListener(new CertificationFieldTextWatcher(
                                     view, diverCertNumber) {
@@ -711,7 +711,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
                             });
 
-                            CheckBox diverCertPrimary = view.findViewById(R.id.diver_cert_primary);
+                            CheckBox diverCertPrimary = (CheckBox) view.findViewById(R.id.diver_cert_primary);
                             diverCertPrimary.setTag(view);
                             diverCertPrimary.setChecked(c.getPrimary());
                             diverCertPrimary.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -730,7 +730,7 @@ public class DiverProfileFragment extends DiverPageFragment {
                                             if (c2.getLocalId() != c.getLocalId() ||
                                                     c2.getOnlineId() != c.getOnlineId()) {
                                                 CheckBox diverCertPrimary =
-														certView.findViewById(R.id.diver_cert_primary);
+                                                        (CheckBox) certView.findViewById(R.id.diver_cert_primary);
                                                 diverCertPrimary.setChecked(false);
                                             }
                                         }
@@ -745,7 +745,7 @@ public class DiverProfileFragment extends DiverPageFragment {
                             View view = layoutInflater.inflate(
                                     R.layout.diver_cert_list_item, null);
 
-                            TextView diverCertTitle = view
+                            TextView diverCertTitle = (TextView) view
                                     .findViewById(R.id.diver_cert_title);
                             diverCertTitle.setText(c.getCertifTitle());
                             if (diverCertTitle.getText().toString().trim().isEmpty()) {
@@ -754,7 +754,7 @@ public class DiverProfileFragment extends DiverPageFragment {
                                 diverCertTitle.setVisibility(View.VISIBLE);
                             }
 
-                            TextView diverCertDate = view
+                            TextView diverCertDate = (TextView) view
                                     .findViewById(R.id.diver_cert_date);
                             diverCertDate.setText(c.getCertifDate());
                             if (diverCertDate.getText().toString().trim().isEmpty()) {
@@ -763,7 +763,7 @@ public class DiverProfileFragment extends DiverPageFragment {
                                 diverCertDate.setVisibility(View.VISIBLE);
                             }
 
-                            TextView diverCertLocation = view
+                            TextView diverCertLocation = (TextView) view
                                     .findViewById(R.id.diver_cert_location);
                             diverCertLocation.setText(c.getCertifLocation());
                             if (diverCertLocation.getText().toString().trim().isEmpty()) {
@@ -772,7 +772,7 @@ public class DiverProfileFragment extends DiverPageFragment {
                                 diverCertLocation.setVisibility(View.VISIBLE);
                             }
 
-                            TextView diverCertNumber = view.findViewById(R.id.diver_cert_number);
+                            TextView diverCertNumber = (TextView) view.findViewById(R.id.diver_cert_number);
                             diverCertNumber.setText(c.getCertifNumber());
                             if (diverCertNumber.getText().toString().trim().isEmpty()) {
                                 diverCertNumber.setVisibility(View.GONE);
@@ -823,7 +823,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 		cert.setCertifUserId(mDiver.getOnlineId());
 		view.setTag(cert);
 
-		EditText diverCertTitle = view.findViewById(R.id.diver_cert_title);
+		EditText diverCertTitle = (EditText) view.findViewById(R.id.diver_cert_title);
 		diverCertTitle.addTextChangedListener(new CertificationFieldTextWatcher(view,
 						diverCertTitle) {
 
@@ -839,7 +839,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
 				});
 
-		EditText diverCertDate = view.findViewById(R.id.diver_cert_date);
+		EditText diverCertDate = (EditText) view.findViewById(R.id.diver_cert_date);
 		diverCertDate.addTextChangedListener(new CertificationFieldTextWatcher(view, diverCertDate) {
 
 			@Override
@@ -854,7 +854,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
 		});
 
-		EditText diverCertLocation = view.findViewById(R.id.diver_cert_location);
+		EditText diverCertLocation = (EditText) view.findViewById(R.id.diver_cert_location);
 		diverCertLocation.addTextChangedListener(new CertificationFieldTextWatcher(view,
 						diverCertLocation) {
 
@@ -870,7 +870,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
 				});
 
-		EditText diverCertNumber = view.findViewById(R.id.diver_cert_number);
+		EditText diverCertNumber = (EditText) view.findViewById(R.id.diver_cert_number);
 		diverCertNumber.addTextChangedListener(new CertificationFieldTextWatcher(view,
 						diverCertNumber) {
 
@@ -886,7 +886,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
 				});
 		
-		CheckBox diverCertPrimary = view.findViewById(R.id.diver_cert_primary);
+		CheckBox diverCertPrimary = (CheckBox) view.findViewById(R.id.diver_cert_primary);
 		diverCertPrimary.setTag(view);
 		diverCertPrimary.setChecked(cert.getPrimary());
 		diverCertPrimary.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -904,8 +904,8 @@ public class DiverProfileFragment extends DiverPageFragment {
 						
 						if (c2.getLocalId() != c.getLocalId() || 
 							c2.getOnlineId() != c.getOnlineId()) {
-							CheckBox diverCertPrimary =
-									certView.findViewById(R.id.diver_cert_primary);
+							CheckBox diverCertPrimary = 
+								(CheckBox) certView.findViewById(R.id.diver_cert_primary);
 							diverCertPrimary.setChecked(false);
 						}
 					}

@@ -195,7 +195,7 @@ public class DiveActivity extends SingleFragmentActivity {
                                         getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE)
                                                 .edit()
                                                 .remove(DiveSiteManager.PREF_CURRENT_USER_ID)
-                                                .apply();
+                                                .commit();
                                         Intent i = new Intent(DiveActivity.this, LoginActivity.class);
                                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(i);

@@ -34,13 +34,13 @@ public class DiveLogListTabFragment extends DiveListTabFragment {
 
         tabView = createTabView(getActivity(), getResources().getString(R.string.online));
         tabHost.addTab(tabHost.newTabSpec(getResources().getString(R.string.online)).setIndicator(tabView), DiveLogListOnlineFragment.class, getArguments());
-        mOnlineSubtitle1Label = tabView.findViewById(R.id.tabSubTitleText1);
-        mOnlineSubtitle2Label = tabView.findViewById(R.id.tabSubTitleText2);
+        mOnlineSubtitle1Label = (TextView) tabView.findViewById(R.id.tabSubTitleText1);
+        mOnlineSubtitle2Label = (TextView) tabView.findViewById(R.id.tabSubTitleText2);
 
         tabView = createTabView(getActivity(), getResources().getString(R.string.saved));
         tabHost.addTab(tabHost.newTabSpec(getResources().getString(R.string.saved)).setIndicator(tabView), DiveLogListLocalFragment.class, getArguments());
-        mLocalSubtitle1Label = tabView.findViewById(R.id.tabSubTitleText1);
-        mLocalSubtitle2Label = tabView.findViewById(R.id.tabSubTitleText2);
+        mLocalSubtitle1Label = (TextView) tabView.findViewById(R.id.tabSubTitleText1);
+        mLocalSubtitle2Label = (TextView) tabView.findViewById(R.id.tabSubTitleText2);
 
         // Set Local SubTitle right away with item count
         Long diverID = getArguments().getLong(DiverTabFragment.ARG_DIVER_ID);

@@ -426,10 +426,10 @@ public class LoginActivity extends AppCompatActivity {
 		mProgressDialog.dismiss();
 
 		mPrefs.edit().putLong(DiveSiteManager.PREF_CURRENT_USER_ID, userId)
-				.apply();
+				.commit();
 		mPrefs.edit()
 				.putString(DiveSiteManager.PREF_CURRENT_USERNAME, username)
-				.apply();
+				.commit();
 
 		Intent i = new Intent(LoginActivity.this, HomeActivity.class);
 		

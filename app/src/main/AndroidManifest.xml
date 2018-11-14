@@ -77,7 +77,6 @@
             android:name=".view.SettingsActivity"
             android:label="@string/settings_title" >
         </activity>
-        <activity android:name=".view.DiveActivity" />
 
         <service android:name=".controller.PollService" />
 

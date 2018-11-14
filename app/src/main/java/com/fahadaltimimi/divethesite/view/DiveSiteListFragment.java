@@ -193,12 +193,12 @@ public class DiveSiteListFragment extends ListFragment implements
 						mPrefs.edit()
 								.putString(
 										DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE,
-										filterTitle).apply();
+										filterTitle).commit();
 					} else {
 						mPrefs.edit()
 								.putString(
 										DiveSiteManager.PREF_FILTER_DIVESITE_TITLE,
-										filterTitle).apply();
+										filterTitle).commit();
 					}
 
 					filterDiveSiteList();
@@ -237,7 +237,7 @@ public class DiveSiteListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY,
-									filterCountry).apply();
+									filterCountry).commit();
 
 					filterDiveSiteList();
 				}
@@ -263,7 +263,7 @@ public class DiveSiteListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_DIVESITE_STATE,
-									filterState).apply();
+									filterState).commit();
 					filterDiveSiteList();
 				}
 			}
@@ -293,7 +293,7 @@ public class DiveSiteListFragment extends ListFragment implements
 					mPrefs.edit()
 							.putString(
 									DiveSiteManager.PREF_FILTER_DIVESITE_CITY,
-									filterCity).apply();
+									filterCity).commit();
 					filterDiveSiteList();
 				}
 			}
@@ -323,7 +323,7 @@ public class DiveSiteListFragment extends ListFragment implements
 							mPrefs.edit()
 									.putBoolean(
 											DiveSiteManager.PREF_FILTER_DIVESITE_SHOW_PUBLISHED,
-											isChecked).apply();
+											isChecked).commit();
 							filterDiveSiteList();
 						}
 					}
@@ -343,7 +343,7 @@ public class DiveSiteListFragment extends ListFragment implements
 							mPrefs.edit()
 									.putBoolean(
 											DiveSiteManager.PREF_FILTER_DIVESITE_SHOW_UNPUBLISHED,
-											isChecked).apply();
+											isChecked).commit();
 							filterDiveSiteList();
 						}
 					}
