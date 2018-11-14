@@ -10,7 +10,6 @@ import java.util.HashMap;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -20,10 +19,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,13 +83,11 @@ public class HomeFragment extends Fragment implements
 
 	public static final String TAG = "HomeFragment";
 
-	private static int LIST_ITEMS_BUFFER_MULTIPLIER = 3;
-	private static double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
-	private static int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
+	private int LIST_ITEMS_BUFFER_MULTIPLIER = 3;
+	private double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
+	private int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
 	
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
-
-	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 	
 	private int mSitesAdditionalItemsToLoad = 0;
 	private int mScheduledDivesAdditionalItemsToLoad = 0;
@@ -181,8 +176,6 @@ public class HomeFragment extends Fragment implements
     			DiveSiteManager.getIntegerPreferenceFromString(getActivity(), 
     				getActivity().getResources().getString(R.string.PREF_SETTING_INTERVAL_CHECK_UPDATES_SEC),
 					PollService.POLL_INTERVAL_DEFAULT_SECONDS));
-
-		checkLocationPermission();
 	}
 	
 	@Override
@@ -338,11 +331,7 @@ public class HomeFragment extends Fragment implements
 
 				if (mGoogleApiClient.isConnected() && mLocationEnabled) {
 					mForceLocationDataRefresh = true;
-					if (ContextCompat.checkSelfPermission(getActivity(),
-							Manifest.permission.ACCESS_FINE_LOCATION)
-							== PackageManager.PERMISSION_GRANTED) {
-						LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, HomeFragment.this);
-					}
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, HomeFragment.this);
 		    	} else {
 					refreshOnlineDiveSites();
 					refreshOnlineDiveSitesMap();
@@ -680,7 +669,7 @@ public class HomeFragment extends Fragment implements
 		getActivity()
 			.getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE)
 			.edit()
-			.putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).apply();
+			.putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).commit();
 		
 		Intent i = new Intent(getActivity(), DiveSiteActivity.class);
 		i.putExtra(DiveSiteManager.EXTRA_DIVE_SITE, diveSite);
@@ -1512,12 +1501,8 @@ public class HomeFragment extends Fragment implements
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationRequest.setInterval(1000); // Update location every second
 
-			if (ContextCompat.checkSelfPermission(getActivity(),
-					Manifest.permission.ACCESS_FINE_LOCATION)
-					== PackageManager.PERMISSION_GRANTED) {
-				LocationServices.FusedLocationApi.requestLocationUpdates(
-						mGoogleApiClient, mLocationRequest, this);
-			}
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
         }
     }
 
@@ -2250,72 +2235,5 @@ public class HomeFragment extends Fragment implements
 	public void onConfigurationChanged(Configuration newConfig) {
 	  super.onConfigurationChanged(newConfig);
 	}
-
-	public boolean checkLocationPermission() {
-		if (ContextCompat.checkSelfPermission(getActivity(),
-				Manifest.permission.ACCESS_FINE_LOCATION)
-				!= PackageManager.PERMISSION_GRANTED) {
-
-			// Should we show an explanation?
-			if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-					Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-				// Show an explanation to the user *asynchronously* -- don't block
-				// this thread waiting for the user's response! After the user
-				// sees the explanation, try again to request the permission.
-				new AlertDialog.Builder(getActivity())
-						.setTitle(R.string.title_location_permission)
-						.setMessage(R.string.text_location_permission)
-						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-								// Prompt the user once explanation has been shown
-								ActivityCompat.requestPermissions(getActivity(),
-										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-										MY_PERMISSIONS_REQUEST_LOCATION);
-							}
-						})
-						.create()
-						.show();
-
-
-			} else {
-				// No explanation needed, we can request the permission.
-
-			}
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode,
-										   String permissions[], int[] grantResults) {
-		switch (requestCode) {
-			case MY_PERMISSIONS_REQUEST_LOCATION: {
-				// If request is cancelled, the result arrays are empty.
-				if (grantResults.length > 0
-						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-					// Permission was granted, do the
-					// location-related task you need to do.
-					if (ContextCompat.checkSelfPermission(getActivity(),
-							Manifest.permission.ACCESS_FINE_LOCATION)
-							== PackageManager.PERMISSION_GRANTED) {
-
-					}
-
-				} else {
-
-					// Permission denied, disable the
-					// functionality that depends on this permission.
-
-				}
-				return;
-			}
-
-		}
-	}
-
+	
 }

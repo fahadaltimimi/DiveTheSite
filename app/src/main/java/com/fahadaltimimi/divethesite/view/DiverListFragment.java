@@ -143,7 +143,7 @@ public class DiverListFragment extends ListFragment {
 
 		getActivity().setTitle(R.string.diverListTitle);
 
-		mListView = v.findViewById(android.R.id.list);
+		mListView = (ListView) v.findViewById(android.R.id.list);		
 		mListView.setOnScrollListener(new OnScrollListener(){
 
 			@Override
@@ -167,25 +167,25 @@ public class DiverListFragment extends ListFragment {
 			
 		});
 		
-		mFilterNotificationContainer = v
+		mFilterNotificationContainer = (LinearLayout) v
 				.findViewById(R.id.diver_list_filter_notification_container);
-		mFilterNotification = v
+		mFilterNotification = (TextView) v
 				.findViewById(R.id.diver_list_filter_notification);
 
 		// Initialize filter panel
-		mListFilter = v.findViewById(R.id.diver_list_filter);
+		mListFilter = (LinearLayout) v.findViewById(R.id.diver_list_filter);
 
-		mFilterName = mListFilter
+		mFilterName = (EditText) mListFilter
 				.findViewById(R.id.diver_list_filter_name);
-		mFilterCountry = mListFilter
+		mFilterCountry = (Spinner) mListFilter
 				.findViewById(R.id.diver_list_filter_country);
-		mFilterState = mListFilter
+		mFilterState = (EditText) mListFilter
 				.findViewById(R.id.diver_list_filter_state);
-		mFilterCity = mListFilter
+		mFilterCity = (EditText) mListFilter
 				.findViewById(R.id.diver_list_filter_city);
-		mFilterClear = mListFilter
+		mFilterClear = (Button) mListFilter
 				.findViewById(R.id.diver_list_clear_filter);
-		mFilterClose = mListFilter
+		mFilterClose = (Button) mListFilter
 				.findViewById(R.id.diver_list_close_filter);
 
 		mFilterName.setText(mPrefs.getString(
@@ -198,7 +198,7 @@ public class DiverListFragment extends ListFragment {
 				String mFilterName = c.toString().trim();
 				mPrefs.edit()
 						.putString(DiveSiteManager.PREF_FILTER_DIVER_NAME,
-								mFilterName).apply();
+								mFilterName).commit();
 
 				filterDiverList();
 			}
@@ -258,7 +258,7 @@ public class DiverListFragment extends ListFragment {
 				}
 				mPrefs.edit()
 						.putString(DiveSiteManager.PREF_FILTER_DIVER_COUNTRY,
-								filterCountry).apply();
+								filterCountry).commit();
 
 				filterDiverList();
 			}
@@ -280,7 +280,7 @@ public class DiverListFragment extends ListFragment {
 				String filterState = c.toString().trim();
 				mPrefs.edit()
 						.putString(DiveSiteManager.PREF_FILTER_DIVER_STATE,
-								filterState).apply();
+								filterState).commit();
 
 				filterDiverList();
 			}
@@ -307,7 +307,7 @@ public class DiverListFragment extends ListFragment {
 				String mFilterCity = c.toString().trim();
 				mPrefs.edit()
 						.putString(DiveSiteManager.PREF_FILTER_DIVER_CITY,
-								mFilterCity).apply();
+								mFilterCity).commit();
 
 				filterDiverList();
 			}
@@ -612,7 +612,7 @@ public class DiverListFragment extends ListFragment {
 
 	private int getDiverIndex(Diver diver) {
 		int index = -1;
-		for (int i = 0; i < getListAdapter().getCount(); i++) {
+		for (int i = 0; i < ((DiverAdapter) getListAdapter()).getCount(); i++) {
 			if (((DiverAdapter) getListAdapter()).getItem(i).getOnlineId() == diver
 					.getOnlineId()) {
 				index = i;
@@ -624,7 +624,7 @@ public class DiverListFragment extends ListFragment {
 
 	private Diver getDiverOnlineId(Diver diver) {
 		Diver diverDuplicate = null;
-		for (int i = 0; i < getListAdapter().getCount(); i++) {
+		for (int i = 0; i < ((DiverAdapter) getListAdapter()).getCount(); i++) {
 			if (((DiverAdapter) getListAdapter()).getItem(i).getOnlineId() == diver
 					.getOnlineId()) {
 				diverDuplicate = ((DiverAdapter) getListAdapter()).getItem(i);
@@ -745,7 +745,7 @@ public class DiverListFragment extends ListFragment {
 					R.color.itemPublished));
 
 			// Set profile image here
-			ImageButton diverProfileImage = view
+			ImageButton diverProfileImage = (ImageButton) view
 					.findViewById(R.id.diver_item_picture);
 			diverProfileImage.setImageResource(R.drawable.logo_symbol);
 			diverProfileImage.setTag(diver);
@@ -782,27 +782,27 @@ public class DiverListFragment extends ListFragment {
 			});
 
 			// Diver Username
-			TextView diverUsername = view
+			TextView diverUsername = (TextView) view
 					.findViewById(R.id.diver_item_username);
 			diverUsername.setText(diver.getUsername());
 
 			// Diver Fullname
-			TextView diverName = view
+			TextView diverName = (TextView) view
 					.findViewById(R.id.diver_item_fullname);
 			diverName.setText(diver.getFirstName() + " " + diver.getLastName());
 
 			// Diver Location
-			TextView diverLocation = view
+			TextView diverLocation = (TextView) view
 					.findViewById(R.id.diver_item_location);
 			diverLocation.setText(diver.getFullLocation());
 
 			// Diver's Log Count
-			TextView diverLogCount = view
+			TextView diverLogCount = (TextView) view
 					.findViewById(R.id.diver_item_log_count);
 			diverLogCount.setText(String.valueOf(diver.getLogCount()));
 
 			// Diver's Dive Site Submitted Count
-			TextView diverDiveSiteSubmittedCount = view
+			TextView diverDiveSiteSubmittedCount = (TextView) view
 					.findViewById(R.id.diver_item_sites_count);
 			diverDiveSiteSubmittedCount.setText(String.valueOf(diver
 					.getDiveSiteSubmittedCount()));
@@ -811,7 +811,7 @@ public class DiverListFragment extends ListFragment {
 			for (int i = 0; i < diver.getCertifications().size(); i++) {
 				DiverCertification cert = diver.getCertifications().get(i);
 				// Diver's Primary Certification (last one added)
-				TextView diverPrimaryCertification = view
+				TextView diverPrimaryCertification = (TextView) view
 						.findViewById(R.id.diver_item_primary_certification);
 
 				if (cert.getPrimary()) {

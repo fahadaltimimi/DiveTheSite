@@ -617,7 +617,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 						mPrefs.edit()
 								.putBoolean(
 										DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-										false).apply();
+										false).commit();
 
 						DiveSite diveSite = (DiveSite) v.getTag();
 						Intent intent = new Intent(getActivity(),

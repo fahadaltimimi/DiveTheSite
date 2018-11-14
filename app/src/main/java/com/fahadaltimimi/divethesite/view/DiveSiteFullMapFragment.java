@@ -428,7 +428,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 									mPrefs.edit()
 											.putBoolean(
 													DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-													true).apply();
+													true).commit();
 
 									// Add a new dive site with the selected markers
 									// location and switch to Dive Site view
@@ -444,7 +444,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 									mPrefs.edit()
 											.putBoolean(
 													DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-													false).apply();
+													false).commit();
 
 									// Display Dive Site info
 									Object[] diveSites = mVisibleDiveSiteMarkers

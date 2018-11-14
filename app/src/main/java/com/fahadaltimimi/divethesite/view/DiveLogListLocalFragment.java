@@ -1,5 +1,6 @@
 package com.fahadaltimimi.divethesite.view;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,8 @@ import com.fahadaltimimi.divethesite.model.DiveLog;
 import com.fahadaltimimi.divethesite.model.DiveLogBuddy;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 
 public class DiveLogListLocalFragment extends DiveLogListFragment implements
 		LoaderCallbacks<Cursor> {
@@ -708,7 +711,7 @@ public class DiveLogListLocalFragment extends DiveLogListFragment implements
 				@Override
 				public void onClick(View v) {
 					// Open the dive site with edit mode set to false
-					mPrefs.edit().putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).apply();
+					mPrefs.edit().putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).commit();
 
 					DiveSite diveSite = (DiveSite) v.getTag();
 					Intent intent = new Intent(getActivity(), DiveSiteActivity.class);

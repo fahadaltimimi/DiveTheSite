@@ -221,7 +221,7 @@ public class ScheduledDiveFragment extends Fragment {
 						.putString(
 								DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE,
 								mScheduledDiveSetDiveSite.getText().toString())
-						.apply();
+						.commit();
 
 				Intent intent = new Intent(ScheduledDiveFragment.this.getActivity(),
 						DiveSiteListActivity.class);
@@ -290,7 +290,7 @@ public class ScheduledDiveFragment extends Fragment {
 														.edit()
 														.putBoolean(
 																DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-																true).apply();
+																true).commit();
 												Intent intent = new Intent(
 														ScheduledDiveFragment.this
 																.getActivity(),
