@@ -182,7 +182,7 @@ public class DiveLogFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_divelog, parent, false);
 
-		mDiveLogSetDiveSite = view
+		mDiveLogSetDiveSite = (EditText) view
 				.findViewById(R.id.divelog_set_divesite);
 		if (mDiveLog.getDiveSite() != null) {
 			mDiveLogSetDiveSite.setText(mDiveLog.getDiveSite().getName());
@@ -213,14 +213,14 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogDiveSiteSearch = view
+		mDiveLogDiveSiteSearch = (ImageButton) view
 				.findViewById(R.id.divelog_divesite_search);
 		mDiveLogDiveSiteSearch.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// Open Dive Site List with filter set to text entered
-				mPrefs.edit().putString(DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, mDiveLogSetDiveSite.getText().toString().trim()).apply();
+				mPrefs.edit().putString(DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, mDiveLogSetDiveSite.getText().toString().trim()).commit();
 
 				Intent intent = new Intent(DiveLogFragment.this.getActivity(),
 						DiveSiteListActivity.class);
@@ -243,7 +243,7 @@ public class DiveLogFragment extends Fragment {
 		mDiveLogTimestampTimeDialog = new TimePickerDialog(getActivity(),
 				new PickDiveLogTimestampTime(), 0, 0, true);
 
-		mDiveLogSetTimestamp = view
+		mDiveLogSetTimestamp = (Button) view
 				.findViewById(R.id.divelog_set_timestamp);
 		mDiveLogSetTimestamp.setOnClickListener(new View.OnClickListener() {
 
@@ -262,7 +262,7 @@ public class DiveLogFragment extends Fragment {
 			}
 		});
 
-		mDiveLogSetRating = view
+		mDiveLogSetRating = (RatingBar) view
 				.findViewById(R.id.divelog_set_rating);
 		mDiveLogSetRating
 				.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
@@ -275,7 +275,7 @@ public class DiveLogFragment extends Fragment {
 
 				});
 
-		mDiveLogSetDiveTime = view
+		mDiveLogSetDiveTime = (EditText) view
 				.findViewById(R.id.divelog_set_dive_time);
 		mDiveLogSetDiveTime.addTextChangedListener(new TextWatcher() {
 
@@ -300,7 +300,7 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetStartPressure = view
+		mDiveLogSetStartPressure = (Spinner) view
 				.findViewById(R.id.divelog_set_start_pressure);
 		mDiveLogSetStartPressure
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -321,7 +321,7 @@ public class DiveLogFragment extends Fragment {
 
 				});
 
-		mDiveLogSetEndPressure = view
+		mDiveLogSetEndPressure = (Spinner) view
 				.findViewById(R.id.divelog_set_end_pressure);
 		mDiveLogSetEndPressure
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -342,7 +342,7 @@ public class DiveLogFragment extends Fragment {
 
 				});
 
-        mDiveLogSetStartAirValue = view.findViewById(R.id.divelog_set_start_air);
+        mDiveLogSetStartAirValue = (EditText) view.findViewById(R.id.divelog_set_start_air);
         mDiveLogSetStartAirValue.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -366,9 +366,9 @@ public class DiveLogFragment extends Fragment {
 
         });
 
-        mDiveLogSetStartAirUnits = view.findViewById(R.id.divelog_set_start_air_units);
+        mDiveLogSetStartAirUnits = (Spinner) view.findViewById(R.id.divelog_set_start_air_units);
 
-        mDiveLogSetEndAirValue = view.findViewById(R.id.divelog_set_end_air);
+        mDiveLogSetEndAirValue = (EditText) view.findViewById(R.id.divelog_set_end_air);
         mDiveLogSetEndAirValue.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -392,9 +392,9 @@ public class DiveLogFragment extends Fragment {
 
         });
 
-        mDiveLogSetEndAirUnits = view.findViewById(R.id.divelog_set_end_air_units);
+        mDiveLogSetEndAirUnits = (Spinner) view.findViewById(R.id.divelog_set_end_air_units);
 
-		mDiveLogSetMaxDepthValue = view.findViewById(R.id.divelog_set_max_depth);
+		mDiveLogSetMaxDepthValue = (EditText) view.findViewById(R.id.divelog_set_max_depth);
 		mDiveLogSetMaxDepthValue.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -419,10 +419,10 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetMaxDepthUnits = view
+		mDiveLogSetMaxDepthUnits = (Spinner) view
 				.findViewById(R.id.divelog_set_max_depth_units);
 
-		mDiveLogSetAvgDepthValue = view
+		mDiveLogSetAvgDepthValue = (EditText) view
 				.findViewById(R.id.divelog_set_avg_depth);
 		mDiveLogSetAvgDepthValue.addTextChangedListener(new TextWatcher() {
 
@@ -448,7 +448,7 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetGasMixValue = view
+		mDiveLogSetGasMixValue = (EditText) view
 				.findViewById(R.id.divelog_set_gas_mix);
 		mDiveLogSetGasMixValue.addTextChangedListener(new TextWatcher() {
 
@@ -469,10 +469,10 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetAvgDepthUnits = view
+		mDiveLogSetAvgDepthUnits = (Spinner) view
 				.findViewById(R.id.divelog_set_avg_depth_units);
 
-		mDiveLogSetAirTempValue = view
+		mDiveLogSetAirTempValue = (EditText) view
 				.findViewById(R.id.divelog_set_air_temp);
 		mDiveLogSetAirTempValue.addTextChangedListener(new TextWatcher() {
 
@@ -498,10 +498,10 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetAirTempUnits = view
+		mDiveLogSetAirTempUnits = (Spinner) view
 				.findViewById(R.id.divelog_set_air_temp_units);
 
-		mDiveLogSetWaterTempValue = view
+		mDiveLogSetWaterTempValue = (EditText) view
 				.findViewById(R.id.divelog_set_water_temp);
 		mDiveLogSetWaterTempValue.addTextChangedListener(new TextWatcher() {
 
@@ -527,10 +527,10 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetWaterTempUnits = view
+		mDiveLogSetWaterTempUnits = (Spinner) view
 				.findViewById(R.id.divelog_set_water_temp_units);
 
-		mDiveLogSetVisibilityValue = view
+		mDiveLogSetVisibilityValue = (EditText) view
 				.findViewById(R.id.divelog_set_visibility);
 		mDiveLogSetVisibilityValue.addTextChangedListener(new TextWatcher() {
 
@@ -556,10 +556,10 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetVisibilityUnits = view
+		mDiveLogSetVisibilityUnits = (Spinner) view
 				.findViewById(R.id.divelog_set_visibility_units);
 
-		mDiveLogSetSurfaceTime = view
+		mDiveLogSetSurfaceTime = (EditText) view
 				.findViewById(R.id.divelog_set_surface);
 		mDiveLogSetSurfaceTime.addTextChangedListener(new TextWatcher() {
 
@@ -584,7 +584,7 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetWeightsValue = view
+		mDiveLogSetWeightsValue = (EditText) view
 				.findViewById(R.id.divelog_set_weights);
 		mDiveLogSetWeightsValue.addTextChangedListener(new TextWatcher() {
 
@@ -610,10 +610,10 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetWeightsUnits = view
+		mDiveLogSetWeightsUnits = (Spinner) view
 				.findViewById(R.id.divelog_set_weights_units);
 
-		mDiveLogSetComments = view
+		mDiveLogSetComments = (EditText) view
 				.findViewById(R.id.divelog_set_comments);
 		mDiveLogSetComments.addTextChangedListener(new TextWatcher() {
 
@@ -634,10 +634,10 @@ public class DiveLogFragment extends Fragment {
 
 		});
 
-		mDiveLogSetBuddies = view
+		mDiveLogSetBuddies = (LinearLayout) view
 				.findViewById(R.id.divelog_set_buddy_list);
 
-		mDiveLogAddBuddy = view
+		mDiveLogAddBuddy = (ImageButton) view
 				.findViewById(R.id.divelog_buddy_add);
 		mDiveLogAddBuddy.setOnClickListener(new View.OnClickListener() {
 
@@ -649,10 +649,10 @@ public class DiveLogFragment extends Fragment {
 			}
 		});
 
-		mDiveLogSetStops = view
+		mDiveLogSetStops = (LinearLayout) view
 				.findViewById(R.id.divelog_set_stop_list);
 
-		mDiveLogAddStop = view
+		mDiveLogAddStop = (ImageButton) view
 				.findViewById(R.id.divelog_stop_add);
 		mDiveLogAddStop.setOnClickListener(new View.OnClickListener() {
 
@@ -664,7 +664,7 @@ public class DiveLogFragment extends Fragment {
 			}
 		});
 
-		mDiveLogDayIndicator = view
+		mDiveLogDayIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_day_indicator);
 		mDiveLogDayIndicator.setOnClickListener(new View.OnClickListener() {
 
@@ -677,7 +677,7 @@ public class DiveLogFragment extends Fragment {
 			}
 		});
 
-		mDiveLogNightIndicator = view
+		mDiveLogNightIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_night_indicator);
 		mDiveLogNightIndicator.setOnClickListener(new View.OnClickListener() {
 
@@ -690,7 +690,7 @@ public class DiveLogFragment extends Fragment {
 			}
 		});
 
-		mDiveLogPhotoEnabledIndicator = view
+		mDiveLogPhotoEnabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_photo_enabled_indicator);
 		mDiveLogPhotoEnabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -705,7 +705,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogPhotoDisabledIndicator = view
+		mDiveLogPhotoDisabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_photo_disabled_indicator);
 		mDiveLogPhotoDisabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -720,7 +720,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogDeepEnabledIndicator = view
+		mDiveLogDeepEnabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_deep_enabled_indicator);
 		mDiveLogDeepEnabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -735,7 +735,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogDeepDisabledIndicator = view
+		mDiveLogDeepDisabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_deep_disabled_indicator);
 		mDiveLogDeepDisabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -750,7 +750,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogIceEnabledIndicator = view
+		mDiveLogIceEnabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_ice_enabled_indicator);
 		mDiveLogIceEnabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -765,7 +765,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogIceDisabledIndicator = view
+		mDiveLogIceDisabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_ice_disabled_indicator);
 		mDiveLogIceDisabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -779,7 +779,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogCourseEnabledIndicator = view
+		mDiveLogCourseEnabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_course_enabled_indicator);
 		mDiveLogCourseEnabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -794,7 +794,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogCourseDisabledIndicator = view
+		mDiveLogCourseDisabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_course_disabled_indicator);
 		mDiveLogCourseDisabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -810,7 +810,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogInstructorEnabledIndicator = view
+		mDiveLogInstructorEnabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_instructor_enabled_indicator);
 		mDiveLogInstructorEnabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -826,7 +826,7 @@ public class DiveLogFragment extends Fragment {
 					}
 				});
 
-		mDiveLogInstructorDisabledIndicator = view
+		mDiveLogInstructorDisabledIndicator = (ImageButton) view
 				.findViewById(R.id.divelog_item_set_instructor_disabled_indicator);
 		mDiveLogInstructorDisabledIndicator
 				.setOnClickListener(new View.OnClickListener() {
@@ -855,7 +855,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetStartAirValue.setText(String.valueOf(mDiveLog.getStartAir().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_STARTAIRUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_STARTAIRUNITS, newUnits).commit();
             }
 
             @Override
@@ -874,7 +874,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetEndAirValue.setText(String.valueOf(mDiveLog.getEndAir().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_ENDAIRUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_ENDAIRUNITS, newUnits).commit();
             }
 
             @Override
@@ -893,7 +893,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetMaxDepthValue.setText(String.valueOf(mDiveLog.getMaxDepth().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_MAXDEPTHUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_MAXDEPTHUNITS, newUnits).commit();
             }
 
             @Override
@@ -913,7 +913,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetAvgDepthValue.setText(String.valueOf(mDiveLog.getAverageDepth().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_AVGDEPTHUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_AVGDEPTHUNITS, newUnits).commit();
             }
 
             @Override
@@ -932,7 +932,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetAirTempValue.setText(String.valueOf(mDiveLog.getSurfaceTemperature().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_AIRTEMPUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_AIRTEMPUNITS, newUnits).commit();
             }
 
             @Override
@@ -951,7 +951,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetWaterTempValue.setText(String.valueOf(mDiveLog.getWaterTemperature().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_WATERTEMPUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_WATERTEMPUNITS, newUnits).commit();
             }
 
             @Override
@@ -970,7 +970,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetVisibilityValue.setText(String.valueOf(mDiveLog.getVisibility().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_VISIBILITYUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_VISIBILITYUNITS, newUnits).commit();
             }
 
             @Override
@@ -989,7 +989,7 @@ public class DiveLogFragment extends Fragment {
                     mDiveLogSetWeightsValue.setText(String.valueOf(mDiveLog.getWeightsRequired().getValue()));
                 }
 
-                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_WEIGHTUNITS, newUnits).apply();
+                mPrefs.edit().putString(DiveSiteManager.PREF_DIVELOG_WEIGHTUNITS, newUnits).commit();
             }
 
             @Override
@@ -1041,7 +1041,7 @@ public class DiveLogFragment extends Fragment {
 			DiveLogBuddy buddy = (DiveLogBuddy) mLastSelectedBuddyView.getTag();
 			buddy.setDiverOnlineId(diverOnlineID);
 
-			EditText diveLogBuddyUsername = mLastSelectedBuddyView
+			EditText diveLogBuddyUsername = (EditText) mLastSelectedBuddyView
 					.findViewById(R.id.divelog_buddy_name_edit);
 			diveLogBuddyUsername.setText(diverUsername);
 
@@ -1058,7 +1058,7 @@ public class DiveLogFragment extends Fragment {
 						.getString(c
 								.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
 
-				EditText diveLogBuddyUsername = mLastSelectedBuddyView
+				EditText diveLogBuddyUsername = (EditText) mLastSelectedBuddyView
 						.findViewById(R.id.divelog_buddy_name_edit);
 				diveLogBuddyUsername.setText(name);
 			}
@@ -1136,7 +1136,7 @@ public class DiveLogFragment extends Fragment {
 											mDiveLog.setDiveSiteLocalId(diveSites.get(item).getLocalId());
 
 											// Open Dive Site in Edit Mode
-											mPrefs.edit().putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, true).apply();
+											mPrefs.edit().putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, true).commit();
 											Intent intent = new Intent(
 													DiveLogFragment.this
 															.getActivity(),
@@ -1382,7 +1382,7 @@ public class DiveLogFragment extends Fragment {
             view.setTag(diveLogBuddy);
             mDiveLogSetBuddies.addView(view);
 
-            ImageButton diverRemove = view
+            ImageButton diverRemove = (ImageButton) view
                     .findViewById(R.id.divelog_buddy_remove);
             diverRemove.setOnClickListener(new View.OnClickListener() {
 
@@ -1401,7 +1401,7 @@ public class DiveLogFragment extends Fragment {
                 }
             });
 
-            ImageButton diverButtonOptions = view
+            ImageButton diverButtonOptions = (ImageButton) view
                     .findViewById(R.id.divelog_buddy_button);
             mDiveLogBuddyImages.put(diveLogBuddy, diverButtonOptions);
             diverButtonOptions.setOnClickListener(new View.OnClickListener() {
@@ -1541,7 +1541,7 @@ public class DiveLogFragment extends Fragment {
             }
 
             final EditText diverUsernameEdit =
-					view.findViewById(R.id.divelog_buddy_name_edit);
+                    (EditText) view.findViewById(R.id.divelog_buddy_name_edit);
             diverUsernameEdit.setText(diveLogBuddy.getDiverUsername());
             diverUsernameEdit.addTextChangedListener(new TextWatcher() {
 
@@ -1583,7 +1583,7 @@ public class DiveLogFragment extends Fragment {
             mDiveLogSetStops.addView(view);
             view.setTag(diveLogStop);
 
-            ImageButton stopRemove = view
+            ImageButton stopRemove = (ImageButton) view
                     .findViewById(R.id.divelog_stop_remove);
             stopRemove.setOnClickListener(new View.OnClickListener() {
 
@@ -1602,7 +1602,7 @@ public class DiveLogFragment extends Fragment {
                 }
             });
 
-            final EditText stopTimeEdit = view
+            final EditText stopTimeEdit = (EditText) view
                     .findViewById(R.id.divelog_stop_time);
             stopTimeEdit.setText(String.valueOf(diveLogStop.getTime()));
             stopTimeEdit.addTextChangedListener(new TextWatcher() {
@@ -1632,7 +1632,7 @@ public class DiveLogFragment extends Fragment {
 
             });
 
-            final EditText stopTimeDepthValue = view
+            final EditText stopTimeDepthValue = (EditText) view
                     .findViewById(R.id.divelog_stop_depth);
             stopTimeDepthValue.setText(String.valueOf(diveLogStop.getDepth().getValue()));
             stopTimeDepthValue.addTextChangedListener(new TextWatcher() {
@@ -1662,7 +1662,7 @@ public class DiveLogFragment extends Fragment {
 
             });
 
-            final Spinner stopTimeDepthUnits = view
+            final Spinner stopTimeDepthUnits = (Spinner) view
                     .findViewById(R.id.divelog_stop_depth_units);
             stopTimeDepthUnits.setSelection(FindPositionInArray(diveLogStop.getDepth().getUnits(),
                     getResources().getStringArray(R.array.units_depth_array)));
