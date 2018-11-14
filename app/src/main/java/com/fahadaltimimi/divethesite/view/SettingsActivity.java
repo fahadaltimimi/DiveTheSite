@@ -193,7 +193,7 @@ public class SettingsActivity extends PreferenceActivity {
 				
 				PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
 					.edit().putLong(DiveSiteManager.PREF_SETTING_LAST_NEAR_SCHEDULED_DIVE_CHECK_TIMESTAMP, 
-							(lastNearScheduledDiveCheck).getTime()).commit();
+							(lastNearScheduledDiveCheck).getTime()).apply();
 				
 				// Append (days) to summary
 				preference.setSummary(newValue.toString() + " days");
@@ -469,7 +469,7 @@ public class SettingsActivity extends PreferenceActivity {
 					
 					PreferenceManager.getDefaultSharedPreferences(ScheduledDivePreferenceFragment.this.getActivity())
 						.edit().putLong(DiveSiteManager.PREF_SETTING_LAST_NEAR_SCHEDULED_DIVE_CHECK_TIMESTAMP, 
-								(lastNearScheduledDiveCheck).getTime()).commit();
+								(lastNearScheduledDiveCheck).getTime()).apply();
 					
 					// Append (days) to summary
 					preference.setSummary(newValue.toString() + " days");

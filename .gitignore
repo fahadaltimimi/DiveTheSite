@@ -4,3 +4,5 @@
 /.idea/
 .idea/.name
 app/src/main/res/values/secrets.xml
+app/app.iml
+app/app.iml
