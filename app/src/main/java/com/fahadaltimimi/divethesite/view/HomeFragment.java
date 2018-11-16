@@ -110,9 +110,9 @@ public class HomeFragment extends Fragment implements
 	protected DiveSiteOnlineDatabaseLink mDiveSitesMapOnlineDatabase;
 	protected DiveSiteOnlineDatabaseLink mScheduledDivesOnlineDatabase;
 	protected DiveSiteOnlineDatabaseLink mNDBCOnlineDatabase;
-	protected HashMap<Long, DiveSiteOnlineDatabaseLink> mNDBCDataOnlineDatabase = 
-			new HashMap<Long, DiveSiteOnlineDatabaseLink>();
-    protected ArrayList<Long> mRefreshNDBCStationIDData = new ArrayList<Long>();
+	protected HashMap<Long, DiveSiteOnlineDatabaseLink> mNDBCDataOnlineDatabase =
+			new HashMap<>();
+    protected ArrayList<Long> mRefreshNDBCStationIDData = new ArrayList<>();
 	
 	private DiveSiteManager mDiveSiteManager;
 	
@@ -121,13 +121,11 @@ public class HomeFragment extends Fragment implements
 	private boolean mLocationEnabled;
 	
 	private Button mWelcomeTitle;
-	
-	private Button mProfileTitle;
+
 	private View mProfileProgress;
 	private ImageButton mProfileImageButton;
 	private Button mProfileNoImageButton;
 
-	private Button mDiverListTitle;
 	private Button mDiverList;
 	private Button mRefresh;
 	
@@ -138,20 +136,19 @@ public class HomeFragment extends Fragment implements
 	
 	private Button mMapTitle;
 	private MapView mMapView;
-	private GoogleMap mGoogleMap;
+	private GoogleMap mGoogleMap = null;
 	
 	private Button mScheduledDiveTitle;
 	private View mScheduledDiveListProgress;
 	private ListView mScheduledDiveListView;
 	private Button mScheduledDiveListNoDataLabel;
-	
-	private Button mNDBCListTitle;
+
 	private View mNDBCListProgress;
 	private ListView mNDBCListView;
 	private Button mNDBCListNoDataLabel;
 	
-	private HashMap<DiveSite, Marker> mDiveSiteMarkers = new HashMap<DiveSite, Marker>();
-	private HashMap<NDBCStation, Marker> mNDBCMarkers = new HashMap<NDBCStation, Marker>();
+	private HashMap<DiveSite, Marker> mDiveSiteMarkers = new HashMap<>();
+	private HashMap<NDBCStation, Marker> mNDBCMarkers = new HashMap<>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
@@ -425,79 +422,11 @@ public class HomeFragment extends Fragment implements
                 }
             }
 		});
- 
+
 	    mMapTitle = view.findViewById(R.id.home_item_map_title);
-	    mMapView = view.findViewById(R.id.home_item_mapView);
-	    
-	    mMapTitle.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), DiveSiteFullMapActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-			}
-		});
-	    mMapView.onCreate(savedInstanceState);
-	    mMapView.onResume();
-		mMapView.getMapAsync(new OnMapReadyCallback() {
-			@Override
-			public void onMapReady(GoogleMap googleMap) {
-				mGoogleMap = googleMap;
-				if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-						== PackageManager.PERMISSION_GRANTED) {
-					mGoogleMap.setMyLocationEnabled(true);
-					mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
-
-					if (getLocation() != null) {
-						CameraPosition cameraPosition = new CameraPosition.Builder()
-								.target(new LatLng(getLocation().getLatitude(),
-										getLocation().getLongitude())).zoom(7).build();
-						mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-					}
-
-					mGoogleMap.setOnMapClickListener(new OnMapClickListener() {
-
-						@Override
-						public void onMapClick(LatLng arg0) {
-							Intent i = new Intent(getActivity(), DiveSiteFullMapActivity.class);
-							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(i);
-						}
-
-					});
-
-					mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
-
-						@Override
-						public void onCameraChange(CameraPosition cameraPosition) {
-							// Only refresh dive sites and station data if we're zoomed in
-							// enough, otherwise display message
-							if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
-								refreshOnlineDiveSitesMap();
-							}
-						}
-
-					});
-					mGoogleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-								@Override
-								public void onInfoWindowClick(Marker marker) {
-									// Display Dive Site info
-									Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
-									for (int i = 0; i < diveSites.length; i++) {
-										if (mDiveSiteMarkers.get(diveSites[i]).equals(marker)) {
-											// Dive Site found
-											openDiveSite((DiveSite) diveSites[i]);
-											break;
-										}
-									}
-								}
-							});
-				}
-			}
-		});
-
-        MapsInitializer.initialize(getActivity());
+        mMapView = view.findViewById(R.id.home_item_mapView);
+        mMapView.onCreate(savedInstanceState);
+        initializeMap();
 		
 	    mScheduledDiveTitle = view.findViewById(R.id.home_item_scheduled_dive_title);
 	    mScheduledDiveListProgress = view.findViewById(R.id.home_item_scheduled_list_progress_bar);
@@ -571,13 +500,12 @@ public class HomeFragment extends Fragment implements
 			}
 			
 		});
-		
-	    mNDBCListTitle = view.findViewById(R.id.home_item_ndbc_title);
+
 	    mNDBCListProgress = view.findViewById(R.id.home_item_ndbc_list_progress_bar);
 	    mNDBCListNoDataLabel = view.findViewById(R.id.home_item_ndbc_list_no_data);
 	    
 	    // Retain list view adapter if available
-	    ListAdapter ndbcAdapter = null;
+	    ListAdapter ndbcAdapter;
 	    boolean showNDBCList = false;
 	    if (mNDBCListView != null) {
 	    	ndbcAdapter = mNDBCListView.getAdapter();
@@ -1428,7 +1356,9 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onPause() {
-        mMapView.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
         super.onPause();
     }
 	
@@ -1443,7 +1373,9 @@ public class HomeFragment extends Fragment implements
 	@Override
 	public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        if (mMapView != null && mGoogleMap != null) {
+			mMapView.onResume();
+		}
 
         if (refreshAdditionalDiveSiteListRequired()) {
             refreshOnlineDiveSites();
@@ -1568,42 +1500,44 @@ public class HomeFragment extends Fragment implements
      */
     @Override
     public void onLocationChanged(Location location) {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if (mGoogleMap != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
-    	if (mDiveSiteManager.getLastLocation() == null || 
-    		mForceLocationDataRefresh ||
-    		(Math.abs(location.getLatitude() - mDiveSiteManager.getLastLocation().getLatitude()) > DiveSiteManager.LOCATION_COMPARE_EPSILON) ||
-    		(Math.abs(location.getLongitude() - mDiveSiteManager.getLastLocation().getLongitude()) > DiveSiteManager.LOCATION_COMPARE_EPSILON)) {
-	    	
-    		mDiveSiteManager.saveLastLocation(location);
-    		
-    		mForceLocationDataRefresh = false;
-    		
-	    	CameraPosition cameraPosition = new CameraPosition.Builder()
-					.target(new LatLng(location.getLatitude(), 
-									   location.getLongitude())).zoom(7).build();
-			mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-			
-	    	// Clear and refresh lists
-            mDiveSiteListView.setVisibility(View.GONE);
-            mDiveSiteListNoDataLabel.setVisibility(View.GONE);
-            mDiveSiteListProgress.setVisibility(View.VISIBLE);
-            mScheduledDiveListView.setVisibility(View.GONE);
-            mScheduledDiveListNoDataLabel.setVisibility(View.GONE);
-            mScheduledDiveListProgress.setVisibility(View.VISIBLE);
-            mNDBCListView.setVisibility(View.GONE);
-            mNDBCListProgress.setVisibility(View.VISIBLE);
-            mNDBCListNoDataLabel.setVisibility(View.GONE);
+            if (mDiveSiteManager.getLastLocation() == null ||
+                    mForceLocationDataRefresh ||
+                    (Math.abs(location.getLatitude() - mDiveSiteManager.getLastLocation().getLatitude()) > DiveSiteManager.LOCATION_COMPARE_EPSILON) ||
+                    (Math.abs(location.getLongitude() - mDiveSiteManager.getLastLocation().getLongitude()) > DiveSiteManager.LOCATION_COMPARE_EPSILON)) {
 
-            clearDiveSites();
-            clearScheduledDives();
-            clearNDBCs();
+                mDiveSiteManager.saveLastLocation(location);
 
-			refreshOnlineDiveSites();
-			refreshOnlineDiveSitesMap();
-			refreshOnlineScheduledDives();
-			refreshOnlineNDBCs();
-    	}
+                mForceLocationDataRefresh = false;
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(location.getLatitude(),
+                                location.getLongitude())).zoom(7).build();
+                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                // Clear and refresh lists
+                mDiveSiteListView.setVisibility(View.GONE);
+                mDiveSiteListNoDataLabel.setVisibility(View.GONE);
+                mDiveSiteListProgress.setVisibility(View.VISIBLE);
+                mScheduledDiveListView.setVisibility(View.GONE);
+                mScheduledDiveListNoDataLabel.setVisibility(View.GONE);
+                mScheduledDiveListProgress.setVisibility(View.VISIBLE);
+                mNDBCListView.setVisibility(View.GONE);
+                mNDBCListProgress.setVisibility(View.VISIBLE);
+                mNDBCListNoDataLabel.setVisibility(View.GONE);
+
+                clearDiveSites();
+                clearScheduledDives();
+                clearNDBCs();
+
+                refreshOnlineDiveSites();
+                refreshOnlineDiveSitesMap();
+                refreshOnlineScheduledDives();
+                refreshOnlineNDBCs();
+            }
+        }
     }
     	
 	private class DiveSiteAdapter extends ArrayAdapter<DiveSite> {
@@ -2281,7 +2215,9 @@ public class HomeFragment extends Fragment implements
 
 			} else {
 				// No explanation needed, we can request the permission.
-
+				ActivityCompat.requestPermissions(getActivity(),
+					new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_LOCATION);
 			}
 			return false;
 		} else {
@@ -2298,24 +2234,89 @@ public class HomeFragment extends Fragment implements
 				if (grantResults.length > 0
 						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-					// Permission was granted, do the
-					// location-related task you need to do.
-					if (ContextCompat.checkSelfPermission(getActivity(),
-							Manifest.permission.ACCESS_FINE_LOCATION)
-							== PackageManager.PERMISSION_GRANTED) {
-
-					}
+					initializeMap();
 
 				} else {
 
-					// Permission denied, disable the
-					// functionality that depends on this permission.
-
+					// Permission denied
 				}
-				return;
 			}
-
 		}
 	}
 
+	private void initializeMap() {
+        // Permission was granted
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMapView.onResume();
+            mMapTitle.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), DiveSiteFullMapActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }
+            });
+            mMapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mGoogleMap = googleMap;
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        mGoogleMap.setMyLocationEnabled(true);
+                        mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
+
+                        if (getLocation() != null) {
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(getLocation().getLatitude(),
+                                            getLocation().getLongitude())).zoom(7).build();
+                            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }
+
+                        mGoogleMap.setOnMapClickListener(new OnMapClickListener() {
+
+                            @Override
+                            public void onMapClick(LatLng arg0) {
+                                Intent i = new Intent(getActivity(), DiveSiteFullMapActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
+                            }
+
+                        });
+
+                        mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+                            @Override
+                            public void onCameraChange(CameraPosition cameraPosition) {
+                                // Only refresh dive sites and station data if we're zoomed in
+                                // enough, otherwise display message
+                                if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
+                                    refreshOnlineDiveSitesMap();
+                                }
+                            }
+
+                        });
+                        mGoogleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(Marker marker) {
+                                // Display Dive Site info
+                                Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
+                                for (int i = 0; i < diveSites.length; i++) {
+                                    if (mDiveSiteMarkers.get(diveSites[i]).equals(marker)) {
+                                        // Dive Site found
+                                        openDiveSite((DiveSite) diveSites[i]);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            MapsInitializer.initialize(getActivity());
+        }
+    }
 }
