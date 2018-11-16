@@ -168,7 +168,7 @@ public class JSONParser {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     is, "iso-8859-1"), 8);
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null && !mCancelled) {
                 if (!line.trim().isEmpty() && mJSONParserListener != null) {
 

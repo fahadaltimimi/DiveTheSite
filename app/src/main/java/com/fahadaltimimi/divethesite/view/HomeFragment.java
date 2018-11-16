@@ -119,27 +119,20 @@ public class HomeFragment extends Fragment implements
 	private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
 	private boolean mLocationEnabled;
-	
-	private Button mWelcomeTitle;
 
-	private View mProfileProgress;
+    private View mProfileProgress;
 	private ImageButton mProfileImageButton;
 	private Button mProfileNoImageButton;
 
-	private Button mDiverList;
-	private Button mRefresh;
-	
-	private Button mDiveSiteListTitle;
-	private View mDiveSiteListProgress;
+    private View mDiveSiteListProgress;
 	private ListView mDiveSiteListView;
     private Button mDiveSiteListNoDataLabel;
 	
 	private Button mMapTitle;
 	private MapView mMapView;
 	private GoogleMap mGoogleMap = null;
-	
-	private Button mScheduledDiveTitle;
-	private View mScheduledDiveListProgress;
+
+    private View mScheduledDiveListProgress;
 	private ListView mScheduledDiveListView;
 	private Button mScheduledDiveListNoDataLabel;
 
@@ -188,14 +181,16 @@ public class HomeFragment extends Fragment implements
 		View view = inflater.inflate(R.layout.fragment_home, parent, false);
 		
 		// Get and set Views
-	    mWelcomeTitle = view.findViewById(R.id.home_welcome);
-	    mWelcomeTitle.setText(String.format(getResources().getString(R.string.welcomeMessage), 
+        Button welcomeTitle = view.findViewById(R.id.home_welcome);
+	    welcomeTitle.setText(String.format(getResources().getString(R.string.welcomeMessage),
 	    		mDiveSiteManager.getLoggedInDiverUsername()));
-	    mWelcomeTitle.setOnClickListener(new View.OnClickListener() {
+	    welcomeTitle.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				((DiveActivity) getActivity()).openDrawer();
+			    if (getActivity() != null) {
+                    ((DiveActivity) getActivity()).openDrawer();
+                }
 			}
 		});
 	    
@@ -297,9 +292,8 @@ public class HomeFragment extends Fragment implements
 			mProfileImageButton.setVisibility(View.GONE);
 			mProfileNoImageButton.setVisibility(View.VISIBLE);
 		}
-	    
-	    //mDiverListTitle = (Button) findViewById(R.id.home_item_diver_list_title);
-	    mDiverList = view.findViewById(R.id.home_item_diver_list);
+
+        Button diverList = view.findViewById(R.id.home_item_diver_list);
 
 	    View.OnClickListener diverListClickListener = new View.OnClickListener() {
 			
@@ -311,10 +305,10 @@ public class HomeFragment extends Fragment implements
 			}
 		};
 		
-		mDiverList.setOnClickListener(diverListClickListener);
-	    
-		mRefresh = view.findViewById(R.id.home_item_refresh);
-		mRefresh.setOnClickListener(new View.OnClickListener() {
+		diverList.setOnClickListener(diverListClickListener);
+
+        Button refresh = view.findViewById(R.id.home_item_refresh);
+		refresh.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -348,8 +342,8 @@ public class HomeFragment extends Fragment implements
 		    	}
 			}
 		});
-		
-	    mDiveSiteListTitle = view.findViewById(R.id.home_item_dive_site_title);
+
+        Button diveSiteListTitle = view.findViewById(R.id.home_item_dive_site_title);
 	    mDiveSiteListProgress = view.findViewById(R.id.home_item_site_list_progress_bar);
         mDiveSiteListNoDataLabel = view.findViewById(R.id.home_item_site_list_no_data);
 	    
@@ -380,7 +374,7 @@ public class HomeFragment extends Fragment implements
 				startActivity(i);
 			}
 		});
-	    mDiveSiteListTitle.setOnClickListener(new View.OnClickListener() {
+	    diveSiteListTitle.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -427,8 +421,8 @@ public class HomeFragment extends Fragment implements
         mMapView = view.findViewById(R.id.home_item_mapView);
         mMapView.onCreate(savedInstanceState);
         initializeMap();
-		
-	    mScheduledDiveTitle = view.findViewById(R.id.home_item_scheduled_dive_title);
+
+        Button scheduledDiveTitle = view.findViewById(R.id.home_item_scheduled_dive_title);
 	    mScheduledDiveListProgress = view.findViewById(R.id.home_item_scheduled_list_progress_bar);
 	    mScheduledDiveListNoDataLabel = view.findViewById(R.id.home_item_scheduled_list_no_data);
 	    
@@ -467,7 +461,7 @@ public class HomeFragment extends Fragment implements
 			}
 		};
 		mScheduledDiveListProgress.setOnClickListener(scheduledDiveClickListener);
-	    mScheduledDiveTitle.setOnClickListener(scheduledDiveClickListener);
+	    scheduledDiveTitle.setOnClickListener(scheduledDiveClickListener);
 	    mScheduledDiveListNoDataLabel.setOnClickListener(scheduledDiveClickListener);
 	    mScheduledDiveListView.setOnItemClickListener(new OnItemClickListener() {
 	    	@Override
