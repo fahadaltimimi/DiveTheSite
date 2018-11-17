@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -59,9 +60,13 @@ import com.fahadaltimimi.divethesite.model.ScheduledDive;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -77,6 +82,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
 public class HomeFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -91,6 +98,9 @@ public class HomeFragment extends Fragment implements
 	private static int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
 	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
 	
 	private int mSitesAdditionalItemsToLoad = 0;
 	private int mScheduledDivesAdditionalItemsToLoad = 0;
@@ -114,7 +124,7 @@ public class HomeFragment extends Fragment implements
 	
 	private DiveSiteManager mDiveSiteManager;
 	
-	private LocationRequest mLocationRequest;
+	private LocationCallback mLocationCallback = null;
     private GoogleApiClient mGoogleApiClient;
 	private boolean mLocationEnabled;
 
@@ -327,11 +337,7 @@ public class HomeFragment extends Fragment implements
 
 				if (mGoogleApiClient.isConnected() && mLocationEnabled) {
 					mForceLocationDataRefresh = true;
-					if (ContextCompat.checkSelfPermission(getActivity(),
-							Manifest.permission.ACCESS_FINE_LOCATION)
-							== PackageManager.PERMISSION_GRANTED) {
-						LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, HomeFragment.this);
-					}
+                    startLocationUpdates();
 		    	} else {
 					refreshOnlineDiveSites();
 					refreshOnlineDiveSitesMap();
@@ -346,7 +352,7 @@ public class HomeFragment extends Fragment implements
         mDiveSiteListNoDataLabel = view.findViewById(R.id.home_item_site_list_no_data);
 	    
 	    // Retain list view adapter if available
-	    ListAdapter siteAdapter = null;
+	    ListAdapter siteAdapter;
 	    boolean showSiteList = false;
 	    if (mDiveSiteListView != null) {
 	    	siteAdapter = mDiveSiteListView.getAdapter();
@@ -425,7 +431,7 @@ public class HomeFragment extends Fragment implements
 	    mScheduledDiveListNoDataLabel = view.findViewById(R.id.home_item_scheduled_list_no_data);
 	    
 	    // Retain list view adapter if available
-	    ListAdapter scheduledAdapter = null;
+	    ListAdapter scheduledAdapter;
 	    boolean showScheduledList = false;
 	    if (mScheduledDiveListView != null) {
 	    	scheduledAdapter = mScheduledDiveListView.getAdapter();
@@ -591,7 +597,39 @@ public class HomeFragment extends Fragment implements
 
 		return view;
 	}
-	
+
+    // Trigger new location updates at interval
+    private void startLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Create the location request to start receiving updates
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setInterval(UPDATE_INTERVAL);
+            locationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+            // Create LocationSettingsRequest object using location request
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+            builder.addLocationRequest(locationRequest);
+            LocationSettingsRequest locationSettingsRequest = builder.build();
+
+            // Check whether location settings are satisfied
+            // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+            SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
+            settingsClient.checkLocationSettings(locationSettingsRequest);
+
+            // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    onLocationChanged(locationResult.getLastLocation());
+                }
+            };
+            getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper());
+        }
+    }
+
 	private void openDiveSite(DiveSite diveSite) {
 		getActivity()
 			.getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE)
@@ -1322,8 +1360,12 @@ public class HomeFragment extends Fragment implements
 	
 	private Location getLocation() {
 		if (mGoogleApiClient != null && mGoogleApiClient.isConnected() &&
-                LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient) != null) {
-			return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) &&
+                LocationServices.getFusedLocationProviderClient(getActivity()).getLastLocation().isComplete() &&
+                LocationServices.getFusedLocationProviderClient(getActivity()).getLastLocation().getResult() != null) {
+			return LocationServices.getFusedLocationProviderClient(getActivity()).getLastLocation().getResult();
 		} else {
 			return mDiveSiteManager.getLastLocation();
 		}
@@ -1420,16 +1462,7 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onConnected(Bundle dataBundle) {
         if (mLocationEnabled) {
-            mLocationRequest = LocationRequest.create();
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(1000); // Update location every second
-
-			if (ContextCompat.checkSelfPermission(getActivity(),
-					Manifest.permission.ACCESS_FINE_LOCATION)
-					== PackageManager.PERMISSION_GRANTED) {
-				LocationServices.FusedLocationApi.requestLocationUpdates(
-						mGoogleApiClient, mLocationRequest, this);
-			}
+            startLocationUpdates();
         }
     }
 
@@ -1481,7 +1514,7 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onLocationChanged(Location location) {
         if (mGoogleMap != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            LocationServices.getFusedLocationProviderClient(getActivity()).removeLocationUpdates(mLocationCallback);
 
             if (mDiveSiteManager.getLastLocation() == null ||
                     mForceLocationDataRefresh ||
