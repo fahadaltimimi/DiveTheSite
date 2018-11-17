@@ -89,9 +89,7 @@ public class HomeFragment extends Fragment implements
 	private static int LIST_ITEMS_BUFFER_MULTIPLIER = 3;
 	private static double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
 	private static int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
-	
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
-
 	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 	
 	private int mSitesAdditionalItemsToLoad = 0;
@@ -563,9 +561,7 @@ public class HomeFragment extends Fragment implements
 		});
 		
 		// Load markers already available
-	    Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
-		for (int i = 0; i < diveSites.length; i++) {
-			DiveSite diveSite = (DiveSite) diveSites[i];
+		for (DiveSite diveSite : mDiveSiteMarkers.keySet()) {
 			LatLng latLng = new LatLng(diveSite.getLatitude(), diveSite.getLongitude());
 			MarkerOptions markerOptions = new MarkerOptions().position(
 					latLng).title(diveSite.getName());
@@ -578,20 +574,18 @@ public class HomeFragment extends Fragment implements
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.divesite_active_marker));
 			}
-			
+
 			mGoogleMap.addMarker(markerOptions);
 		}
-		
-		Object[] ndbcs = mNDBCMarkers.keySet().toArray();
-		for (int i = 0; i < ndbcs.length; i++) {
-			NDBCStation ndbc = (NDBCStation) ndbcs[i];
+
+		for (NDBCStation ndbc : mNDBCMarkers.keySet()) {
 			LatLng latLng = new LatLng(ndbc.getLatitude(), ndbc.getLongitude());
 			MarkerOptions markerOptions = new MarkerOptions().position(
 					latLng).title(ndbc.getStationName());
-			
+
 			markerOptions.icon(BitmapDescriptorFactory
 					.fromResource(R.drawable.ndcp_buoy_marker));
-			
+
 			mGoogleMap.addMarker(markerOptions);
 		}
 
@@ -659,17 +653,19 @@ public class HomeFragment extends Fragment implements
 								boolean added = false;
 								for (int i = 0; i < mDiveSiteListView.getAdapter().getCount(); i++) {
 									diveSite = ((DiveSiteAdapter) mDiveSiteListView.getAdapter()).getItem(i);
-									Location location = new Location(diveSite.getName());
-									location.setLatitude(diveSite.getLatitude());
-									location.setLongitude(diveSite.getLongitude());
-									
-									if (mDiveSiteManager.getLastLocation() != null &&
-										mDiveSiteManager.getLastLocation().distanceTo(newLocation) <
-										mDiveSiteManager.getLastLocation().distanceTo(location)) {
-										
-										((DiveSiteAdapter) mDiveSiteListView.getAdapter()).insert((DiveSite) result, i);
-										added = true;
-										break;
+									if (diveSite != null) {
+										Location location = new Location(diveSite.getName());
+										location.setLatitude(diveSite.getLatitude());
+										location.setLongitude(diveSite.getLongitude());
+
+										if (mDiveSiteManager.getLastLocation() != null &&
+												mDiveSiteManager.getLastLocation().distanceTo(newLocation) <
+														mDiveSiteManager.getLastLocation().distanceTo(location)) {
+
+											((DiveSiteAdapter) mDiveSiteListView.getAdapter()).insert((DiveSite) result, i);
+											added = true;
+											break;
+										}
 									}
 								}
 
@@ -837,12 +833,14 @@ public class HomeFragment extends Fragment implements
 	private Marker getMarkerForDiveSiteOnlineID(long onlineID) {
 		Marker marker = null;
 		Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
-		for (int i = 0; i < diveSites.length; i++) {
-			if (((DiveSite) diveSites[i]).getOnlineId() == onlineID) {
-				marker = mDiveSiteMarkers.get(diveSites[i]);
-				break;
-			}
-		}
+		if (diveSites != null) {
+            for (Object diveSite : diveSites) {
+                if (((DiveSite) diveSite).getOnlineId() == onlineID) {
+                    marker = mDiveSiteMarkers.get(diveSite);
+                    break;
+                }
+            }
+        }
 
 		return marker;
 	}
@@ -1118,26 +1116,14 @@ public class HomeFragment extends Fragment implements
 	private Marker getMarkerForNDBCStationID(long stationID) {
 		Marker marker = null;
 		Object[] ndbcs = mNDBCMarkers.keySet().toArray();
-		for (int i = 0; i < ndbcs.length; i++) {
-			if (((NDBCStation) ndbcs[i]).getStationId() == stationID) {
-				marker = mNDBCMarkers.get(ndbcs[i]);
+		for (Object ndbc : ndbcs) {
+			if (((NDBCStation) ndbc).getStationId() == stationID) {
+				marker = mNDBCMarkers.get(ndbc);
 				break;
 			}
 		}
 
 		return marker;
-	}
-	
-	private int getDiveSiteIndex(DiveSite diveSite) {
-		int index = -1;
-		for (int i = 0; i < mDiveSiteListView.getAdapter().getCount(); i++) {
-			if (((DiveSiteAdapter) mDiveSiteListView.getAdapter()).getItem(i).getOnlineId() == 
-					diveSite.getOnlineId()) {
-				index = i;
-				break;
-			}
-		}
-		return index;
 	}
 
 	private DiveSite getDiveSiteOnlineId(DiveSite diveSite) {
@@ -1318,11 +1304,11 @@ public class HomeFragment extends Fragment implements
 	
 	private void cancelOnlineNDBCDataRefresh() {
 		Object[] ndbcStationIDs = mNDBCDataOnlineDatabase.keySet().toArray();
-		for (int i = 0; i < ndbcStationIDs.length; i++) {
-			if (mNDBCDataOnlineDatabase.get(ndbcStationIDs[i]) != null && 
-					mNDBCDataOnlineDatabase.get(ndbcStationIDs[i]).getActive()) {
-				mNDBCDataOnlineDatabase.get(ndbcStationIDs[i]).stopBackground();
-				mNDBCDataOnlineDatabase.get(ndbcStationIDs[i]).cancel(true);
+		for (Object ndbcStationID : ndbcStationIDs) {
+			if (mNDBCDataOnlineDatabase.get(ndbcStationID) != null &&
+					mNDBCDataOnlineDatabase.get(ndbcStationID).getActive()) {
+				mNDBCDataOnlineDatabase.get(ndbcStationID).stopBackground();
+				mNDBCDataOnlineDatabase.get(ndbcStationID).cancel(true);
 			}
 		}
 	}
@@ -2297,13 +2283,13 @@ public class HomeFragment extends Fragment implements
                             public void onInfoWindowClick(Marker marker) {
                                 // Display Dive Site info
                                 Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
-                                for (int i = 0; i < diveSites.length; i++) {
-                                    if (mDiveSiteMarkers.get(diveSites[i]).equals(marker)) {
-                                        // Dive Site found
-                                        openDiveSite((DiveSite) diveSites[i]);
-                                        break;
-                                    }
-                                }
+								for (Object diveSite : diveSites) {
+									if (mDiveSiteMarkers.get(diveSite).equals(marker)) {
+										// Dive Site found
+										openDiveSite((DiveSite) diveSite);
+										break;
+									}
+								}
                             }
                         });
                     }
