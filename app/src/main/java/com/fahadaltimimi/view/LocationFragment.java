@@ -48,7 +48,7 @@ public abstract class LocationFragment extends com.fahadaltimimi.divethesite.vie
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        if (LocationController.getLocationControler().isLocationEnabled(getActivity())) {
+        if (!LocationController.getLocationControler().isLocationEnabled(getActivity())) {
             Toast.makeText(getActivity(), "Enable location services for accurate data", Toast.LENGTH_SHORT).show();
         }
 
