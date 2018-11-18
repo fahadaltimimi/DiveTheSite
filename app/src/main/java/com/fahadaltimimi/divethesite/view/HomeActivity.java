@@ -16,5 +16,5 @@ public class HomeActivity extends DiveActivity {
 	@Override
 	protected Fragment createFragment() {
 		return new HomeFragment();
-	}	
+	}
 }
