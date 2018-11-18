@@ -6,26 +6,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +36,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
-import com.fahadaltimimi.divethesite.controller.DiveSiteManager.ErrorDialogFragment;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.model.LoadOnlineImageTask;
 import com.fahadaltimimi.divethesite.model.NDBCStation;
@@ -57,16 +50,6 @@ import com.fahadaltimimi.divethesite.model.ScheduledDiveDiveSite;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -78,16 +61,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
-
-public class HomeFragment extends Fragment implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+public class HomeFragment extends com.fahadaltimimi.view.LocationFragment {
 
     private static final SimpleDateFormat scheduledDiveTimestampFormat = new SimpleDateFormat("dd/MM/yy, HH:mm");
 
@@ -97,10 +74,6 @@ public class HomeFragment extends Fragment implements
 	private static double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
 	private static int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
-	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
 	
 	private int mSitesAdditionalItemsToLoad = 0;
 	private int mScheduledDivesAdditionalItemsToLoad = 0;
@@ -123,10 +96,6 @@ public class HomeFragment extends Fragment implements
     protected ArrayList<Long> mRefreshNDBCStationIDData = new ArrayList<>();
 	
 	private DiveSiteManager mDiveSiteManager;
-	
-	private LocationCallback mLocationCallback = null;
-    private GoogleApiClient mGoogleApiClient;
-	private boolean mLocationEnabled;
 
     private View mProfileProgress;
 	private ImageButton mProfileImageButton;
@@ -154,42 +123,25 @@ public class HomeFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
 			    
 		mDiveSiteManager = DiveSiteManager.get(getActivity());
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mLocationEnabled = false;
-            Toast.makeText(getActivity(), "Enable location services for accurate data", Toast.LENGTH_SHORT).show();
-        } else {
-        	mLocationEnabled = true;
-        }
         
         if (PollService.isServiceAlarmOn(getActivity())) {
         	PollService.setServiceAlarm(getActivity(), false, 0);
         }
         PollService.setServiceAlarm(getActivity(), true, 
     			DiveSiteManager.getIntegerPreferenceFromString(getActivity(), 
-    				getActivity().getResources().getString(R.string.PREF_SETTING_INTERVAL_CHECK_UPDATES_SEC),
+    				Objects.requireNonNull(getActivity()).getResources().getString(R.string.PREF_SETTING_INTERVAL_CHECK_UPDATES_SEC),
 					PollService.POLL_INTERVAL_DEFAULT_SECONDS));
-
-		checkLocationPermission();
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_home, parent, false);
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+                             Bundle savedInstanceState) {
+		View view = super.onCreateView(inflater, parent, savedInstanceState);
 		
 		// Get and set Views
-        Button welcomeTitle = view.findViewById(R.id.home_welcome);
+        Button welcomeTitle = Objects.requireNonNull(view).findViewById(R.id.home_welcome);
 	    welcomeTitle.setText(String.format(getResources().getString(R.string.welcomeMessage),
 	    		mDiveSiteManager.getLoggedInDiverUsername()));
 	    welcomeTitle.setOnClickListener(new View.OnClickListener() {
@@ -335,9 +287,8 @@ public class HomeFragment extends Fragment implements
                 clearScheduledDives();
                 clearNDBCs();
 
-				if (mGoogleApiClient.isConnected() && mLocationEnabled) {
-					mForceLocationDataRefresh = true;
-                    startLocationUpdates();
+                if (startLocationUpdates()) {
+                    mForceLocationDataRefresh = true;
 		    	} else {
 					refreshOnlineDiveSites();
 					refreshOnlineDiveSitesMap();
@@ -598,40 +549,18 @@ public class HomeFragment extends Fragment implements
 		return view;
 	}
 
-    // Trigger new location updates at interval
-    private void startLocationUpdates() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            // Create the location request to start receiving updates
-            LocationRequest locationRequest = LocationRequest.create();
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setInterval(UPDATE_INTERVAL);
-            locationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-            // Create LocationSettingsRequest object using location request
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-            builder.addLocationRequest(locationRequest);
-            LocationSettingsRequest locationSettingsRequest = builder.build();
-
-            // Check whether location settings are satisfied
-            // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-            SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
-            settingsClient.checkLocationSettings(locationSettingsRequest);
-
-            // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-            mLocationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    onLocationChanged(locationResult.getLastLocation());
-                }
-            };
-            getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper());
-        }
+    @Override
+    protected int getLayoutView() {
+        return R.layout.fragment_home;
     }
 
-	private void openDiveSite(DiveSite diveSite) {
-		getActivity()
+    @Override
+    protected void onLocationPermissionGranted() {
+        initializeMap();
+    }
+
+    private void openDiveSite(DiveSite diveSite) {
+		Objects.requireNonNull(getActivity())
 			.getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE)
 			.edit()
 			.putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, false).apply();
@@ -823,7 +752,7 @@ public class HomeFragment extends Fragment implements
 		
 		
 
-		String coordinateRange[] = getCoordinateRange();
+		String coordinateRange[] = getCoordinateRange(mGoogleMap);
 		if (getLocation() != null) {
 			mDiveSitesMapOnlineDatabase.getDiveSiteList(new Date(0), -1, 
 					String.valueOf(getLocation().getLatitude()),
@@ -836,36 +765,6 @@ public class HomeFragment extends Fragment implements
 					"", coordinateRange[0], coordinateRange[1], coordinateRange[2],
 					coordinateRange[3], "", "", "");
 		}
-	}
-	
-	private String[] getCoordinateRange() {
-		String coordinateRange[] = new String[4];
-		if (mGoogleMap == null) {
-			coordinateRange[0] = "0";
-			coordinateRange[1] = "0";
-			coordinateRange[2] = "0";
-			coordinateRange[3] = "0";
-		} else {
-			LatLngBounds curMapBounds = mGoogleMap.getProjection()
-					.getVisibleRegion().latLngBounds;
-
-			String minLatitude = String
-					.valueOf(curMapBounds.southwest.latitude);
-			String maxLatitude = String
-					.valueOf(curMapBounds.northeast.latitude);
-
-			String minLongitude = String
-					.valueOf(curMapBounds.southwest.longitude);
-			String maxLongitude = String
-					.valueOf(curMapBounds.northeast.longitude);
-
-			coordinateRange[0] = minLatitude;
-			coordinateRange[1] = maxLatitude;
-			coordinateRange[2] = minLongitude;
-			coordinateRange[3] = maxLongitude;
-		}
-
-		return coordinateRange;
 	}
 	
 	private Marker getMarkerForDiveSiteOnlineID(long onlineID) {
@@ -923,7 +822,6 @@ public class HomeFragment extends Fragment implements
 							if (scheduledDive == null) {
 								((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).add((ScheduledDive) result);
 							} else {
-								int index = getScheduledDiveIndex(scheduledDive);
 								((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).remove(scheduledDive);
 								
 								// Add new item in order of distance
@@ -935,7 +833,7 @@ public class HomeFragment extends Fragment implements
 									boolean added = false;
 									for (int i = 0; i < mDiveSiteListView.getAdapter().getCount(); i++) {
 										scheduledDive = ((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).getItem(i);
-										Location location = scheduledDive.getClosestLocation(mDiveSiteManager.getLastLocation());
+										Location location = Objects.requireNonNull(scheduledDive).getClosestLocation(mDiveSiteManager.getLastLocation());
 												
 										if (location != null && 
 											mDiveSiteManager.getLastLocation() != null &&
@@ -1053,7 +951,7 @@ public class HomeFragment extends Fragment implements
 						boolean added = false;
 						for (int i = 0; i < mNDBCListView.getAdapter().getCount(); i++) {
 							ndbc = ((NDBCAdapter) mNDBCListView.getAdapter()).getItem(i);
-							Location location = new Location(ndbc.getStationName());
+							Location location = new Location(Objects.requireNonNull(ndbc).getStationName());
 							location.setLatitude(ndbc.getLatitude());
 							location.setLongitude(ndbc.getLongitude());
 							
@@ -1154,7 +1052,7 @@ public class HomeFragment extends Fragment implements
 	private Marker getMarkerForNDBCStationID(long stationID) {
 		Marker marker = null;
 		Object[] ndbcs = mNDBCMarkers.keySet().toArray();
-		for (Object ndbc : ndbcs) {
+		for (Object ndbc : Objects.requireNonNull(ndbcs)) {
 			if (((NDBCStation) ndbc).getStationId() == stationID) {
 				marker = mNDBCMarkers.get(ndbc);
 				break;
@@ -1167,7 +1065,7 @@ public class HomeFragment extends Fragment implements
 	private DiveSite getDiveSiteOnlineId(DiveSite diveSite) {
 		DiveSite diveSiteDuplicate = null;
 		for (int i = 0; i < mDiveSiteListView.getAdapter().getCount(); i++) {
-			if (((DiveSiteAdapter) mDiveSiteListView.getAdapter()).getItem(i).getOnlineId() == diveSite
+			if (Objects.requireNonNull(((DiveSiteAdapter) mDiveSiteListView.getAdapter()).getItem(i)).getOnlineId() == diveSite
 					.getOnlineId()) {
 				diveSiteDuplicate = ((DiveSiteAdapter) mDiveSiteListView.getAdapter()).getItem(i);
 				break;
@@ -1190,23 +1088,11 @@ public class HomeFragment extends Fragment implements
                  mDiveSiteListView.getChildAt(mDiveSiteListView.getChildCount() - 1).getBottom() >= ((ViewGroup) mDiveSiteListView.getParent()).getHeight() &&
                  mDiveSiteListView.getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER);
     }
-	
-	private int getScheduledDiveIndex(ScheduledDive scheduledDive) {
-		int index = -1;
-		for (int i = 0; i < mScheduledDiveListView.getAdapter().getCount(); i++) {
-			if (((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).getItem(i).getOnlineId() == 
-					scheduledDive.getOnlineId()) {
-				index = i;
-				break;
-			}
-		}
-		return index;
-	}
 
 	private ScheduledDive getScheduledDiveOnlineId(ScheduledDive scheduledDive) {
 		ScheduledDive scheduledDiveDuplicate = null;
 		for (int i = 0; i < mScheduledDiveListView.getAdapter().getCount(); i++) {
-			if (((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).getItem(i).getOnlineId() == 
+			if (Objects.requireNonNull(((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).getItem(i)).getOnlineId() ==
 					scheduledDive.getOnlineId()) {
 				scheduledDiveDuplicate = ((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).getItem(i);
 				break;
@@ -1233,7 +1119,7 @@ public class HomeFragment extends Fragment implements
 	private int getNDBCIndex(NDBCStation ndbcStation) {
 		int index = -1;
 		for (int i = 0; i < mNDBCListView.getAdapter().getCount(); i++) {
-			if (((NDBCAdapter) mNDBCListView.getAdapter()).getItem(i).getStationId() == 
+			if (Objects.requireNonNull(((NDBCAdapter) mNDBCListView.getAdapter()).getItem(i)).getStationId() ==
 					ndbcStation.getStationId()) {
 				index = i;
 				break;
@@ -1245,7 +1131,7 @@ public class HomeFragment extends Fragment implements
 	private NDBCStation getNDBCOnlineId(NDBCStation ndbc) {
 		NDBCStation ndbcDuplicate = null;
 		for (int i = 0; i < mNDBCListView.getAdapter().getCount(); i++) {
-			if (((NDBCAdapter) mNDBCListView.getAdapter()).getItem(i).getStationId() == ndbc
+			if (Objects.requireNonNull(((NDBCAdapter) mNDBCListView.getAdapter()).getItem(i)).getStationId() == ndbc
 					.getStationId()) {
 				ndbcDuplicate = ((NDBCAdapter) mNDBCListView.getAdapter()).getItem(i);
 				break;
@@ -1342,11 +1228,11 @@ public class HomeFragment extends Fragment implements
 	
 	private void cancelOnlineNDBCDataRefresh() {
 		Object[] ndbcStationIDs = mNDBCDataOnlineDatabase.keySet().toArray();
-		for (Object ndbcStationID : ndbcStationIDs) {
+		for (Object ndbcStationID : Objects.requireNonNull(ndbcStationIDs)) {
 			if (mNDBCDataOnlineDatabase.get(ndbcStationID) != null &&
-					mNDBCDataOnlineDatabase.get(ndbcStationID).getActive()) {
-				mNDBCDataOnlineDatabase.get(ndbcStationID).stopBackground();
-				mNDBCDataOnlineDatabase.get(ndbcStationID).cancel(true);
+					Objects.requireNonNull(mNDBCDataOnlineDatabase.get(ndbcStationID)).getActive()) {
+				Objects.requireNonNull(mNDBCDataOnlineDatabase.get(ndbcStationID)).stopBackground();
+				Objects.requireNonNull(mNDBCDataOnlineDatabase.get(ndbcStationID)).cancel(true);
 			}
 		}
 	}
@@ -1359,20 +1245,11 @@ public class HomeFragment extends Fragment implements
 	}
 	
 	private Location getLocation() {
-		if (mGoogleApiClient != null && mGoogleApiClient.isConnected() &&
-                (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) &&
-                LocationServices.getFusedLocationProviderClient(getActivity()).getLastLocation().isComplete() &&
-                LocationServices.getFusedLocationProviderClient(getActivity()).getLastLocation().getResult() != null) {
-			return LocationServices.getFusedLocationProviderClient(getActivity()).getLastLocation().getResult();
-		} else {
-			return mDiveSiteManager.getLastLocation();
-		}
+		return LocationController.getLocationControler().getLocation(getActivity(), mDiveSiteManager.getLastLocation());
 	}
 
     @Override
-    public void onSaveInstanceState(Bundle outState){
+    public void onSaveInstanceState(@NonNull Bundle outState){
         super.onSaveInstanceState(outState);
     }
 
@@ -1387,9 +1264,6 @@ public class HomeFragment extends Fragment implements
 	@Override
 	public void onStart() {
 		super.onStart();
-
-        // Connect the client.
-        mGoogleApiClient.connect();
 	}
 	
 	@Override
@@ -1414,9 +1288,6 @@ public class HomeFragment extends Fragment implements
 	
 	@Override
 	public void onStop() {
-        // Disconnecting the client invalidates it.
-        mGoogleApiClient.disconnect();
-
         cancelProfileRefresh();
         cancelOnlineDiveSiteRefresh();
         cancelOnlineDiveSiteMapRefresh();
@@ -1425,86 +1296,6 @@ public class HomeFragment extends Fragment implements
 		
 		super.onStop();
 	}
-	
-	/**
-     * Show a dialog returned by Google Play services for the
-     * connection error code
-     *
-     * @param errorCode An error code returned from onConnectionFailed
-     */
-    private void showErrorDialog(int errorCode) {
-
-        // Get the error dialog from Google Play services
-        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-            errorCode,
-            getActivity(),
-            DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-        // If Google Play services can provide an error dialog
-        if (errorDialog != null) {
-
-            // Create a new DialogFragment in which to show the error dialog
-            ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-
-            // Set the dialog in the DialogFragment
-            errorFragment.setDialog(errorDialog);
-
-            // Show the error dialog in the DialogFragment
-            errorFragment.show(getActivity().getSupportFragmentManager(), TAG);
-        }
-    }
-	
-	/*
-     * Called by Location Services when the request to connect the
-     * client finishes successfully. At this point, you can
-     * request the current location or start periodic updates
-     */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        if (mLocationEnabled) {
-            startLocationUpdates();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has been suspend");
-    }
-    
-    /*
-     * Called by Location Services if the attempt to
-     * Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                		getActivity(),
-                        DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
-            showErrorDialog(connectionResult.getErrorCode());
-        }
-    }
     
     /**
      * Report location updates to the UI.
@@ -1514,7 +1305,7 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onLocationChanged(Location location) {
         if (mGoogleMap != null) {
-            LocationServices.getFusedLocationProviderClient(getActivity()).removeLocationUpdates(mLocationCallback);
+            LocationController.getLocationControler().stopLocationUpdates(getActivity());
 
             if (mDiveSiteManager.getLastLocation() == null ||
                     mForceLocationDataRefresh ||
@@ -1556,15 +1347,15 @@ public class HomeFragment extends Fragment implements
 	private class DiveSiteAdapter extends ArrayAdapter<DiveSite> {
 
 		public DiveSiteAdapter(ArrayList<DiveSite> diveSites) {
-			super(getActivity(), 0, diveSites);
+			super(Objects.requireNonNull(getActivity()), 0, diveSites);
 		}
 
 		@Override
-		public View getView(int position, View view, ViewGroup parent) {
+		public View getView(int position, View view, @NonNull ViewGroup parent) {
 			// If we weren't given a view, inflate one using the layout we
 			// created for each list item
 			if (view == null) {
-				view = getActivity().getLayoutInflater().inflate(R.layout.home_divesite_list_item, parent, false);
+				view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.home_divesite_list_item, parent, false);
 			}
 
 			DiveSite diveSite = getItem(position);
@@ -1572,7 +1363,7 @@ public class HomeFragment extends Fragment implements
 			TextView title = view.findViewById(R.id.home_divesite_list_item_title);
 			TextView location = view.findViewById(R.id.home_divesite_list_item_location);
 
-			title.setText(diveSite.getName());
+			title.setText(Objects.requireNonNull(diveSite).getName());
 			location.setText(diveSite.getFullLocation());
 
             if (mDiveSiteListView.getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
@@ -1588,23 +1379,22 @@ public class HomeFragment extends Fragment implements
 	private class ScheduledDiveAdapter extends ArrayAdapter<ScheduledDive> {
 
 		public ScheduledDiveAdapter(ArrayList<ScheduledDive> scheduledDives) {
-			super(getActivity(), 0, scheduledDives);
+			super(Objects.requireNonNull(getActivity()), 0, scheduledDives);
 		}
 
 		@Override
-		public View getView(int position, View view, ViewGroup parent) {
+		public View getView(int position, View view, @NonNull ViewGroup parent) {
 			// If we weren't given a view, inflate one using the layout we
 			// created for each list item
 			if (view == null) {
-				view = getActivity().getLayoutInflater().inflate(R.layout.home_scheduleddive_list_item, parent, false);
+				view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.home_scheduleddive_list_item, parent, false);
 			}
 
 			ScheduledDive scheduledDive = getItem(position);
 			
 			TextView title = view.findViewById(R.id.home_scheduleddive_list_item_title);
-			if (scheduledDive.getTitle().trim().isEmpty()) {
-				title.setText(getResources().getString(R.string.scheduleddive_default_title) + 
-						" " + scheduledDive.getTimestampStringShort());
+			if (Objects.requireNonNull(scheduledDive).getTitle().trim().isEmpty()) {
+				title.setText(String.format("%s %s", getResources().getString(R.string.scheduleddive_default_title), scheduledDive.getTimestampStringShort()));
 			} else {
 				title.setText(scheduledDive.getTitle());
 			}			
@@ -1632,7 +1422,7 @@ public class HomeFragment extends Fragment implements
 						LayoutInflater layoutInflater = 
 								(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 						View scheduledDiveDiveSiteView = layoutInflater.inflate(
-								R.layout.scheduleddive_site_item, null);
+								R.layout.scheduleddive_site_item, scheduledDiveDiveSiteListView);
 				
 						// Open scheduled dive if scheduled dive dive site clicked
 						scheduledDiveDiveSiteView.setOnClickListener(new View.OnClickListener() {
@@ -1644,9 +1434,6 @@ public class HomeFragment extends Fragment implements
 								startActivity(i);
 							}
 						});
-						
-						// Add the view to the list
-						scheduledDiveDiveSiteListView.addView(scheduledDiveDiveSiteView);
 		
 						// Set scheduled dive site view fields
 						TextView scheduledDiveDiveSiteName =
@@ -1669,7 +1456,7 @@ public class HomeFragment extends Fragment implements
 				LayoutInflater layoutInflater = 
 						(LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View scheduledDiveDiveSiteView = layoutInflater.inflate(
-						R.layout.scheduleddive_site_item, null);
+						R.layout.scheduleddive_site_item, scheduledDiveDiveSiteListView);
 		
 				// Open scheduled dive if scheduled dive dive site clicked
 				scheduledDiveDiveSiteView.setOnClickListener(new View.OnClickListener() {
@@ -1681,9 +1468,6 @@ public class HomeFragment extends Fragment implements
 						startActivity(i);
 					}
 				});
-				
-				// Add the view to the list
-				scheduledDiveDiveSiteListView.addView(scheduledDiveDiveSiteView);
 
 				// Set scheduled dive site view fields
 				TextView scheduledDiveDiveSiteName =
@@ -1704,21 +1488,21 @@ public class HomeFragment extends Fragment implements
 	private class NDBCAdapter extends ArrayAdapter<NDBCStation> {
 
 		public NDBCAdapter(ArrayList<NDBCStation> ndbcs) {
-			super(getActivity(), 0, ndbcs);
+			super(Objects.requireNonNull(getActivity()), 0, ndbcs);
 		}
 
 		@Override
-		public View getView(int position, View view, ViewGroup parent) {
+		public View getView(int position, View view, @NonNull ViewGroup parent) {
 			// If we weren't given a view, inflate one using the layout we
 			// created for each list item
 			if (view == null) {
-				view = getActivity().getLayoutInflater().inflate(R.layout.home_ndbc_list_item, parent, false);
+				view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.home_ndbc_list_item, parent, false);
 			}
 
             NDBCStation ndbc = getItem(position);
 			
 			TextView stationTitle = view.findViewById(R.id.home_ndbc_list_item_station);
-			stationTitle.setText(ndbc.getStationName());
+			stationTitle.setText(Objects.requireNonNull(ndbc).getStationName());
 			
 			TextView stationDistance = view.findViewById(R.id.home_ndbc_list_item_distance);
 			
@@ -1733,7 +1517,7 @@ public class HomeFragment extends Fragment implements
 
 			float distance = getLocation().distanceTo(ndbcLocation);
 			distance = distance / 1000;
-			stationDistance.setText(distanceFormat.format(distance) + " km");
+			stationDistance.setText(String.format("%s km", distanceFormat.format(distance)));
 	
 			View ndbcDataProgress = view.findViewById(R.id.home_item_ndbc_data_progress_bar);
 
@@ -2198,68 +1982,9 @@ public class HomeFragment extends Fragment implements
 	  super.onConfigurationChanged(newConfig);
 	}
 
-	public boolean checkLocationPermission() {
-		if (ContextCompat.checkSelfPermission(getActivity(),
-				Manifest.permission.ACCESS_FINE_LOCATION)
-				!= PackageManager.PERMISSION_GRANTED) {
-
-			// Should we show an explanation?
-			if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-					Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-				// Show an explanation to the user *asynchronously* -- don't block
-				// this thread waiting for the user's response! After the user
-				// sees the explanation, try again to request the permission.
-				new AlertDialog.Builder(getActivity())
-						.setTitle(R.string.title_location_permission)
-						.setMessage(R.string.text_location_permission)
-						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-								// Prompt the user once explanation has been shown
-								ActivityCompat.requestPermissions(getActivity(),
-										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-										MY_PERMISSIONS_REQUEST_LOCATION);
-							}
-						})
-						.create()
-						.show();
-
-
-			} else {
-				// No explanation needed, we can request the permission.
-				ActivityCompat.requestPermissions(getActivity(),
-					new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-						MY_PERMISSIONS_REQUEST_LOCATION);
-			}
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode,
-										   String permissions[], int[] grantResults) {
-		switch (requestCode) {
-			case MY_PERMISSIONS_REQUEST_LOCATION: {
-				// If request is cancelled, the result arrays are empty.
-				if (grantResults.length > 0
-						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-					initializeMap();
-
-				} else {
-
-					// Permission denied
-				}
-			}
-		}
-	}
-
 	private void initializeMap() {
         // Permission was granted
-        if (ContextCompat.checkSelfPermission(getActivity(),
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMapView.onResume();
@@ -2316,8 +2041,8 @@ public class HomeFragment extends Fragment implements
                             public void onInfoWindowClick(Marker marker) {
                                 // Display Dive Site info
                                 Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
-								for (Object diveSite : diveSites) {
-									if (mDiveSiteMarkers.get(diveSite).equals(marker)) {
+								for (Object diveSite : Objects.requireNonNull(diveSites)) {
+									if (Objects.requireNonNull(mDiveSiteMarkers.get(diveSite)).equals(marker)) {
 										// Dive Site found
 										openDiveSite((DiveSite) diveSite);
 										break;
