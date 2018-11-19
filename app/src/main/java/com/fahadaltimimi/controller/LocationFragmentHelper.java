@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.Objects;
@@ -39,6 +40,7 @@ public class LocationFragmentHelper implements
     private static final String TAG = "LocationFragmentHelper";
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private static final double EARTHRADIUS = 6366198;
 
     private Fragment mFragment;
     private GoogleApiClient mGoogleApiClient;
@@ -240,6 +242,35 @@ public class LocationFragmentHelper implements
     @Override
     public void onLocationChanged(Location location) {
         mLocationListener.onLocationChanged(location);
+    }
+
+    /**
+     * Create a new LatLng which lies toNorth meters north and toEast meters
+     * east of startLL
+     */
+    public static LatLng move(LatLng startLL, double toNorth, double toEast) {
+        double lonDiff = meterToLongitude(toEast, startLL.latitude);
+        double latDiff = meterToLatitude(toNorth);
+        return new LatLng(startLL.latitude + latDiff, startLL.longitude
+                + lonDiff);
+    }
+
+    /**
+     * Calculates longitude value using given meters to east and latitude values
+     */
+    public static double meterToLongitude(double meterToEast, double latitude) {
+        double latArc = Math.toRadians(latitude);
+        double radius = Math.cos(latArc) * EARTHRADIUS;
+        double rad = meterToEast / radius;
+        return Math.toDegrees(rad);
+    }
+
+    /**
+     * Calculates latitude value using given meters to north
+     */
+    public static double meterToLatitude(double meterToNorth) {
+        double rad = meterToNorth / EARTHRADIUS;
+        return Math.toDegrees(rad);
     }
 
     /**

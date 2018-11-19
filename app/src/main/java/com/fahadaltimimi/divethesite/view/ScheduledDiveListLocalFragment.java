@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -103,8 +104,8 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-			Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+                             Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		// Register list view with context menu

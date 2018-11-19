@@ -2,26 +2,23 @@ package com.fahadaltimimi.divethesite.view;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Objects;
 
 import android.animation.LayoutTransition;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -40,23 +37,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
-import com.fahadaltimimi.divethesite.controller.DiveSiteManager.ErrorDialogFragment;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -66,25 +56,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ScheduledDiveListFragment extends ListFragment implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+import static com.fahadaltimimi.controller.LocationFragmentHelper.move;
+
+public class ScheduledDiveListFragment extends com.fahadaltimimi.view.LocationListFragment {
 
     protected static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("EEEE MMMM dd yyyy, HH:mm");
 
 	public static final String TAG = "ScheduledDiveListFragment";
 	protected static final int REQUEST_NEW_SCHEDULEDDIVE = 0;
-	private static final double EARTHRADIUS = 6366198;
 
 	protected DiveSiteManager mDiveSiteManager;
-	
-	protected LocationRequest mLocationRequest;
-	protected GoogleApiClient mGoogleApiClient;
-    protected boolean mLocationEnabled;
 	
 	protected Bundle mSavedInstanceState;
 
@@ -115,12 +98,12 @@ public class ScheduledDiveListFragment extends ListFragment implements
 	protected DiveSite mDiveSite = null;
 	protected ScheduledDive mSelectedScheduledDive = null;
 
-    protected HashMap<Long, View> mScheduledDiveListItemViews = new HashMap<Long, View>();
-	protected HashMap<Long, View> mScheduledDiveDiveSiteListItemViews = new HashMap<Long, View>();
-	protected HashMap<Long, View> mScheduledDiveUserListItemViews = new HashMap<Long, View>();
-	protected HashMap<Long, Integer> mScheduledDiveListItemLoaderIDs = new HashMap<Long, Integer>();
-	protected HashMap<Long, Diver> mScheduledDiveListItemDiver = new HashMap<Long, Diver>();
-	protected HashMap<Long, ImageView> mScheduledDiveListItemDiverImageView = new HashMap<Long, ImageView>();
+    protected HashMap<Long, View> mScheduledDiveListItemViews = new HashMap<>();
+	protected HashMap<Long, View> mScheduledDiveDiveSiteListItemViews = new HashMap<>();
+	protected HashMap<Long, View> mScheduledDiveUserListItemViews = new HashMap<>();
+	protected HashMap<Long, Integer> mScheduledDiveListItemLoaderIDs = new HashMap<>();
+	protected HashMap<Long, Diver> mScheduledDiveListItemDiver = new HashMap<>();
+	protected HashMap<Long, ImageView> mScheduledDiveListItemDiverImageView = new HashMap<>();
 	protected LruCache<Long, Bitmap> mDiverProfileImageCache;
 	
 	@Override
@@ -131,22 +114,8 @@ public class ScheduledDiveListFragment extends ListFragment implements
 		mSavedInstanceState = savedInstanceState;
 		mDiveSiteManager = DiveSiteManager.get(getActivity());
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mLocationEnabled = false;
-            Toast.makeText(getActivity(), "Enable location services for accurate data", Toast.LENGTH_SHORT).show();
-        } else {
-        	mLocationEnabled = true;
-        }
-
 		mPrefs = 
-			getActivity().getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE);
+			Objects.requireNonNull(getActivity()).getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE);
 
 		mProgressDialog = new ProgressDialog(getActivity());
 		
@@ -164,7 +133,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 
 		mDiverProfileImageCache = new LruCache<Long, Bitmap>(cacheSize) {
 			@Override
-			protected int sizeOf(Long key, Bitmap bitmap) {
+			protected int sizeOf(@NonNull Long key, @NonNull Bitmap bitmap) {
 				// Cache size measured in kilobytes rather than number of items
 				return bitmap.getByteCount() / 1024;
 			}
@@ -172,17 +141,17 @@ public class ScheduledDiveListFragment extends ListFragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_scheduleddive_list, parent, false);
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+                             Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, parent, savedInstanceState);
 
 		mFilterNotificationContainer =
-				v.findViewById(R.id.scheduleddive_list_filter_notification_container);
+				Objects.requireNonNull(view).findViewById(R.id.scheduleddive_list_filter_notification_container);
 		mFilterNotification =
-				v.findViewById(R.id.scheduleddive_list_filter_notification);
+                view.findViewById(R.id.scheduleddive_list_filter_notification);
 
 		// Initialize filter panel
-		mListFilter = v.findViewById(R.id.scheduleddive_list_filter);
+		mListFilter = view.findViewById(R.id.scheduleddive_list_filter);
 
 		mFilterTitle = mListFilter
 				.findViewById(R.id.scheduleddive_list_filter_title);
@@ -213,9 +182,8 @@ public class ScheduledDiveListFragment extends ListFragment implements
 					int count) {
 				// Save text and reset list view
 				String filterTitle = c.toString().trim();
-				if (!mPrefs.getString(
-						DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "")
-						.equals(filterTitle)) {
+				if (!Objects.requireNonNull(mPrefs.getString(
+                        DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "")).equals(filterTitle)) {
 					mPrefs.edit().putString(
 						DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE,
 						filterTitle).apply();
@@ -245,8 +213,8 @@ public class ScheduledDiveListFragment extends ListFragment implements
 				String filterCountry = (String) parentView
 						.getItemAtPosition(position);
 
-				if (!mPrefs.getString(
-						DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, "")
+				if (!Objects.requireNonNull(mPrefs.getString(
+                        DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, ""))
 						.equals(filterCountry)) {
 					if (filterCountry.isEmpty()) {
 						filterCountry = getResources().getString(
@@ -452,22 +420,33 @@ public class ScheduledDiveListFragment extends ListFragment implements
 			}
 		});
 
-        mScheduledDiveItemMapView = v.findViewById(R.id.scheduleddive_list_item_mapView);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        mScheduledDiveItemMapView = view.findViewById(R.id.scheduleddive_list_item_mapView);
         mScheduledDiveItemMapView.onCreate(savedInstanceState);
         mScheduledDiveItemMapView.onResume();
-        mScheduledDiveItemMapView.getLayoutParams().height = (getActivity()
-                .getWindowManager().getDefaultDisplay().getHeight()
-                - getTitleBarHeight() - getStatusBarHeight()) / 2;
+        mScheduledDiveItemMapView.getLayoutParams().height = (displayMetrics.heightPixels - getTitleBarHeight() - getStatusBarHeight()) / 2;
         MapsInitializer.initialize(getActivity());
         mScheduledDiveItemMapView.setVisibility(View.GONE);
 
-        mScheduledDiveItemMapViewSnapShot = v.findViewById(R.id.scheduleddive_list_item_mapView_snapShot);
+        mScheduledDiveItemMapViewSnapShot = view.findViewById(R.id.scheduleddive_list_item_mapView_snapShot);
         mScheduledDiveItemMapViewSnapShot.setVisibility(View.GONE);
 
 		updateFilterNotification();
 
-		return v;
+		return view;
 	}
+
+    @Override
+    protected int getLayoutView() {
+        return R.layout.fragment_scheduleddive_list;
+    }
+
+    @Override
+    protected void onLocationPermissionGranted() {
+        //
+    }
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
@@ -588,7 +567,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 								latLngBuilder.include(southWest);
 								latLngBuilder.include(norhtEast);
 
-								Display display = getActivity().getWindowManager().getDefaultDisplay();
+								Display display = Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay();
 								Point size = new Point();
 								display.getSize(size);
 
@@ -603,34 +582,11 @@ public class ScheduledDiveListFragment extends ListFragment implements
 			});
         }
     }
-	
-	/**
-	 * Create a new LatLng which lies toNorth meters north and toEast meters
-	 * east of startLL
-	 */
-	private static LatLng move(LatLng startLL, double toNorth, double toEast) {
-		double lonDiff = meterToLongitude(toEast, startLL.latitude);
-		double latDiff = meterToLatitude(toNorth);
-		return new LatLng(startLL.latitude + latDiff, startLL.longitude
-				+ lonDiff);
-	}
-
-	private static double meterToLongitude(double meterToEast, double latitude) {
-		double latArc = Math.toRadians(latitude);
-		double radius = Math.cos(latArc) * EARTHRADIUS;
-		double rad = meterToEast / radius;
-		return Math.toDegrees(rad);
-	}
-
-	private static double meterToLatitude(double meterToNorth) {
-		double rad = meterToNorth / EARTHRADIUS;
-		return Math.toDegrees(rad);
-	}
 
 	private void setSelectedScheduledDive(ScheduledDive scheduleddive) {
 		if (mSelectedScheduledDive != scheduleddive) {
 			mSelectedScheduledDive = scheduleddive;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 		}
 	}
 	
@@ -642,9 +598,9 @@ public class ScheduledDiveListFragment extends ListFragment implements
 
 		if (mFilterCountry != null) {
 			// Initialize values and modify first blank entry to read 'All'
-			ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
-					getActivity(), android.R.layout.simple_spinner_item,
-					android.R.id.text1);
+			ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
+                    Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item,
+                    android.R.id.text1);
 			spinnerAdapter
 					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spinnerAdapter.addAll(getResources().getStringArray(
@@ -661,8 +617,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
 					DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY,
 					getResources().getString(R.string.filter_list_all));
 			for (int i = 0; i < spinnerAdapter.getCount(); i++) {
-				if (spinnerAdapter.getItem(i).toString()
-						.equals(currentFilterCountry)) {
+				if (spinnerAdapter.getItem(i).equals(currentFilterCountry)) {
 					mFilterCountry.setSelection(i);
 					break;
 				}
@@ -738,126 +693,16 @@ public class ScheduledDiveListFragment extends ListFragment implements
 
 	public int getStatusBarHeight() {
 		Rect r = new Rect();
-		Window w = getActivity().getWindow();
+		Window w = Objects.requireNonNull(getActivity()).getWindow();
 		w.getDecorView().getWindowVisibleDisplayFrame(r);
 		return r.top;
 	}
 
 	public int getTitleBarHeight() {
-		int viewTop = getActivity().getWindow()
+		int viewTop = Objects.requireNonNull(getActivity()).getWindow()
 				.findViewById(Window.ID_ANDROID_CONTENT).getTop();
 		return (viewTop - getStatusBarHeight());
 	}
-	
-	protected Location getLocation() {
-		if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient) != null) {
-			return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-		} else {
-			return mDiveSiteManager.getLastLocation();
-		}
-	}
-	
-	@Override
-	public void onStart() {
-		super.onStart();
-
-        // Connect the client.
-        mGoogleApiClient.connect();
-	}
-
-	@Override
-	public void onStop() {
-        // Disconnecting the client invalidates it.
-        mGoogleApiClient.disconnect();
-				
-		super.onStop();
-	}
-	
-	/**
-     * Show a dialog returned by Google Play services for the
-     * connection error code
-     *
-     * @param errorCode An error code returned from onConnectionFailed
-     */
-    private void showErrorDialog(int errorCode) {
-
-        // Get the error dialog from Google Play services
-        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-            errorCode,
-            getActivity(),
-            DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-        // If Google Play services can provide an error dialog
-        if (errorDialog != null) {
-
-            // Create a new DialogFragment in which to show the error dialog
-            ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-
-            // Set the dialog in the DialogFragment
-            errorFragment.setDialog(errorDialog);
-
-            // Show the error dialog in the DialogFragment
-            errorFragment.show(getActivity().getSupportFragmentManager(), TAG);
-        }
-    }
-	
-	/*
-     * Called by Location Services when the request to connect the
-     * client finishes successfully. At this point, you can
-     * request the current location or start periodic updates
-     */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        if (mLocationEnabled) {
-            mLocationRequest = LocationRequest.create();
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(1000); // Update location every second
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has been suspend");
-    }
-    
-    /*
-     * Called by Location Services if the attempt to
-     * Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                		getActivity(),
-                        DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
-            showErrorDialog(connectionResult.getErrorCode());
-        }
-    }
-    
 
     /**
      * Report location updates to the UI.
@@ -866,7 +711,7 @@ public class ScheduledDiveListFragment extends ListFragment implements
      */
     @Override
     public void onLocationChanged(Location location) {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationController.getLocationControler().stopLocationUpdates(getActivity());
     	mDiveSiteManager.saveLastLocation(location);
     }
 }
