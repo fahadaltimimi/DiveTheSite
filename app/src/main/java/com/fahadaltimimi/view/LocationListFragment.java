@@ -50,5 +50,13 @@ public abstract class LocationListFragment extends com.fahadaltimimi.view.BaseLi
         return mLocationFragmentHelper.startLocationUpdates();
     }
 
+    protected boolean checkLocationPermission() {
+        return mLocationFragmentHelper.checkLocationPermission();
+    }
+
+    protected  boolean canRequestLocationUpdates() {
+        return mLocationFragmentHelper.canRequestLocationUpdates();
+    }
+
     protected abstract void onLocationPermissionGranted();
 }

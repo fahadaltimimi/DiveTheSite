@@ -1,9 +1,7 @@
 package com.fahadaltimimi.divethesite.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
-import com.fahadaltimimi.divethesite.model.DiveSite;
 
 public class DiveSiteListTabFragment extends DiveListTabFragment {
 

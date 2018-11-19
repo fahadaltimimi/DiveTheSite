@@ -60,7 +60,7 @@ public class LocationFragmentHelper implements
             Toast.makeText(fragment.getActivity(), "Enable location services for accurate data", Toast.LENGTH_SHORT).show();
         }
 
-        checkLocationPermission();
+        requestLocationPermission();
     }
 
     /**
@@ -143,14 +143,25 @@ public class LocationFragmentHelper implements
     }
 
     /**
+     * Check for location permissions
+     * @return Boolean indicating if location permissions granted already
+     */
+    public boolean checkLocationPermission() {
+        return (ContextCompat.checkSelfPermission(Objects.requireNonNull(mFragment.getActivity()),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED);
+    }
+
+    public boolean canRequestLocationUpdates() {
+        return mGoogleApiClient.isConnected() && LocationController.getLocationControler().isLocationEnabled(mFragment.getActivity());
+    }
+
+    /**
      * Check for and request, if necessary, location permissions.
      * @return Boolean indicating if permission was granted already. If not, location permissions are requested fromt he user.
      */
-    private boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(mFragment.getActivity()),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
+    private boolean requestLocationPermission() {
+        if (checkLocationPermission()) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(mFragment.getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
