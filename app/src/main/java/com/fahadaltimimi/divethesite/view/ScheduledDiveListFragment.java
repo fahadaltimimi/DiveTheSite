@@ -530,56 +530,62 @@ public class ScheduledDiveListFragment extends com.fahadaltimimi.view.LocationLi
             mScheduledDiveItemMapView.setVisibility(View.VISIBLE);
             mScheduledDiveItemMapViewSnapShot.setVisibility(View.INVISIBLE);
 
+            initializeMap(scheduledDive);
+        }
+    }
+
+    private void initializeMap(final ScheduledDive scheduledDive) {
+        if (checkLocationPermission()) {
             mScheduledDiveItemMapView.onResume();
-			mScheduledDiveItemMapView.getMapAsync(new OnMapReadyCallback() {
-				@Override
-				public void onMapReady(GoogleMap googleMap) {
-					LatLngBounds.Builder latLngBuilder = new LatLngBounds.Builder();
-					for (int i = 0; i < scheduledDive.getScheduledDiveDiveSites().size(); i++) {
-						final DiveSite diveSite = scheduledDive.getScheduledDiveDiveSites().get(i).getDiveSite();
-						if (diveSite != null) {
-							LatLng latLng = new LatLng(diveSite.getLatitude(), diveSite.getLongitude());
-							latLngBuilder.include(latLng);
+            mScheduledDiveItemMapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    LatLngBounds.Builder latLngBuilder = new LatLngBounds.Builder();
+                    for (int i = 0; i < scheduledDive.getScheduledDiveDiveSites().size(); i++) {
+                        final DiveSite diveSite = scheduledDive.getScheduledDiveDiveSites().get(i).getDiveSite();
+                        if (diveSite != null) {
+                            LatLng latLng = new LatLng(diveSite.getLatitude(), diveSite.getLongitude());
+                            latLngBuilder.include(latLng);
 
-							// If this marker exists, no need to add it again
-							MarkerOptions markerOptions = new MarkerOptions()
-									.position(latLng).title(diveSite.getName());
+                            // If this marker exists, no need to add it again
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(latLng).title(diveSite.getName());
 
-							if (diveSite.getOnlineId() != -1) {
-								markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.divesite_active_marker));
-							} else {
-								markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.divesite_active_local_marker));
-							}
+                            if (diveSite.getOnlineId() != -1) {
+                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.divesite_active_marker));
+                            } else {
+                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.divesite_active_local_marker));
+                            }
 
-							googleMap.addMarker(markerOptions);
+                            googleMap.addMarker(markerOptions);
 
-							/**
-							 * Add 2 points 1000m northEast and southWest of the
-							 * center. They increase the bounds only, if they are
-							 * not already larger than this.
-							 */
+                            /**
+                             * Add 2 points 1000m northEast and southWest of the
+                             * center. They increase the bounds only, if they are
+                             * not already larger than this.
+                             */
 
-							if (scheduledDive.getScheduledDiveDiveSites().size() > 0) {
-								LatLngBounds tmpBounds = latLngBuilder.build();
-								LatLng center = tmpBounds.getCenter();
-								LatLng norhtEast = move(center, 5000, 5000);
-								LatLng southWest = move(center, -5000, -5000);
-								latLngBuilder.include(southWest);
-								latLngBuilder.include(norhtEast);
+                            if (scheduledDive.getScheduledDiveDiveSites().size() > 0) {
+                                LatLngBounds tmpBounds = latLngBuilder.build();
+                                LatLng center = tmpBounds.getCenter();
+                                LatLng norhtEast = move(center, 5000, 5000);
+                                LatLng southWest = move(center, -5000, -5000);
+                                latLngBuilder.include(southWest);
+                                latLngBuilder.include(norhtEast);
 
-								Display display = Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay();
-								Point size = new Point();
-								display.getSize(size);
+                                Display display = Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay();
+                                Point size = new Point();
+                                display.getSize(size);
 
-								LatLngBounds latLngBounds = latLngBuilder.build();
-								CameraUpdate movement = CameraUpdateFactory.newLatLngBounds(latLngBounds, size.x, size.y, 100);
+                                LatLngBounds latLngBounds = latLngBuilder.build();
+                                CameraUpdate movement = CameraUpdateFactory.newLatLngBounds(latLngBounds, size.x, size.y, 100);
 
-								googleMap.moveCamera(movement);
-							}
-						}
-					}
-				}
-			});
+                                googleMap.moveCamera(movement);
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
 

@@ -1,6 +1,5 @@
 package com.fahadaltimimi.divethesite.view;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,7 +10,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -21,7 +19,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.view.ActionMode;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,8 +52,6 @@ import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
 import com.fahadaltimimi.divethesite.model.ScheduledDiveUser;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 
 public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment implements
 		LoaderCallbacks<Cursor> {

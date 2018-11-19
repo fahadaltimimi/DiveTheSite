@@ -1,10 +1,9 @@
 package com.fahadaltimimi.divethesite.view;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Objects;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -16,7 +15,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.ActionMode;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.divethesite.model.DiveLogActivity;
@@ -48,9 +47,6 @@ import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
 import com.fahadaltimimi.divethesite.model.ScheduledDiveUser;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 
 public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 	
@@ -100,7 +96,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		// Register list view with context menu
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
+        ListView listView = Objects.requireNonNull(v).findViewById(android.R.id.list);
 
         listView.setOnScrollListener(new OnScrollListener(){
 
@@ -155,7 +151,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 							ScheduledDive scheduledDive = adapter.getItem(i);
 
 							// Save sites for each scheduled dive
-							for (int j = 0; j < scheduledDive.getScheduledDiveDiveSites().size(); j++) {
+							for (int j = 0; j < Objects.requireNonNull(scheduledDive).getScheduledDiveDiveSites().size(); j++) {
 								DiveSite diveSite = scheduledDive.getScheduledDiveDiveSites().get(j).getDiveSite();
 								diveSite.setLocalId(mDiveSiteManager.getDiveSiteLocalId(diveSite.getOnlineId()));
 								if (diveSite != null) {
@@ -237,11 +233,11 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		});
 
 		// Hide published, unpublished filter for online fragment
-		CheckBox filterPublished = (CheckBox) mListFilter
+		CheckBox filterPublished = mListFilter
 				.findViewById(R.id.scheduleddive_list_filter_published);
 		filterPublished.setVisibility(View.GONE);
 
-		CheckBox filterUnpublished = (CheckBox) mListFilter
+		CheckBox filterUnpublished = mListFilter
 				.findViewById(R.id.scheduleddive_list_filter_unpublished);
 		filterUnpublished.setVisibility(View.GONE);
 
@@ -285,12 +281,15 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		switch (item.getItemId()) {
 
 		case R.id.menu_item_refresh_scheduleddive:
-            if (mGoogleApiClient.isConnected() && mLocationEnabled) {
+            if (canRequestLocationUpdates()) {
                 if (mRefreshMenuItem != null) {
                     mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
                 }
                 mForceLocationDataRefresh = true;
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                if (!startLocationUpdates()) {
+                    clearScheduledDives();
+                    refreshOnlineScheduledDives();
+				}
             } else {
                 clearScheduledDives();
                 refreshOnlineScheduledDives();
@@ -325,19 +324,19 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 	@Override
 	protected void updateFilterNotification() {
 		// Determine filter to set from selection
-		String titleFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "").trim();
-		String countryFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, "").trim();
-		String stateFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_STATE, "").trim();
-		String cityFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_CITY, "").trim();
+		String titleFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "")).trim();
+		String countryFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, "")).trim();
+		String stateFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_STATE, "")).trim();
+		String cityFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_CITY, "")).trim();
 
-		String previousDaysFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_PREVIOUSDAYS, "").trim();
-		String nextDaysFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_NEXTDAYS, "").trim();
+		String previousDaysFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_PREVIOUSDAYS, "")).trim();
+		String nextDaysFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_NEXTDAYS, "")).trim();
 
 		ArrayList<String> filterNotification = new ArrayList<String>();
 
@@ -405,24 +404,24 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		}
 
 		String titleFilter;
-		titleFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "").trim();
+		titleFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "")).trim();
 
-		String countryFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, "").trim();
+		String countryFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, "")).trim();
 		if (countryFilter.equals(getResources().getString(R.string.filter_list_all))) {
 			countryFilter = "";
 		}
 
-		String stateFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_STATE, "").trim();
-		String cityFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_CITY, "").trim();
+		String stateFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_STATE, "")).trim();
+		String cityFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_CITY, "")).trim();
 		
-		String previousDaysFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_PREVIOUSDAYS, "").trim();
-		String nextDaysFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_NEXTDAYS, "").trim();
+		String previousDaysFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_PREVIOUSDAYS, "")).trim();
+		String nextDaysFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_NEXTDAYS, "")).trim();
 		
 		String timeStampStartFilter = "";
 		String timeStampEndFilter = "";
@@ -533,8 +532,8 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 
 	private int getScheduledDiveIndex(ScheduledDive scheduledDive) {
 		int index = -1;
-		for (int i = 0; i < ((ScheduledDiveAdapter) getListAdapter()).getCount(); i++) {
-			if (((ScheduledDiveAdapter) getListAdapter()).getItem(i).getOnlineId() == 
+		for (int i = 0; i < getListAdapter().getCount(); i++) {
+			if (Objects.requireNonNull(((ScheduledDiveAdapter) getListAdapter()).getItem(i)).getOnlineId() ==
 					scheduledDive.getOnlineId()) {
 				index = i;
 				break;
@@ -545,8 +544,8 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 
 	private ScheduledDive getScheduledDive(long scheduledDiveOnlineId) {
 		ScheduledDive scheduledDiveDuplicate = null;
-		for (int i = 0; i < ((ScheduledDiveAdapter) getListAdapter()).getCount(); i++) {
-			if (((ScheduledDiveAdapter) getListAdapter()).getItem(i).getOnlineId() == 
+		for (int i = 0; i < getListAdapter().getCount(); i++) {
+			if (Objects.requireNonNull(((ScheduledDiveAdapter) getListAdapter()).getItem(i)).getOnlineId() ==
 					scheduledDiveOnlineId) {
 				scheduledDiveDuplicate = ((ScheduledDiveAdapter) getListAdapter()).getItem(i);
 				break;
@@ -612,24 +611,24 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 	}
 	
 	protected boolean onlineFilterChanged() {
-		String titleFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "").trim();
-		String countryFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, "").trim();
+		String titleFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_TITLE, "")).trim();
+		String countryFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_COUNTRY, "")).trim();
 		if (countryFilter.equals(getResources().getString(
 				R.string.filter_list_all))) {
 			countryFilter = "";
 		}
 
-		String stateFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_STATE, "").trim();
-		String cityFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_CITY, "").trim();
+		String stateFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_STATE, "")).trim();
+		String cityFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_CITY, "")).trim();
 		
-		String previousDaysFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_PREVIOUSDAYS, "").trim();
-		String nextDaysFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_NEXTDAYS, "").trim();
+		String previousDaysFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_PREVIOUSDAYS, "")).trim();
+		String nextDaysFilter = Objects.requireNonNull(mPrefs.getString(
+                DiveSiteManager.PREF_FILTER_SCHEDULEDDIVE_NEXTDAYS, "")).trim();
 
 		return !mLastOnlineFilter[ONLINE_FILTER_TITLE_INDEX]
 						.equals(titleFilter)
@@ -650,41 +649,46 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		return ((ScheduledDiveAdapter) getListAdapter()).getItem(position);
 	}
 
+    private Location getLocation() {
+        return LocationController.getLocationControler().getLocation(getActivity(), mDiveSiteManager.getLastLocation());
+    }
+
 	private class ScheduledDiveAdapter extends ArrayAdapter<ScheduledDive> {
 
 		public ScheduledDiveAdapter(ArrayList<ScheduledDive> scheduledDives) {
-			super(getActivity(), 0, scheduledDives);
+			super(Objects.requireNonNull(getActivity()), 0, scheduledDives);
 		}
 
-		@Override
-		public View getView(int position, View view, ViewGroup parent) {
+		@NonNull
+        @Override
+		public View getView(int position, View view, @NonNull ViewGroup parent) {
 			// If we weren't given a view, inflate one using the layout we created for each list item
 			if (view == null) {
-				view = getActivity().getLayoutInflater().inflate(R.layout.scheduleddive_list_item, parent, false);
+				view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.scheduleddive_list_item, parent, false);
 			}
 
 			final ScheduledDive scheduledDive = getItem(position);
 
             // Update parent fragment if tab
             if (getParentFragment() != null && getParentFragment() instanceof DiveListTabFragment) {
-                ((DiveListTabFragment) getParentFragment()).updateOnlineSubTitles(String.valueOf(scheduledDive.getScheduledDiveCountWhenRetreived()), "");
+                ((DiveListTabFragment) getParentFragment()).updateOnlineSubTitles(String.valueOf(Objects.requireNonNull(scheduledDive).getScheduledDiveCountWhenRetreived()), "");
             }
 
 			// Save id to view for later updating with buddies and stops
-			mScheduledDiveListItemViews.put(scheduledDive.getOnlineId(), view);
+			mScheduledDiveListItemViews.put(Objects.requireNonNull(scheduledDive).getOnlineId(), view);
 			if (mScheduledDiveListItemLoaderIDs.get(scheduledDive.getOnlineId()) == null) {
 				mScheduledDiveListItemLoaderIDs.put(scheduledDive.getOnlineId(),
 						mScheduledDiveListItemLoaderIDs.size());
 			}
 
 			// Remove sites and users before loading them
-			LinearLayout scheduledDiveDiveSiteListView = 
-					(LinearLayout) view.findViewById(R.id.scheduleddive_item_site_list);
+			LinearLayout scheduledDiveDiveSiteListView =
+                    view.findViewById(R.id.scheduleddive_item_site_list);
 			scheduledDiveDiveSiteListView.setTag(view);
 			scheduledDiveDiveSiteListView.removeAllViews();
 			
-			LinearLayout scheduledDiveUserListView = 
-					(LinearLayout) view.findViewById(R.id.scheduleddive_item_user_list);
+			LinearLayout scheduledDiveUserListView =
+                    view.findViewById(R.id.scheduleddive_item_user_list);
 			scheduledDiveUserListView.removeAllViews();
 
 			// Process scheduled dive's sites 
@@ -753,16 +757,16 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 					scheduledDiveDiveSiteListView.addView(scheduledDiveDiveSiteView);
 	
 					// Set scheduled dive site view fields
-					TextView scheduledDiveDiveSiteName = 
-							(TextView) scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_name);
+					TextView scheduledDiveDiveSiteName =
+                            scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_name);
 					scheduledDiveDiveSiteName.setText(diveSite.getName());
 					
-					TextView scheduledDiveDiveSiteLocation = 
-							(TextView) scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_location);
+					TextView scheduledDiveDiveSiteLocation =
+                            scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_location);
 					scheduledDiveDiveSiteLocation.setText(diveSite.getFullLocation());
 					
-					TextView scheduledDiveDiveSiteVoteCount = 
-							(TextView) scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_vote_count);
+					TextView scheduledDiveDiveSiteVoteCount =
+                            scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_vote_count);
 					//scheduledDiveDiveSiteVoteCount.setVisibility(View.VISIBLE);
 					scheduledDiveDiveSiteVoteCount.setText(String.format(getResources().getString(R.string.scheduleddive_list_vote_count), 
 							scheduledDiveDiveSite.getVoteCount()));
@@ -821,8 +825,8 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 					scheduledDiveUserListView.addView(scheduledDiveUserView);
 	
 					if (scheduledDiveUser.getUserId() != -1) {
-						ImageButton userProfile = 
-								(ImageButton) scheduledDiveUserView.findViewById(R.id.scheduleddive_user_picture);
+						ImageButton userProfile =
+                                scheduledDiveUserView.findViewById(R.id.scheduleddive_user_picture);
 	
 						mScheduledDiveListItemDiverImageView.put(scheduledDiveUser.getOnlineId(), userProfile);
 	
@@ -903,7 +907,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 			}
 			
 			// Title
-			TextView title = (TextView) view.findViewById(R.id.scheduleddive_item_title);
+			TextView title = view.findViewById(R.id.scheduleddive_item_title);
 			if (scheduledDive.getTitle().trim().isEmpty()) {
 				title.setText(getResources().getString(R.string.scheduleddive_default_title) + 
 						" " + scheduledDive.getTimestampStringLong());
@@ -912,21 +916,21 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 			}
 
 			// Timestamp
-			TextView timeStamp = (TextView) view.findViewById(R.id.scheduleddive_item_timestamp);
+			TextView timeStamp = view.findViewById(R.id.scheduleddive_item_timestamp);
 			timeStamp.setText(dateTimeFormat.format(scheduledDive.getTimestamp()));
 
 			// Comment
-			TextView commentView = (TextView) view.findViewById(R.id.scheduleddive_comment);
+			TextView commentView = view.findViewById(R.id.scheduleddive_comment);
 			commentView.setText(scheduledDive.getComment());
 			
 			// Diver Count
-			TextView diverCountView = (TextView) view.findViewById(R.id.scheduleddive_item_divercount);
+			TextView diverCountView = view.findViewById(R.id.scheduleddive_item_divercount);
 			diverCountView.setText(String.format(
 					getResources().getString(R.string.scheduleddive_list_diver_count), 
 					scheduledDive.getAttendingUsersCount()));
 			
 			// Determine which button to show
-			Button scheduledDiveAttend = (Button) view.findViewById(R.id.scheduleddive_item_attend);
+			Button scheduledDiveAttend = view.findViewById(R.id.scheduleddive_item_attend);
 			scheduledDiveAttend.setTag(scheduledDive);
 			scheduledDiveAttend.setOnClickListener(new View.OnClickListener() {
 				
@@ -968,10 +972,10 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 										// Update buttons in view
 										View scheduledDiveView = 
 												mScheduledDiveListItemViews.get(scheduledDive.getOnlineId());
-										Button scheduledDiveAttend = 
-												(Button) scheduledDiveView.findViewById(R.id.scheduleddive_item_attend);
-										Button scheduledDiveBail = 
-												(Button) scheduledDiveView.findViewById(R.id.scheduleddive_item_bail);
+										Button scheduledDiveAttend =
+                                                Objects.requireNonNull(scheduledDiveView).findViewById(R.id.scheduleddive_item_attend);
+										Button scheduledDiveBail =
+                                                scheduledDiveView.findViewById(R.id.scheduleddive_item_bail);
 										
 										scheduledDiveAttend.setVisibility(View.GONE);
 										scheduledDiveBail.setVisibility(View.VISIBLE);
@@ -1001,7 +1005,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 				}
 			});
 			
-			Button scheduledDiveBail = (Button) view.findViewById(R.id.scheduleddive_item_bail);
+			Button scheduledDiveBail = view.findViewById(R.id.scheduleddive_item_bail);
 			scheduledDiveBail.setTag(scheduledDive);
 			scheduledDiveBail.setOnClickListener(new View.OnClickListener() {
 				
@@ -1043,10 +1047,10 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 										// Update buttons in view
 										View scheduledDiveView = 
 												mScheduledDiveListItemViews.get(scheduledDive.getOnlineId());
-										Button scheduledDiveAttend = 
-												(Button) scheduledDiveView.findViewById(R.id.scheduleddive_item_attend);
-										Button scheduledDiveBail = 
-												(Button) scheduledDiveView.findViewById(R.id.scheduleddive_item_bail);
+										Button scheduledDiveAttend =
+                                                Objects.requireNonNull(scheduledDiveView).findViewById(R.id.scheduleddive_item_attend);
+										Button scheduledDiveBail =
+                                                scheduledDiveView.findViewById(R.id.scheduleddive_item_bail);
 										
 										scheduledDiveAttend.setVisibility(View.VISIBLE);
 										scheduledDiveBail.setVisibility(View.GONE);
@@ -1076,7 +1080,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 				}
 			});
 			
-			Button scheduledDiveLog = (Button) view.findViewById(R.id.scheduleddive_item_log);
+			Button scheduledDiveLog = view.findViewById(R.id.scheduleddive_item_log);
 			scheduledDiveLog.setTag(scheduledDive);		
 			scheduledDiveLog.setOnClickListener(new View.OnClickListener() {
 				
@@ -1199,7 +1203,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 			}
 			
 			// Submitter
-			ImageButton submitterView = (ImageButton) view.findViewById(R.id.scheduleddive_item_picture);
+			ImageButton submitterView = view.findViewById(R.id.scheduleddive_item_picture);
 			mScheduledDiveListItemDiverImageView.put(scheduledDive.getOnlineId(), submitterView);
 			
 			if (mDiverProfileImageCache.get(scheduledDive.getSubmitterId()) == null) {
@@ -1225,7 +1229,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 											mDiverProfileImageCache.put(diver.getOnlineId(), result);
 											ImageButton diverProfileImage = 
 												(ImageButton) mScheduledDiveListItemDiverImageView.get(scheduledDive.getOnlineId());
-											diverProfileImage.setImageBitmap(result);
+											Objects.requireNonNull(diverProfileImage).setImageBitmap(result);
 										}
 
 									};
@@ -1266,10 +1270,10 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 				}
 			});
 
-			ImageButton scheduledDivePublished = 
-				(ImageButton) view.findViewById(R.id.scheduleddive_indicate_isPublished);
-			ImageButton scheduledDiveUnpublished = 
-				(ImageButton) view.findViewById(R.id.scheduleddive_indicate_isUnpublished);
+			ImageButton scheduledDivePublished =
+                    view.findViewById(R.id.scheduleddive_indicate_isPublished);
+			ImageButton scheduledDiveUnpublished =
+                    view.findViewById(R.id.scheduleddive_indicate_isUnpublished);
 			if (scheduledDive.isPublished()) {
 				scheduledDivePublished.setVisibility(View.VISIBLE);
 				scheduledDiveUnpublished.setVisibility(View.GONE);
@@ -1278,8 +1282,8 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 				scheduledDiveUnpublished.setVisibility(View.VISIBLE);
 			}
 
-			ImageButton scheduledDiveSaved = 
-				(ImageButton) view.findViewById(R.id.scheduleddive_indicate_isSaved);
+			ImageButton scheduledDiveSaved =
+                    view.findViewById(R.id.scheduleddive_indicate_isSaved);
 			if (scheduledDive.getLocalId() != -1) {
 				scheduledDiveSaved.setVisibility(View.VISIBLE);
 			} else {
@@ -1288,7 +1292,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 
             // Initialize visibility secondary view
             View secondaryView = view.findViewById(R.id.scheduleddive_item_secondary_view);
-            final ViewGroup mapContainer = (ViewGroup) view.findViewById(R.id.scheduleddive_list_item_mapView_container);
+            final ViewGroup mapContainer = view.findViewById(R.id.scheduleddive_list_item_mapView_container);
             if (scheduledDive == mSelectedScheduledDive) {
                 view.setBackgroundColor(getResources().getColor(R.color.diveSiteSelected));
                 secondaryView.setVisibility(View.VISIBLE);
