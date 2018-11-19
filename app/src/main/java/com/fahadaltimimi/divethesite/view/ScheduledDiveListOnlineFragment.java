@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.ActionMode;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -94,8 +95,8 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-			Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+							 Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		// Register list view with context menu
