@@ -1187,10 +1187,12 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 					.fromResource(R.drawable.divesite_active_local_marker));
 		}
 
-		mGoogleMap.clear();
-		mGoogleMap.addMarker(markerOptions);
-		mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,
-				12.0f));
+		if (mGoogleMap != null) {
+			mGoogleMap.clear();
+			mGoogleMap.addMarker(markerOptions);
+			mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,
+					12.0f));
+		}
 	}
 
 	private void updateMapViewHeight() {
