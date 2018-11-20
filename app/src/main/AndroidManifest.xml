@@ -26,7 +26,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo_symbol_shadow2"
+        android:icon="@drawable/ic_launcher_elevated"
+        android:roundIcon="@drawable/ic_launcher_elevated"
         android:label="@string/app_name"
         android:theme="@style/Theme.DiveTheSiteTheme" >
 
