@@ -161,7 +161,7 @@ public class LocationFragmentHelper implements
      * @return Boolean indicating if permission was granted already. If not, location permissions are requested fromt he user.
      */
     private boolean requestLocationPermission() {
-        if (checkLocationPermission()) {
+        if (!checkLocationPermission()) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(mFragment.getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
