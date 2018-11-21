@@ -8,18 +8,14 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -55,16 +51,12 @@ import com.fahadaltimimi.divethesite.model.DiveLog;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.model.LoadOnlineImageTask;
 import com.fahadaltimimi.view.ObservableScrollView;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -75,9 +67,8 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
     private static final String ARG_DIVESITE = "DIVESITE";
 
 	private static final int MAPVIEW_HEIGHT_BUFFER = 200;
-	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
 
-	private boolean mDisableSave = false;
+    private boolean mDisableSave = false;
 	private Boolean mRefreshingOnlineNDBCData = false;
 	
 	private HashMap<NDBCStation, Marker> mVisibleNDBCStationMarkers;
@@ -787,6 +778,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
 		mMapView = view.findViewById(R.id.divesite_view_mapView);
 		mMapView.onCreate(savedInstanceState);
+        initializeMap();
 
         mMapViewSnapShot = view.findViewById(R.id.divesite_view_mapView_snapShot);
 
@@ -803,70 +795,25 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
     private void initializeMap() {
         if (checkLocationPermission()) {
-            mMapView.post(new Runnable() {
-                @Override
-                public void run() {
-                    updateMapViewHeight();
-                }
-            });
-
             mMapView.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
-                    mGoogleMap = googleMap;
-                    if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_COARSE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        mGoogleMap.setMyLocationEnabled(true);
+                    if (mDiveSite != null) {
+                        LatLng latLng = new LatLng(mDiveSite.getLatitude(), mDiveSite.getLongitude());
+
+                        // If this marker exists, no need to add it again
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(latLng).title(mDiveSite.getName());
+
+                        if (mDiveSite.getOnlineId() != -1) {
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.divesite_active_marker));
+                        } else {
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.divesite_active_local_marker));
+                        }
+
+                        googleMap.addMarker(markerOptions);
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
                     }
-                    mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-                        @Override
-                        public boolean onMarkerClick(Marker marker) {
-                            if (mVisibleNDBCStationMarkers.containsValue(marker)) {
-
-                                // Load buoy data then show data toolbar
-                                NDBCStation selectedStation = null;
-                                Object[] ndbcStations = mVisibleNDBCStationMarkers.keySet()
-                                        .toArray();
-                                for (int i = 0; i < Objects.requireNonNull(ndbcStations).length; i++) {
-                                    if (Objects.requireNonNull(mVisibleNDBCStationMarkers.get(ndbcStations[i]))
-                                            .equals(marker)) {
-                                        selectedStation = (NDBCStation) ndbcStations[i];
-                                        break;
-                                    }
-                                }
-
-                                loadDataForStation(selectedStation);
-                            } else {
-                                // Directions to this marker using intent
-                                String destLatLng = marker.getPosition().latitude + ","
-                                        + marker.getPosition().longitude;
-                                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                                        Uri.parse("http://maps.google.com/maps?daddr="
-                                                + destLatLng));
-                                startActivity(intent);
-                            }
-
-                            return true;
-                        }
-                    });
-
-                    mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
-
-                        @Override
-                        public void onCameraChange(CameraPosition cameraPosition) {
-                            // Only refresh dive sites and station data if we're zoomed in
-                            // enough, otherwise display message
-                            if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
-                                refreshVisibleNDBCStations();
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(),
-                                        R.string.divesite_map_zoom_view_data,
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    });
                 }
             });
 

@@ -4,42 +4,25 @@ import java.util.ArrayList;
 
 import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
-import com.fahadaltimimi.divethesite.controller.DiveSiteManager.ErrorDialogFragment;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.DiveLog;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.view.LocationFragment;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 public abstract class DiveSitePageFragment extends LocationFragment {
-
-	private static final String TAG = "DiveSitePageFragment";
-
-	public static final int LOAD_DIVESITES = 0;
-
 	protected DiveSiteManager mDiveSiteManager;
 
 	protected DiveSite mDiveSite;
@@ -170,7 +153,7 @@ public abstract class DiveSitePageFragment extends LocationFragment {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
-									// Create and initialize progress dialog
+									// Create and initializ progress dialog
 									mProgressDialog
 											.setMessage(getString(R.string.publish_divesite_progress));
 									mProgressDialog.setCancelable(false);
