@@ -31,9 +31,9 @@ import com.fahadaltimimi.divethesite.model.DiveLog;
 import com.fahadaltimimi.divethesite.model.DiveLogActivity;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
+import com.fahadaltimimi.view.FAMapView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -56,7 +56,7 @@ public class DiveLogListFragment extends ListFragment {
 	protected LinearLayout mFilterNotificationContainer;
 	protected TextView mFilterNotification;
 
-    protected MapView mDiveLogItemMapView;
+    protected FAMapView mDiveLogItemMapView;
     protected ImageView mDiveLogItemMapViewSnapShot;
 
 	protected MenuItem mRefreshMenuItem = null;
@@ -120,12 +120,12 @@ public class DiveLogListFragment extends ListFragment {
 		View v = inflater
 				.inflate(R.layout.fragment_divelog_list, parent, false);
 
-		mFilterNotificationContainer = (LinearLayout) v
+		mFilterNotificationContainer = v
 				.findViewById(R.id.divesite_list_filter_notification_container);
-		mFilterNotification = (TextView) v
+		mFilterNotification = v
 				.findViewById(R.id.divesite_list_filter_notification);
 
-        mDiveLogItemMapView = (MapView) v.findViewById(R.id.divelog_list_item_mapView);
+        mDiveLogItemMapView = v.findViewById(R.id.divelog_list_item_mapView);
         mDiveLogItemMapView.onCreate(savedInstanceState);
         mDiveLogItemMapView.onResume();
         mDiveLogItemMapView.getLayoutParams().height = (getActivity()
@@ -134,7 +134,7 @@ public class DiveLogListFragment extends ListFragment {
         MapsInitializer.initialize(getActivity());
         mDiveLogItemMapView.setVisibility(View.GONE);
 
-        mDiveLogItemMapViewSnapShot = (ImageView) v.findViewById(R.id.divelog_list_item_mapView_snapShot);
+        mDiveLogItemMapViewSnapShot = v.findViewById(R.id.divelog_list_item_mapView_snapShot);
         mDiveLogItemMapViewSnapShot.setVisibility(View.GONE);
 
 		updateFilterNotification();

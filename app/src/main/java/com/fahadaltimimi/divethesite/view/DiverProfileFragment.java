@@ -50,11 +50,11 @@ import com.fahadaltimimi.model.LoadOnlineImageTask;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.DiverCertification;
+import com.fahadaltimimi.view.FAMapView;
 import com.fahadaltimimi.view.ObservableScrollView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -112,7 +112,7 @@ public class DiverProfileFragment extends DiverPageFragment {
 
     private View mMapContainer;
     private TextView mLogMapLabel;
-    private MapView mMapView;
+    private FAMapView mMapView;
     private GoogleMap mGoogleMap;
     private ImageView mMapViewSnapShot;
 
