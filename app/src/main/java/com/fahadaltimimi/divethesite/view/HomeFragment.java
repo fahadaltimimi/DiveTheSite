@@ -47,6 +47,7 @@ import com.fahadaltimimi.divethesite.model.ScheduledDiveDiveSite;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
+import com.fahadaltimimi.view.LocationFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -61,7 +62,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class HomeFragment extends com.fahadaltimimi.view.LocationFragment {
+public class HomeFragment extends LocationFragment {
 
     private static final SimpleDateFormat scheduledDiveTimestampFormat = new SimpleDateFormat("dd/MM/yy, HH:mm");
 
@@ -1973,7 +1974,7 @@ public class HomeFragment extends com.fahadaltimimi.view.LocationFragment {
 			return view;
 		}
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 	  super.onConfigurationChanged(newConfig);

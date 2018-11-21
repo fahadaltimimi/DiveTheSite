@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +18,7 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
@@ -41,6 +43,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.NDBCStation;
@@ -69,8 +72,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
-	private static final String TAG = "DiveSitePage1Fragment";
-	private static final String ARG_DIVESITE = "DIVESITE";
+    private static final String ARG_DIVESITE = "DIVESITE";
 
 	private static final int MAPVIEW_HEIGHT_BUFFER = 200;
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
@@ -180,15 +182,15 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mVisibleNDBCStationMarkers = new HashMap<NDBCStation, Marker>();
+		mVisibleNDBCStationMarkers = new HashMap<>();
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_divesite_details, parent, false);
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+                             Bundle savedInstanceState) {
+		View view = super.onCreateView(inflater, parent, savedInstanceState);
 
-        ((ObservableScrollView) view).setOnScrollStoppedListener(new ObservableScrollView.OnScrollStoppedListener() {
+        ((ObservableScrollView) Objects.requireNonNull(view)).setOnScrollStoppedListener(new ObservableScrollView.OnScrollStoppedListener() {
 
             public void onScrollStopped() {
                 setSnapshot(View.INVISIBLE);
@@ -251,7 +253,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
 				mDiveSite.setName((c.toString()).trim());
-				getActivity().setTitle(mDiveSite.getName());
+				Objects.requireNonNull(getActivity()).setTitle(mDiveSite.getName());
 			}
 
 			@Override
@@ -262,7 +264,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 			}
 		});
 
@@ -299,7 +300,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -311,7 +311,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -321,7 +320,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -333,7 +331,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -358,7 +355,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
 					@Override
 					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub
 					}
 
 				});
@@ -482,7 +478,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -494,8 +489,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 
@@ -530,7 +523,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -542,7 +534,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 			}
 		});
 
@@ -552,7 +543,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -564,7 +554,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 			}
 		});
 
@@ -574,7 +563,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -586,7 +574,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 			}
 		});
 
@@ -596,7 +583,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -608,7 +594,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 			}
 		});
 
@@ -800,78 +785,8 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			}
 		});
 
-		// Set height of map view to screen's size minus title bar after 2
-		// second delay
 		mMapView = view.findViewById(R.id.divesite_view_mapView);
 		mMapView.onCreate(savedInstanceState);
-		mMapView.post(new Runnable() {
-			@Override
-			public void run() {
-				updateMapViewHeight();
-			}
-		});
-
-		mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mGoogleMap = googleMap;
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    mGoogleMap.setMyLocationEnabled(true);
-                }
-                mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        if (mVisibleNDBCStationMarkers.containsValue(marker)) {
-
-                            // Load buoy data then show data toolbar
-                            NDBCStation selectedStation = null;
-                            Object[] ndbcStations = mVisibleNDBCStationMarkers.keySet()
-                                    .toArray();
-                            for (int i = 0; i < ndbcStations.length; i++) {
-                                if (mVisibleNDBCStationMarkers.get(ndbcStations[i])
-                                        .equals(marker)) {
-                                    selectedStation = (NDBCStation) ndbcStations[i];
-                                    break;
-                                }
-                            }
-
-                            loadDataForStation(selectedStation);
-                        } else {
-                            // Directions to this marker using intent
-                            String destLatLng = marker.getPosition().latitude + ","
-                                    + marker.getPosition().longitude;
-                            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                                    Uri.parse("http://maps.google.com/maps?daddr="
-                                            + destLatLng));
-                            startActivity(intent);
-                        }
-
-                        return true;
-                    }
-                });
-
-                mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
-
-                    @Override
-                    public void onCameraChange(CameraPosition cameraPosition) {
-                        // Only refresh dive sites and station data if we're zoomed in
-                        // enough, otherwise display message
-                        if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
-                            refreshVisibleNDBCStations();
-                        } else {
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    R.string.divesite_map_zoom_view_data,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                });
-            }
-        });
-
-        MapsInitializer.initialize(this.getActivity());
 
         mMapViewSnapShot = view.findViewById(R.id.divesite_view_mapView_snapShot);
 
@@ -880,6 +795,84 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
 		return view;
 	}
+
+    @Override
+    protected void onLocationPermissionGranted() {
+        initializeMap();
+    }
+
+    private void initializeMap() {
+        if (checkLocationPermission()) {
+            mMapView.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateMapViewHeight();
+                }
+            });
+
+            mMapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mGoogleMap = googleMap;
+                    if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_COARSE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        mGoogleMap.setMyLocationEnabled(true);
+                    }
+                    mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            if (mVisibleNDBCStationMarkers.containsValue(marker)) {
+
+                                // Load buoy data then show data toolbar
+                                NDBCStation selectedStation = null;
+                                Object[] ndbcStations = mVisibleNDBCStationMarkers.keySet()
+                                        .toArray();
+                                for (int i = 0; i < Objects.requireNonNull(ndbcStations).length; i++) {
+                                    if (Objects.requireNonNull(mVisibleNDBCStationMarkers.get(ndbcStations[i]))
+                                            .equals(marker)) {
+                                        selectedStation = (NDBCStation) ndbcStations[i];
+                                        break;
+                                    }
+                                }
+
+                                loadDataForStation(selectedStation);
+                            } else {
+                                // Directions to this marker using intent
+                                String destLatLng = marker.getPosition().latitude + ","
+                                        + marker.getPosition().longitude;
+                                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                        Uri.parse("http://maps.google.com/maps?daddr="
+                                                + destLatLng));
+                                startActivity(intent);
+                            }
+
+                            return true;
+                        }
+                    });
+
+                    mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+                        @Override
+                        public void onCameraChange(CameraPosition cameraPosition) {
+                            // Only refresh dive sites and station data if we're zoomed in
+                            // enough, otherwise display message
+                            if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
+                                refreshVisibleNDBCStations();
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(),
+                                        R.string.divesite_map_zoom_view_data,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    });
+                }
+            });
+
+            MapsInitializer.initialize(Objects.requireNonNull(getActivity()));
+        }
+    }
 
 	@Override
 	public void onDestroy() {
@@ -902,14 +895,14 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
 	public int getStatusBarHeight() {
 		Rect r = new Rect();
-		Window w = getActivity().getWindow();
+		Window w = Objects.requireNonNull(getActivity()).getWindow();
 		w.getDecorView().getWindowVisibleDisplayFrame(r);
 		return r.top;
 	}
 
 	public int getTitleBarHeight() {
-		int viewTop = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
-        return (viewTop - getStatusBarHeight() + ((DiveActivity) getActivity()).getSupportActionBar().getHeight());
+		int viewTop = Objects.requireNonNull(getActivity()).getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
+        return (viewTop - getStatusBarHeight() + Objects.requireNonNull(((DiveActivity) getActivity()).getSupportActionBar()).getHeight());
 	}
 
 	@Override
@@ -964,7 +957,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 		if (mDiveSite != null) {
 
 			mDiveSiteNameEdit.setText(mDiveSite.getName());
-			getActivity().setTitle(mDiveSite.getName());
+			Objects.requireNonNull(getActivity()).setTitle(mDiveSite.getName());
 
 			if (mDiveSite.getRatingCount() == 0) {
 				mDiveSiteRating.setRating(0);
@@ -1106,16 +1099,12 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
                 @Override
                 public void onOnlineDiveDataProgress(
                         Object result) {
-                    // TODO Auto-generated method stub
-
                 }
 
                 @Override
                 public void onOnlineDiveDataPostBackground(
                         ArrayList<Object> resultList,
                         String message) {
-                    // TODO Auto-generated method stub
-
                 }
             });
             diveSiteOnlineDatabaseLink.getUser(String.valueOf(mDiveSite.getUserId()), "", "");
@@ -1132,7 +1121,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
      */
     @Override
     public void onLocationChanged(Location location) {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationController.getLocationControler().stopLocationUpdates(getActivity());
     	mDiveSiteManager.saveLastLocation(location);
     }
 
@@ -1197,7 +1186,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
 	private void updateMapViewHeight() {
 		// Set height of MapView
-		int screenHeight = getActivity().getWindowManager().getDefaultDisplay()
+		int screenHeight = Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay()
 				.getHeight();
 
 		int coordinatesContainerHeight = 0;
@@ -1267,7 +1256,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 							// but keep data
 							Object[] ndbcStations = mVisibleNDBCStationMarkers
 									.keySet().toArray();
-							for (int j = 0; j < ndbcStations.length; j++) {
+							for (int j = 0; j < Objects.requireNonNull(ndbcStations).length; j++) {
 								if (((NDBCStation) ndbcStations[j])
 										.getStationId() == ndbcStation
 										.getStationId()) {
@@ -1275,8 +1264,8 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
 									// Remove existing marker, drifting buoy
 									// position may have changed
-									mVisibleNDBCStationMarkers.get(
-											existingNDBCStation).remove();
+									Objects.requireNonNull(mVisibleNDBCStationMarkers.get(
+                                            existingNDBCStation)).remove();
 
 									// Set user data update time
 									ndbcStation
@@ -1311,13 +1300,11 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 					@Override
 					public void onOnlineDiveDataPostBackground(
 							ArrayList<Object> resultList, String message) {
-						// TODO Auto-generated method stub
-
 					}
 				});
 
 		// Show buoys in range with data from last day at least only
-		String coordinateRange[] = getCoordinateRange();
+		String coordinateRange[] = getCoordinateRange(mGoogleMap);
 		
 		Date minLastUpdateTimestamp = new Date();
 		Calendar c = Calendar.getInstance();
@@ -1329,37 +1316,6 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 				coordinateRange[1], coordinateRange[2], coordinateRange[3],
 				"1", String.valueOf(minLastUpdateTimestamp.getTime()),
 				"", "", "", "", "");
-	}
-	
-	private String[] getCoordinateRange() {
-		String coordinateRange[] = new String[4];
-		if (mGoogleMap == null) {
-			coordinateRange[0] = "0";
-			coordinateRange[1] = "0";
-			coordinateRange[2] = "0";
-			coordinateRange[3] = "0";
-		} else {
-			LatLngBounds curMapBounds = mGoogleMap.getProjection()
-					.getVisibleRegion().latLngBounds;
-
-			String minLatitude = String
-					.valueOf(curMapBounds.southwest.latitude);
-			String maxLatitude = String
-					.valueOf(curMapBounds.northeast.latitude);
-
-			String minLongitude = String
-					.valueOf(curMapBounds.southwest.longitude);
-			String maxLongitude = String
-					.valueOf(curMapBounds.northeast.longitude);
-
-			coordinateRange[0] = minLatitude;
-			coordinateRange[1] = maxLatitude;
-			coordinateRange[2] = minLongitude;
-			coordinateRange[3] = maxLongitude;
-		}
-
-		return coordinateRange;
-	
 	}
 	
 	public void loadDataForStation(NDBCStation station) {
@@ -1384,7 +1340,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 											.get(0);
 									Object[] ndbcStations = mVisibleNDBCStationMarkers
 											.keySet().toArray();
-									for (int i = 0; i < ndbcStations.length; i++) {
+									for (int i = 0; i < Objects.requireNonNull(ndbcStations).length; i++) {
 										if (((NDBCStation) ndbcStations[i])
 												.getStationId() == updatedNDBCStation
 												.getStationId()) {
@@ -1405,7 +1361,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 									showDataForStation(updatedNDBCStation);
 								} else {
 									Toast.makeText(
-											getActivity()
+											Objects.requireNonNull(getActivity())
 													.getApplicationContext(),
 											message, Toast.LENGTH_LONG).show();
 								}
@@ -1414,15 +1370,11 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
 							@Override
 							public void onOnlineDiveDataProgress(Object result) {
-								// TODO Auto-generated method stub
-
 							}
 
 							@Override
 							public void onOnlineDiveDataPostBackground(
 									ArrayList<Object> resultList, String message) {
-								// TODO Auto-generated method stub
-
 							}
 						});
 

@@ -9,7 +9,7 @@ import com.google.android.gms.maps.GoogleMap;
 
 import java.util.Objects;
 
-public abstract class LocationListFragment extends com.fahadaltimimi.view.BaseListFragment
+public abstract class LocationListFragment extends BaseListFragment
         implements LocationListener {
 
     private LocationFragmentHelper mLocationFragmentHelper;

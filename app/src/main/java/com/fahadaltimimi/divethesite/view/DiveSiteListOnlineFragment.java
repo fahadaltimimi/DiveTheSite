@@ -36,6 +36,7 @@ import com.google.android.gms.location.LocationServices;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 
@@ -84,7 +85,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		// Register list view with context menu
-		mListView = (ListView) v.findViewById(android.R.id.list);
+		mListView = Objects.requireNonNull(v).findViewById(android.R.id.list);
 		
 		mListView.setOnScrollListener(new OnScrollListener(){
 
@@ -137,7 +138,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 						if (mListView.isItemChecked(i)) {
 							DiveSiteAdapter adapter = (DiveSiteAdapter)mListView.getAdapter();
 							DiveSite diveSite = adapter.getItem(i);
-							diveSite.setLocalId(mDiveSiteManager.getDiveSiteLocalId(diveSite.getOnlineId()));
+							diveSite.setLocalId(mDiveSiteManager.getDiveSiteLocalId(Objects.requireNonNull(diveSite).getOnlineId()));
 
 							mDiveSiteManager.saveDiveSite(diveSite);
 							
@@ -303,11 +304,11 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 		});
 
 		// Hide published, unpublished filter for online fragment
-		CheckBox filterPublished = (CheckBox) mListFilter
+		CheckBox filterPublished = mListFilter
 				.findViewById(R.id.divesite_list_filter_published);
 		filterPublished.setVisibility(View.GONE);
 
-		CheckBox filterUnpublished = (CheckBox) mListFilter
+		CheckBox filterUnpublished = mListFilter
 				.findViewById(R.id.divesite_list_filter_unpublished);
 		filterUnpublished.setVisibility(View.GONE);
 
@@ -357,21 +358,15 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				Intent intent = new Intent(getActivity(), DiveLogActivity.class);
 				intent.putExtra(DiveSiteManager.EXTRA_DIVE_SITE,
 						mSelectedDiveSite);
-				getActivity().setResult(Activity.RESULT_OK, intent);
+				Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
 				getActivity().finish();
 			}
 			return true;
 
 		case R.id.menu_item_refresh_divesites:
-			if (mGoogleApiClient.isConnected() && mLocationEnabled) {
-                if (mRefreshMenuItem != null) {
-                    mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-                }
-                mForceLocationDataRefresh = true;
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-	    	} else {
-	    		clearDiveSites();
-	    		refreshOnlineDiveSites();
+			if (!startLocationUpdates()) {
+                clearDiveSites();
+                refreshOnlineDiveSites();
 	    	}
 			return true;
 
@@ -415,19 +410,19 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 		// Determine filter to set from selection
 		String titleFilter = "";
 		if (mSetToDiveLog) {
-			titleFilter = mPrefs.getString(
-					DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, "")
+			titleFilter = Objects.requireNonNull(mPrefs.getString(
+					DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, ""))
 					.trim();
 		} else {
-			titleFilter = mPrefs.getString(
-					DiveSiteManager.PREF_FILTER_DIVESITE_TITLE, "").trim();
+			titleFilter = Objects.requireNonNull(mPrefs.getString(
+					DiveSiteManager.PREF_FILTER_DIVESITE_TITLE, "")).trim();
 		}
-		String countryFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, "").trim();
-		String stateFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "").trim();
-		String cityFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "").trim();
+		String countryFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, "")).trim();
+		String stateFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "")).trim();
+		String cityFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "")).trim();
 
 		Boolean publishedFilter = mPrefs.getBoolean(
 				DiveSiteManager.PREF_FILTER_DIVESITE_SHOW_PUBLISHED, true);
@@ -504,25 +499,25 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 
 		String titleFilter;
 		if (mSetToDiveLog) {
-			titleFilter = mPrefs.getString(
-					DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, "")
+			titleFilter = Objects.requireNonNull(mPrefs.getString(
+					DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, ""))
 					.trim();
 		} else {
-			titleFilter = mPrefs.getString(
-					DiveSiteManager.PREF_FILTER_DIVESITE_TITLE, "").trim();
+			titleFilter = Objects.requireNonNull(mPrefs.getString(
+					DiveSiteManager.PREF_FILTER_DIVESITE_TITLE, "")).trim();
 		}
 
-		String countryFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, "").trim();
+		String countryFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, "")).trim();
 		if (countryFilter.equals(getResources().getString(
 				R.string.filter_list_all))) {
 			countryFilter = "";
 		}
 
-		String stateFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "").trim();
-		String cityFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "").trim();
+		String stateFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "")).trim();
+		String cityFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "")).trim();
 
 		mLastOnlineFilter[ONLINE_FILTER_TITLE_INDEX] = titleFilter;
 		mLastOnlineFilter[ONLINE_FILTER_COUNTRY_INDEX] = countryFilter;
@@ -614,8 +609,8 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 
 	private int getDiveSiteIndex(DiveSite diveSite) {
 		int index = -1;
-		for (int i = 0; i < ((DiveSiteAdapter) getListAdapter()).getCount(); i++) {
-			if (((DiveSiteAdapter) getListAdapter()).getItem(i).getOnlineId() == diveSite
+		for (int i = 0; i < getListAdapter().getCount(); i++) {
+			if (Objects.requireNonNull(((DiveSiteAdapter) getListAdapter()).getItem(i)).getOnlineId() == diveSite
 					.getOnlineId()) {
 				index = i;
 				break;
@@ -626,8 +621,8 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 
 	private DiveSite getDiveSiteOnlineId(DiveSite diveSite) {
 		DiveSite diveSiteDuplicate = null;
-		for (int i = 0; i < ((DiveSiteAdapter) getListAdapter()).getCount(); i++) {
-			if (((DiveSiteAdapter) getListAdapter()).getItem(i).getOnlineId() == diveSite
+		for (int i = 0; i < getListAdapter().getCount(); i++) {
+			if (Objects.requireNonNull(((DiveSiteAdapter) getListAdapter()).getItem(i)).getOnlineId() == diveSite
 					.getOnlineId()) {
 				diveSiteDuplicate = ((DiveSiteAdapter) getListAdapter())
 						.getItem(i);
@@ -696,24 +691,24 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 	protected boolean onlineFilterChanged() {
 		String titleFilter;
 		if (mSetToDiveLog) {
-			titleFilter = mPrefs.getString(
-					DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, "")
+			titleFilter = Objects.requireNonNull(mPrefs.getString(
+					DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, ""))
 					.trim();
 		} else {
-			titleFilter = mPrefs.getString(
-					DiveSiteManager.PREF_FILTER_DIVESITE_TITLE, "").trim();
+			titleFilter = Objects.requireNonNull(mPrefs.getString(
+					DiveSiteManager.PREF_FILTER_DIVESITE_TITLE, "")).trim();
 		}
-		String countryFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, "").trim();
+		String countryFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, "")).trim();
 		if (countryFilter.equals(getResources().getString(
 				R.string.filter_list_all))) {
 			countryFilter = "";
 		}
 
-		String stateFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "").trim();
-		String cityFilter = mPrefs.getString(
-				DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "").trim();
+		String stateFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "")).trim();
+		String cityFilter = Objects.requireNonNull(mPrefs.getString(
+				DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "")).trim();
 
 		return !mLastOnlineFilter[ONLINE_FILTER_TITLE_INDEX]
 				.equals(titleFilter)
@@ -748,7 +743,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 	private class DiveSiteAdapter extends ArrayAdapter<DiveSite> {
 
 		public DiveSiteAdapter(ArrayList<DiveSite> diveSites) {
-			super(getActivity(), 0, diveSites);
+			super(Objects.requireNonNull(getActivity()), 0, diveSites);
 		}
 
 		@Override
@@ -756,30 +751,30 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 			// If we weren't given a view, inflate one using the layout we
 			// created for each list item
 			if (view == null) {
-				view = getActivity().getLayoutInflater().inflate(R.layout.divesite_list_item, parent, false);
+				view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.divesite_list_item, parent, false);
 			}
 
 			final DiveSite diveSite = getItem(position);
 
             // Update parent fragment if tab
             if (getParentFragment() != null && getParentFragment() instanceof DiveListTabFragment) {
-                ((DiveListTabFragment) getParentFragment()).updateOnlineSubTitles(String.valueOf(diveSite.getDiveSiteCountWhenRetreived()), "");
+                ((DiveListTabFragment) getParentFragment()).updateOnlineSubTitles(String.valueOf(Objects.requireNonNull(diveSite).getDiveSiteCountWhenRetreived()), "");
             }
 
 			// Set up the view with the dive sites info
-			if (diveSite.isPublished()) {
+			if (Objects.requireNonNull(diveSite).isPublished()) {
 				view.setBackgroundColor(getResources().getColor(R.color.itemPublished));
 			} else {
 				view.setBackgroundColor(getResources().getColor(R.color.itemUnpublished));
 			}
 
 			// Dive Site Title
-			TextView diveSiteTitle = (TextView) view
+			TextView diveSiteTitle = view
 					.findViewById(R.id.divesite_list_item_titleTextView);
 			diveSiteTitle.setText(diveSite.getName());
 
 			// Dive Site Location
-			TextView diveSiteLocation = (TextView) view
+			TextView diveSiteLocation = view
 					.findViewById(R.id.divesite_list_item_locationTextView);
 			diveSiteLocation.setText(diveSite.getFullLocation());
 
@@ -789,7 +784,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 					R.color.diveSiteListVisibleFontColor));
 
 			// Dive Site Indicator Icons
-			mDiveSiteIndicatorSalt = (ImageButton) view
+			mDiveSiteIndicatorSalt = view
 					.findViewById(R.id.divesite_indicate_isSalt);
 			if (diveSite.isSalty()) {
 				mDiveSiteIndicatorSalt.setVisibility(View.VISIBLE);
@@ -797,7 +792,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				mDiveSiteIndicatorSalt.setVisibility(View.GONE);
 			}
 
-			mDiveSiteIndicatorFresh = (ImageButton) view
+			mDiveSiteIndicatorFresh = view
 					.findViewById(R.id.divesite_indicate_isFresh);
 			if (!diveSite.isSalty()) {
 				mDiveSiteIndicatorFresh.setVisibility(View.VISIBLE);
@@ -805,7 +800,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				mDiveSiteIndicatorFresh.setVisibility(View.GONE);
 			}
 
-			mDiveSiteIndicatorShore = (ImageButton) view
+			mDiveSiteIndicatorShore = view
 					.findViewById(R.id.divesite_indicate_isShore);
 			if (diveSite.isShoreDive()) {
 				mDiveSiteIndicatorShore.setVisibility(View.VISIBLE);
@@ -813,7 +808,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				mDiveSiteIndicatorShore.setVisibility(View.GONE);
 			}
 
-			mDiveSiteIndicatorBoat = (ImageButton) view
+			mDiveSiteIndicatorBoat = view
 					.findViewById(R.id.divesite_indicate_isBoat);
 			if (diveSite.isBoatDive()) {
 				mDiveSiteIndicatorBoat.setVisibility(View.VISIBLE);
@@ -821,7 +816,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				mDiveSiteIndicatorBoat.setVisibility(View.GONE);
 			}
 
-			mDiveSiteIndicatorWreck = (ImageButton) view
+			mDiveSiteIndicatorWreck = view
 					.findViewById(R.id.divesite_indicate_isWreck);
 			if (diveSite.isWreck()) {
 				mDiveSiteIndicatorWreck.setVisibility(View.VISIBLE);
@@ -829,9 +824,9 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				mDiveSiteIndicatorWreck.setVisibility(View.GONE);
 			}
 
-			ImageButton diveSitePublished = (ImageButton) view
+			ImageButton diveSitePublished = view
 					.findViewById(R.id.divesite_indicate_isPublished);
-			ImageButton diveSiteUnpublished = (ImageButton) view
+			ImageButton diveSiteUnpublished = view
 					.findViewById(R.id.divesite_indicate_isUnpublished);
 			if (diveSite.isPublished()) {
 				diveSitePublished.setVisibility(View.VISIBLE);
@@ -841,7 +836,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				diveSiteUnpublished.setVisibility(View.VISIBLE);
 			}
 
-			ImageButton diveSiteSaved = (ImageButton) view
+			ImageButton diveSiteSaved = view
 					.findViewById(R.id.divesite_indicate_isSaved);
 			if (diveSite.getLocalId() != -1) {
 				diveSiteSaved.setVisibility(View.VISIBLE);
@@ -851,7 +846,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 
 			// Dive Site Distance
 			if (getLocation() != null) {
-				TextView diveSiteDistance = (TextView) view
+				TextView diveSiteDistance = view
 						.findViewById(R.id.divesite_list_item_distanceTextView);
 
 				Location diveSiteLocationEnd = new Location(diveSite.getName());
@@ -875,7 +870,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 			}
 
 			// Dive Site Button
-			ImageButton diveSiteShowDetails = (ImageButton) view
+			ImageButton diveSiteShowDetails = view
 					.findViewById(R.id.divesite_list_item_showDetails);
 
 			if (diveSite.getOnlineId() == -1) {
@@ -906,7 +901,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 			});
 
             // Initialize visibility map view
-            final ViewGroup mapContainer = (ViewGroup) view.findViewById(R.id.divesite_list_item_mapView_container);
+            final ViewGroup mapContainer = view.findViewById(R.id.divesite_list_item_mapView_container);
             if (diveSite == mSelectedDiveSite) {
                 view.setBackgroundColor(getResources().getColor(R.color.diveSiteSelected));
                 setDiveSiteMap(diveSite, mapContainer);
