@@ -47,6 +47,7 @@ import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
+import com.fahadaltimimi.view.LocationListFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,7 +61,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import static com.fahadaltimimi.controller.LocationFragmentHelper.move;
 
-public class ScheduledDiveListFragment extends com.fahadaltimimi.view.LocationListFragment {
+public class ScheduledDiveListFragment extends LocationListFragment {
 
     protected static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("EEEE MMMM dd yyyy, HH:mm");
 

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -81,15 +83,14 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_divesite_pictures,
-				parent, false);
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+                             Bundle savedInstanceState) {
+		View view = super.onCreateView(inflater, parent, savedInstanceState);
 
-		mDiveSitePictureViewContainer = (ViewGroup) view
+		mDiveSitePictureViewContainer = Objects.requireNonNull(view)
 				.findViewById(R.id.divesite_pictures_view_container);
 
-		mDiveSiteAddPictureGallery = (Button) view
+		mDiveSiteAddPictureGallery = view
 				.findViewById(R.id.divesite_add_picture_gallery);
 		mDiveSiteAddPictureGallery
 				.setOnClickListener(new View.OnClickListener() {
@@ -107,9 +108,9 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 					}
 				});
 
-		mDiveSiteAddPictureCamera = (Button) view
+		mDiveSiteAddPictureCamera = view
 				.findViewById(R.id.divesite_add_picture_camera);
-		if (getActivity().getPackageManager().hasSystemFeature(
+		if (Objects.requireNonNull(getActivity()).getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_CAMERA)) {
 			mDiveSiteAddPictureCamera.setVisibility(View.VISIBLE);
 			mDiveSiteAddPictureCamera
@@ -152,7 +153,7 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 			mDiveSiteAddPictureCamera.setVisibility(View.GONE);
 		}
 
-		mDiveSiteDeletePicture = (ImageButton) view
+		mDiveSiteDeletePicture = view
 				.findViewById(R.id.delete_dive_site_picture);
 		mDiveSiteDeletePicture.setOnClickListener(new View.OnClickListener() {
 
@@ -182,12 +183,12 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 			}
 		});
 
-		mDiveSiteSelectedImage = (ImageView) view
+		mDiveSiteSelectedImage = view
 				.findViewById(R.id.divesite_selected_image);
 		mDiveSiteSelectedImageProgress = view
 				.findViewById(R.id.divesite_picture_progress_bar);
 
-		mDiveSiteImageGallery = (ViewGroup) view
+		mDiveSiteImageGallery = view
 				.findViewById(R.id.divesite_image_gallery);
 		mDiveSiteImageGallery.setOnTouchListener(new OnTouchListener() {
 
@@ -207,6 +208,16 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 	}
 
 	@Override
+	protected int getLayoutView() {
+		return R.layout.fragment_divesite_pictures;
+	}
+
+	@Override
+	protected void onLocationPermissionGranted() {
+		//
+	}
+
+	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 
@@ -221,16 +232,15 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 			return;
 		}
 
-		if (requestCode == REQUEST_PICK_IMAGE
-				&& resultCode == Activity.RESULT_OK) {
+		if (requestCode == REQUEST_PICK_IMAGE) {
 			// User has selected an image and came back
 			// Add the image to the dive site, gallery and selected image view
 			Uri selectedImage = data.getData();
 			String imagePathToSave = null;
 			Bitmap image = null;
 			try {
-				image = BitmapFactory.decodeStream(getActivity()
-						.getContentResolver().openInputStream(selectedImage));
+				image = BitmapFactory.decodeStream(Objects.requireNonNull(getActivity())
+						.getContentResolver().openInputStream(Objects.requireNonNull(selectedImage)));
 				imagePathToSave = mDiveSiteManager.saveImageInternalStorage(
 						image, "DiveSiteImage");
 			} catch (FileNotFoundException e) {
@@ -251,8 +261,7 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 
 				updateUI();
 			}
-		} else if (requestCode == REQUEST_CAPTURE_IMAGE
-				&& resultCode == Activity.RESULT_OK) {
+		} else if (requestCode == REQUEST_CAPTURE_IMAGE) {
 			DiveSitePicture diveSitePicture = new DiveSitePicture();
 			diveSitePicture.setBitmapFilePath(mLastPictureFileCreated);
 
@@ -353,7 +362,7 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 		View diveSitePictureView = null;
 		if (existingPicture == null) {
 			// Create new view
-			LayoutInflater layoutInflater = (LayoutInflater) getActivity()
+			LayoutInflater layoutInflater = (LayoutInflater) Objects.requireNonNull(getActivity())
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			diveSitePictureView = layoutInflater.inflate(
 					R.layout.divesite_picture_item, null);
@@ -370,7 +379,7 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 			diveSitePicture = existingPicture;
 		}
 
-		ImageView imageView = (ImageView) diveSitePictureView
+		ImageView imageView = Objects.requireNonNull(diveSitePictureView)
 				.findViewById(R.id.divesite_picture);
 		imageView.setTag(null);
 
@@ -505,7 +514,7 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 	private DiveSitePicture getPictureViewOnlineId(long onlineId) {
 		DiveSitePicture picture = null;
 		Object[] diveSitePictures = mDiveSitePictureViews.keySet().toArray();
-		for (int i = 0; i < diveSitePictures.length; i++) {
+		for (int i = 0; i < Objects.requireNonNull(diveSitePictures).length; i++) {
 			if (((DiveSitePicture) diveSitePictures[i]).getOnlineId() == onlineId) {
 				picture = (DiveSitePicture) diveSitePictures[i];
 				break;
@@ -517,7 +526,7 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 	private DiveSitePicture getPictureViewLocalId(long localId) {
 		DiveSitePicture picture = null;
 		Object[] diveSitePictures = mDiveSitePictureViews.keySet().toArray();
-		for (int i = 0; i < diveSitePictures.length; i++) {
+		for (int i = 0; i < Objects.requireNonNull(diveSitePictures).length; i++) {
 			if (((DiveSitePicture) diveSitePictures[i]).getLocalId() == localId) {
 				picture = (DiveSitePicture) diveSitePictures[i];
 				break;
@@ -526,21 +535,22 @@ public class DiveSitePicturePageFragment extends DiveSitePageFragment implements
 		return picture;
 	}
 
-	@Override
+	@NonNull
+    @Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new PicturesListCursorLoader(getActivity(),
 				mDiveSite.getLocalId());
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+	public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
 		mPictureCursor = (PictureCursor) cursor;
 
 		updateLocalPictures();
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 		// Stop using the data
 		mPictureCursor.close();
 		mPictureCursor = null;

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -21,10 +22,9 @@ import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
@@ -43,6 +43,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.data.DiveCursorLoaders;
 import com.fahadaltimimi.divethesite.data.DiveSiteDatabaseHelper.DiveSiteCursor;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
@@ -55,10 +56,9 @@ import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCSpectralWaveData;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.data.SQLiteCursorLoader;
 import com.fahadaltimimi.divethesite.model.DiveSite;
+import com.fahadaltimimi.view.LocationFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -79,11 +79,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DiveSiteFullMapFragment extends Fragment implements
-		LoaderCallbacks<Cursor>,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+import static com.fahadaltimimi.controller.LocationFragmentHelper.move;
+
+public class DiveSiteFullMapFragment extends LocationFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	public static final String TAG = "DiveSiteFullMapFragment";
 	
@@ -92,24 +90,16 @@ public class DiveSiteFullMapFragment extends Fragment implements
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
 
 	protected DiveSiteManager mDiveSiteManager;
-	
-	private LocationRequest mLocationRequest;
-    protected GoogleApiClient mGoogleApiClient;
-	private boolean mLocationEnabled;
-	
-	private Bundle mSavedInstanceState;
 
-	private MenuItem mRefreshMenuItem = null;
+    private MenuItem mRefreshMenuItem = null;
 
 	private SharedPreferences mPrefs;
-	private Date mLastDiveSiteRefreshTime;
-	private boolean mArchives = false;
+    private boolean mArchives = false;
 
 	private MapView mMapView;
 	private GoogleMap mGoogleMap;
 
-	private LinearLayout mDiveSiteDataViewContainer;
-	private LinearLayout mDiveSiteLatestMeteorologicalData;
+    private LinearLayout mDiveSiteLatestMeteorologicalData;
 	private LinearLayout mDiveSiteLatestWaveData;
 
 	private LinearLayout mDiveSiteDataToolbar;
@@ -152,9 +142,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 	private ArrayList<Marker> mSearchResultsMarkers;
 	private HashMap<NDBCStation, Marker> mVisibleNDBCStationMarkers;
 
-	private DiveSiteListCursorLoader mDiveSiteListLoader = null;
-
-	private Boolean mRefreshingOnlineDiveSites = false;
+    private Boolean mRefreshingOnlineDiveSites = false;
 	private Boolean mRefreshingOnlineNDBCData = false;
 
 	private Boolean mNDCPBuoysDisplayed = true;
@@ -166,156 +154,131 @@ public class DiveSiteFullMapFragment extends Fragment implements
 	private DiveSiteOnlineDatabaseLink mDiveSiteOnlineDatabase = null;
 	private DiveSiteOnlineDatabaseLink mNDBCDataOnlineDatabase = null;
 
-	private static final double EARTHRADIUS = 6366198;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
 
-		mSavedInstanceState = savedInstanceState;
 		mDiveSiteManager = DiveSiteManager.get(getActivity());
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mLocationEnabled = false;
-            Toast.makeText(getActivity(), "Enable location services for accurate data", Toast.LENGTH_SHORT).show();
-        } else {
-        	mLocationEnabled = true;
-        }
 		
-		mPrefs = getActivity().getSharedPreferences(DiveSiteManager.PREFS_FILE,
+		mPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(DiveSiteManager.PREFS_FILE,
 				Context.MODE_PRIVATE);
-		mLastDiveSiteRefreshTime = new Date(mPrefs.getLong(
-				DiveSiteManager.PREF_LAST_DIVESITES_REFRESH_DATE, 0));
 
-		mVisibleDiveSiteMarkers = new HashMap<DiveSite, Marker>();
-		mSearchResultsMarkers = new ArrayList<Marker>();
-		mVisibleNDBCStationMarkers = new HashMap<NDBCStation, Marker>();
-
-		// Initialize the loader to load the list of Dive Sites
-		mDiveSiteListLoader = (DiveSiteListCursorLoader) getLoaderManager()
-				.initLoader(DiveCursorLoaders.LOAD_DIVESITE, null, this);
-
+        mVisibleDiveSiteMarkers = new HashMap<>();
+		mSearchResultsMarkers = new ArrayList<>();
+		mVisibleNDBCStationMarkers = new HashMap<>();
 		mGeocoder = new Geocoder(getActivity(), Locale.getDefault());
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_divesite_fullmap, parent,
-				false);
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
+                             Bundle savedInstanceState) {
+		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-		getActivity().setTitle(R.string.mapTitle);
+		Objects.requireNonNull(getActivity()).setTitle(R.string.mapTitle);
 
-		mMapView = (MapView) v.findViewById(R.id.diveSite_fullMap_MapView);
+		mMapView = Objects.requireNonNull(v).findViewById(R.id.diveSite_fullMap_MapView);
 		mMapView.onCreate(savedInstanceState);
 
-		mDiveSiteDataViewContainer = (LinearLayout) v
-				.findViewById(R.id.diveSite_fullMap_data_view_container);
+        LinearLayout diveSiteDataViewContainer = v
+                .findViewById(R.id.diveSite_fullMap_data_view_container);
 
 		// Create and add views for each type of data
 		mDiveSiteLatestMeteorologicalData = (LinearLayout) inflater.inflate(
-				R.layout.ndbc_station_data_item, mDiveSiteDataViewContainer,
+				R.layout.ndbc_station_data_item, diveSiteDataViewContainer,
 				false);
 		mDiveSiteLatestMeteorologicalData.setVisibility(View.GONE);
-		mDiveSiteDataViewContainer.addView(mDiveSiteLatestMeteorologicalData);
+		diveSiteDataViewContainer.addView(mDiveSiteLatestMeteorologicalData);
 
-		mNDBCMeteorologicalDataTitle = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataTitle = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_station_data_item_title);
-		mNDBCMeteorologicalDataLabel00 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel00 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_00);
-		mNDBCMeteorologicalDataValue00 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue00 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_00);
-		mNDBCMeteorologicalDataLabel01 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel01 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_01);
-		mNDBCMeteorologicalDataValue01 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue01 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_01);
-		mNDBCMeteorologicalDataLabel02 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel02 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_02);
-		mNDBCMeteorologicalDataValue02 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue02 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_02);
-		mNDBCMeteorologicalDataLabel10 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel10 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_10);
-		mNDBCMeteorologicalDataValue10 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue10 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_10);
-		mNDBCMeteorologicalDataLabel11 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel11 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_11);
-		mNDBCMeteorologicalDataValue11 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue11 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_11);
-		mNDBCMeteorologicalDataLabel12 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel12 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_12);
-		mNDBCMeteorologicalDataValue12 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue12 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_12);
-		mNDBCMeteorologicalDataLabel20 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel20 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_20);
-		mNDBCMeteorologicalDataValue20 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue20 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_20);
-		mNDBCMeteorologicalDataLabel21 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel21 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_21);
-		mNDBCMeteorologicalDataValue21 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue21 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_21);
-		mNDBCMeteorologicalDataLabel22 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataLabel22 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_label_22);
-		mNDBCMeteorologicalDataValue22 = (TextView) mDiveSiteLatestMeteorologicalData
+		mNDBCMeteorologicalDataValue22 = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_data_item_value_22);
 
 		mDiveSiteLatestWaveData = (LinearLayout) inflater.inflate(
-				R.layout.ndbc_station_data_item, mDiveSiteDataViewContainer,
+				R.layout.ndbc_station_data_item, diveSiteDataViewContainer,
 				false);
 		mDiveSiteLatestWaveData.setVisibility(View.GONE);
-		mDiveSiteDataViewContainer.addView(mDiveSiteLatestWaveData);
+		diveSiteDataViewContainer.addView(mDiveSiteLatestWaveData);
 
-		mNDBCWaveDataTitle = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataTitle = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_station_data_item_title);
-		mNDBCWaveDataLabel00 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel00 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_00);
-		mNDBCWaveDataValue00 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue00 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_00);
-		mNDBCWaveDataLabel01 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel01 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_01);
-		mNDBCWaveDataValue01 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue01 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_01);
-		mNDBCWaveDataLabel02 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel02 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_02);
-		mNDBCWaveDataValue02 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue02 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_02);
-		mNDBCWaveDataLabel10 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel10 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_10);
-		mNDBCWaveDataValue10 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue10 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_10);
-		mNDBCWaveDataLabel11 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel11 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_11);
-		mNDBCWaveDataValue11 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue11 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_11);
-		mNDBCWaveDataLabel12 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel12 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_12);
-		mNDBCWaveDataValue12 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue12 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_12);
-		mNDBCWaveDataLabel20 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel20 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_20);
-		mNDBCWaveDataValue20 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue20 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_20);
-		mNDBCWaveDataLabel21 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel21 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_21);
-		mNDBCWaveDataValue21 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue21 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_21);
-		mNDBCWaveDataLabel22 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataLabel22 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_label_22);
-		mNDBCWaveDataValue22 = (TextView) mDiveSiteLatestWaveData
+		mNDBCWaveDataValue22 = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_data_item_value_22);
 
-		mDiveSiteDataToolbar = (LinearLayout) v
+		mDiveSiteDataToolbar = v
 				.findViewById(R.id.diveSite_fullMap_data_toolbar);
 
-		mMeteorologicalDataButton = (Button) v
+		mMeteorologicalDataButton = v
 				.findViewById(R.id.diveSite_fullMap_meteorological);
 		mMeteorologicalDataButton
 				.setOnClickListener(new View.OnClickListener() {
@@ -332,7 +295,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 					}
 				});
 
-		mWaveDataButton = (Button) v.findViewById(R.id.diveSite_fullMap_wave);
+		mWaveDataButton = v.findViewById(R.id.diveSite_fullMap_wave);
 		mWaveDataButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -345,171 +308,27 @@ public class DiveSiteFullMapFragment extends Fragment implements
 			}
 		});
 
-		mMapView.getMapAsync(new OnMapReadyCallback() {
-			@Override
-			public void onMapReady(GoogleMap googleMap) {
-				mGoogleMap = googleMap;
-
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    mGoogleMap.setMyLocationEnabled(true);
-                }
-
-				mGoogleMap.setOnMapLongClickListener(new OnMapLongClickListener() {
-
-					@Override
-					public void onMapLongClick(LatLng latLng) {
-						// Remove existing add marker if it exists
-						if (mAddDiveSiteMarker != null) {
-							mAddDiveSiteMarker.remove();
-						}
-
-						// Add marker for user to click to add a new dive site
-						MarkerOptions markerOptions = new MarkerOptions()
-								.position(latLng)
-								.title(getResources().getString(
-										R.string.divesite_add_divesite_here))
-								.icon(BitmapDescriptorFactory
-										.fromResource(R.drawable.divesite_add_marker));
-
-						mAddDiveSiteMarker = mGoogleMap.addMarker(markerOptions);
-						mAddDiveSiteMarker.showInfoWindow();
-					}
-				});
-
-				mGoogleMap.setOnMapClickListener(new OnMapClickListener() {
-
-					@Override
-					public void onMapClick(LatLng arg0) {
-						// Remove existing add marker if it exists
-						if (mAddDiveSiteMarker != null) {
-							mAddDiveSiteMarker.remove();
-						}
-
-						// Hide data
-						hideCurrentlyDisplayedData();
-					}
-				});
-
-				mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-					@Override
-					public boolean onMarkerClick(Marker marker) {
-						if (mVisibleNDBCStationMarkers.containsValue(marker)) {
-
-							// Load buoy data then show data toolbar
-							NDBCStation selectedStation = null;
-							Object[] ndbcStations = mVisibleNDBCStationMarkers.keySet()
-									.toArray();
-							for (int i = 0; i < ndbcStations.length; i++) {
-								if (mVisibleNDBCStationMarkers.get(ndbcStations[i])
-										.equals(marker)) {
-									selectedStation = (NDBCStation) ndbcStations[i];
-									break;
-								}
-							}
-
-							loadDataForStation(selectedStation);
-						}
-
-						return false;
-					}
-
-				});
-
-				mGoogleMap
-						.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-							@Override
-							public void onInfoWindowClick(Marker marker) {
-								// If user clicked add marker, add a new one, otherwise
-								// search for existing dive site
-								if (marker.equals(mAddDiveSiteMarker)) {
-									// Open the dive site in edit mode
-									mPrefs.edit()
-											.putBoolean(
-													DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-													true).apply();
-
-									// Add a new dive site with the selected markers
-									// location and switch to Dive Site view
-									DiveSite diveSite = new DiveSite(mDiveSiteManager
-											.getLoggedInDiverId(), mDiveSiteManager
-											.getLoggedInDiverUsername());
-									diveSite.setLatitude(marker.getPosition().latitude);
-									diveSite.setLongitude(marker.getPosition().longitude);
-
-									mDiveSiteManager.insertDiveSite(diveSite);
-									openDiveSite(diveSite);
-								} else {
-									mPrefs.edit()
-											.putBoolean(
-													DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-													false).apply();
-
-									// Display Dive Site info
-									Object[] diveSites = mVisibleDiveSiteMarkers
-											.keySet().toArray();
-									for (int i = 0; i < diveSites.length; i++) {
-										if (mVisibleDiveSiteMarkers.get(diveSites[i])
-												.equals(marker)) {
-											// Dive Site found
-											openDiveSite((DiveSite) diveSites[i]);
-											break;
-										}
-									}
-								}
-							}
-						});
-
-				mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
-
-					@Override
-					public void onCameraChange(CameraPosition cameraPosition) {
-						// Only refresh dive sites and station data if we're zoomed in
-						// enough, otherwise display message
-						if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
-							refreshDiveSiteList();
-							refreshVisibleNDBCStations();
-							if (!mArchives) {
-								refreshOnlineDiveSites();
-							}
-						} else {
-							Toast.makeText(getActivity().getApplicationContext(),
-									R.string.divesite_map_zoom_view_data,
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-
-				});
-
-				if (getLocation() != null) {
-					CameraPosition cameraPosition = new CameraPosition.Builder()
-							.target(new LatLng(getLocation().getLatitude(),
-									getLocation().getLongitude())).zoom(7).build();
-					mGoogleMap.animateCamera(CameraUpdateFactory
-							.newCameraPosition(cameraPosition));
-				}
-			}
-		});
-
-        MapsInitializer.initialize(this.getActivity());
+		initializeMap();
 
 		return v;
 	}
-	
-	@Override
-	public void onStart() {
-        super.onStart();
 
-        // Connect the client.
-        mGoogleApiClient.connect();
+    @Override
+    protected int getLayoutView() {
+        return R.layout.fragment_divesite_fullmap;
+    }
+
+    private Location getLocation() {
+        return LocationController.getLocationControler().getLocation(getActivity(), mDiveSiteManager.getLastLocation());
     }
 
 	@Override
+	protected void onLocationPermissionGranted() {
+		initializeMap();
+	}
+
+	@Override
 	public void onStop() {
-        // Disconnecting the client invalidates it.
-        mGoogleApiClient.disconnect();
-				
 		super.onStop();
 
 		// Cancel running task
@@ -552,29 +371,27 @@ public class DiveSiteFullMapFragment extends Fragment implements
 											.get(0);
 									Object[] ndbcStations = mVisibleNDBCStationMarkers
 											.keySet().toArray();
-									for (int i = 0; i < ndbcStations.length; i++) {
-										if (((NDBCStation) ndbcStations[i])
-												.getStationId() == updatedNDBCStation
-												.getStationId()) {
-											NDBCStation existingNDBCStation = (NDBCStation) ndbcStations[i];
-											Marker existingMarker = mVisibleNDBCStationMarkers
-													.get(existingNDBCStation);
+                                    for (Object ndbcStation : Objects.requireNonNull(ndbcStations)) {
+                                        if (((NDBCStation) ndbcStation)
+                                                .getStationId() == updatedNDBCStation
+                                                .getStationId()) {
+                                            NDBCStation existingNDBCStation = (NDBCStation) ndbcStation;
+                                            Marker existingMarker = mVisibleNDBCStationMarkers
+                                                    .get(existingNDBCStation);
 
-											mVisibleNDBCStationMarkers
-													.remove(existingNDBCStation);
-											mVisibleNDBCStationMarkers.put(
-													updatedNDBCStation,
-													existingMarker);
+                                            mVisibleNDBCStationMarkers
+                                                    .remove(existingNDBCStation);
+                                            mVisibleNDBCStationMarkers.put(
+                                                    updatedNDBCStation,
+                                                    existingMarker);
 
-											break;
-										}
-									}
+                                            break;
+                                        }
+                                    }
 
 									showDataForStation(updatedNDBCStation);
 								} else {
-									Toast.makeText(
-											getActivity()
-													.getApplicationContext(),
+									Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
 											message, Toast.LENGTH_LONG).show();
 								}
 
@@ -942,9 +759,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 			if (data.getWindWaveDirection() == null) {
 				mNDBCWaveDataValue22.setText(naString);
 			} else {
-				String value = String.format(
-						getResources().getString(R.string.distanceMValue),
-						data.getWindWaveDirection());
+				String value = data.getWindWaveDirection();
 				mNDBCWaveDataValue22.setText(value);
 			}
 
@@ -1049,22 +864,22 @@ public class DiveSiteFullMapFragment extends Fragment implements
 
 	private void toggleOnlineDiveSiteVisibility(boolean visible) {
 		Object[] diveSites = mVisibleDiveSiteMarkers.keySet().toArray();
-		for (int i = 0; i < diveSites.length; i++) {
-			if (((DiveSite) diveSites[i]).getLocalId() == -1) {
-				Marker marker = mVisibleDiveSiteMarkers.get(diveSites[i]);
-				marker.setVisible(visible);
-			}
-		}
+        for (Object diveSite : Objects.requireNonNull(diveSites)) {
+            if (((DiveSite) diveSite).getLocalId() == -1) {
+                Marker marker = mVisibleDiveSiteMarkers.get(diveSite);
+                Objects.requireNonNull(marker).setVisible(visible);
+            }
+        }
 	}
 
 	private void toggleSavedDiveSiteVisibility(boolean visible) {
 		Object[] diveSites = mVisibleDiveSiteMarkers.keySet().toArray();
-		for (int i = 0; i < diveSites.length; i++) {
-			if (((DiveSite) diveSites[i]).getLocalId() != -1) {
-				Marker marker = mVisibleDiveSiteMarkers.get(diveSites[i]);
-				marker.setVisible(visible);
-			}
-		}
+        for (Object diveSite : Objects.requireNonNull(diveSites)) {
+            if (((DiveSite) diveSite).getLocalId() != -1) {
+                Marker marker = mVisibleDiveSiteMarkers.get(diveSite);
+                Objects.requireNonNull(marker).setVisible(visible);
+            }
+        }
 	}
 
 	@Override
@@ -1108,7 +923,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_divesites);
 
 		// Associate searchable configuration with the SearchView
-		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+		SearchManager searchManager = (SearchManager) Objects.requireNonNull(getActivity()).getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_item_search));
 
         if (searchView != null) {
@@ -1191,29 +1006,6 @@ public class DiveSiteFullMapFragment extends Fragment implements
         }
 	}
 
-	/**
-	 * Create a new LatLng which lies toNorth meters north and toEast meters
-	 * east of startLL
-	 */
-	private static LatLng move(LatLng startLL, double toNorth, double toEast) {
-		double lonDiff = meterToLongitude(toEast, startLL.latitude);
-		double latDiff = meterToLatitude(toNorth);
-		return new LatLng(startLL.latitude + latDiff, startLL.longitude
-				+ lonDiff);
-	}
-
-	private static double meterToLongitude(double meterToEast, double latitude) {
-		double latArc = Math.toRadians(latitude);
-		double radius = Math.cos(latArc) * EARTHRADIUS;
-		double rad = meterToEast / radius;
-		return Math.toDegrees(rad);
-	}
-
-	private static double meterToLatitude(double meterToNorth) {
-		double rad = meterToNorth / EARTHRADIUS;
-		return Math.toDegrees(rad);
-	}
-
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		if (mRefreshingOnlineDiveSites || mRefreshingOnlineNDBCData) {
@@ -1271,37 +1063,37 @@ public class DiveSiteFullMapFragment extends Fragment implements
 
 		case R.id.menu_item_showNDBCBuoys:
 			mNDCPBuoysDisplayed = true;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 			refreshVisibleNDBCStations();
 			return true;
 
 		case R.id.menu_item_hideNDBCBuoys:
 			mNDCPBuoysDisplayed = false;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 			refreshVisibleNDBCStations();
 			return true;
 
 		case R.id.menu_item_showOnlineDiveSites:
 			mOnlineSitesDisplayed = true;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 			toggleOnlineDiveSiteVisibility(true);
 			return true;
 
 		case R.id.menu_item_hideOnlineDiveSites:
 			mOnlineSitesDisplayed = false;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 			toggleOnlineDiveSiteVisibility(false);
 			return true;
 
 		case R.id.menu_item_showSavedDiveSites:
 			mSavedSitesDisplayed = true;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 			toggleSavedDiveSiteVisibility(true);
 			return true;
 
 		case R.id.menu_item_hideSavedDiveSites:
 			mSavedSitesDisplayed = false;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 			toggleSavedDiveSiteVisibility(false);
 			return true;
 
@@ -1381,7 +1173,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 					}
 				});
 
-		String coordinateRange[] = getCoordinateRange();
+		String coordinateRange[] = getCoordinateRange(mGoogleMap);
 		if (getLocation() != null) {
 			Location lastLocation = getLocation();
 			mDiveSiteOnlineDatabase.getDiveSiteList(new Date(0), -1, 
@@ -1416,10 +1208,10 @@ public class DiveSiteFullMapFragment extends Fragment implements
 			// Make sure all current buoy markers are visible
 			Object[] ndbcStations = mVisibleNDBCStationMarkers.keySet()
 					.toArray();
-			for (int i = 0; i < ndbcStations.length; i++) {
-				mVisibleNDBCStationMarkers.get(ndbcStations[i])
-						.setVisible(true);
-			}
+            for (Object ndbcStation : Objects.requireNonNull(ndbcStations)) {
+                Objects.requireNonNull(mVisibleNDBCStationMarkers.get(ndbcStation))
+                        .setVisible(true);
+            }
 
 			mNDBCDataOnlineDatabase = new DiveSiteOnlineDatabaseLink(
 					getActivity());
@@ -1466,38 +1258,38 @@ public class DiveSiteFullMapFragment extends Fragment implements
 								// but keep data
 								Object[] ndbcStations = mVisibleNDBCStationMarkers
 										.keySet().toArray();
-								for (int j = 0; j < ndbcStations.length; j++) {
-									if (((NDBCStation) ndbcStations[j])
-											.getStationId() == ndbcStation
-											.getStationId()) {
-										NDBCStation existingNDBCStation = (NDBCStation) ndbcStations[j];
+                                for (Object ndbcStation1 : Objects.requireNonNull(ndbcStations)) {
+                                    if (((NDBCStation) ndbcStation1)
+                                            .getStationId() == ndbcStation
+                                            .getStationId()) {
+                                        NDBCStation existingNDBCStation = (NDBCStation) ndbcStation1;
 
-										// Remove existing marker, drifting buoy
-										// position may have changed
-										mVisibleNDBCStationMarkers.get(
-												existingNDBCStation).remove();
+                                        // Remove existing marker, drifting buoy
+                                        // position may have changed
+                                        Objects.requireNonNull(mVisibleNDBCStationMarkers.get(
+                                                existingNDBCStation)).remove();
 
-										// Set user data update time
-										ndbcStation
-												.setLastUserUpdate(existingNDBCStation
-														.getLastUserUpdate());
+                                        // Set user data update time
+                                        ndbcStation
+                                                .setLastUserUpdate(existingNDBCStation
+                                                        .getLastUserUpdate());
 
-										// Copy data
-										ndbcStation
-												.copyMeteorologicalData(existingNDBCStation);
-										ndbcStation
-												.copyDriftingBuoyData(existingNDBCStation);
-										ndbcStation
-												.copySpectralWaveData(existingNDBCStation);
-										ndbcStation
-												.copyOceanicData(existingNDBCStation);
+                                        // Copy data
+                                        ndbcStation
+                                                .copyMeteorologicalData(existingNDBCStation);
+                                        ndbcStation
+                                                .copyDriftingBuoyData(existingNDBCStation);
+                                        ndbcStation
+                                                .copySpectralWaveData(existingNDBCStation);
+                                        ndbcStation
+                                                .copyOceanicData(existingNDBCStation);
 
-										// Delete existing station
-										mVisibleNDBCStationMarkers
-												.remove(existingNDBCStation);
-									}
+                                        // Delete existing station
+                                        mVisibleNDBCStationMarkers
+                                                .remove(existingNDBCStation);
+                                    }
 
-								}
+                                }
 
 								// Add marker for new station
 								Marker marker = mGoogleMap
@@ -1516,7 +1308,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
 					});
 
 			// Show buoys in range with data from last day at least only
-			String coordinateRange[] = getCoordinateRange();
+			String coordinateRange[] = getCoordinateRange(mGoogleMap);
 			
 			Date minLastUpdateTimestamp = new Date();
 			Calendar c = Calendar.getInstance();
@@ -1532,10 +1324,10 @@ public class DiveSiteFullMapFragment extends Fragment implements
 			// Hide all buoy markers from google map
 			Object[] ndbcStations = mVisibleNDBCStationMarkers.keySet()
 					.toArray();
-			for (int i = 0; i < ndbcStations.length; i++) {
-				mVisibleNDBCStationMarkers.get(ndbcStations[i]).setVisible(
-						false);
-			}
+            for (Object ndbcStation : Objects.requireNonNull(ndbcStations)) {
+                Objects.requireNonNull(mVisibleNDBCStationMarkers.get(ndbcStation)).setVisible(
+                        false);
+            }
 		}
 	}
 
@@ -1552,43 +1344,157 @@ public class DiveSiteFullMapFragment extends Fragment implements
 		startActivityForResult(i, REQUEST_NEW_DIVESITE);
 	}
 
-	private String[] getCoordinateRange() {
-		String coordinateRange[] = new String[4];
-		if (mGoogleMap == null) {
-			coordinateRange[0] = "0";
-			coordinateRange[1] = "0";
-			coordinateRange[2] = "0";
-			coordinateRange[3] = "0";
-		} else {
-			LatLngBounds curMapBounds = mGoogleMap.getProjection()
-					.getVisibleRegion().latLngBounds;
+    private void initializeMap() {
+        if (checkLocationPermission()) {
+            mMapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mGoogleMap = googleMap;
 
-			String minLatitude = String
-					.valueOf(curMapBounds.southwest.latitude);
-			String maxLatitude = String
-					.valueOf(curMapBounds.northeast.latitude);
+                    if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_COARSE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        mGoogleMap.setMyLocationEnabled(true);
+                    }
 
-			String minLongitude = String
-					.valueOf(curMapBounds.southwest.longitude);
-			String maxLongitude = String
-					.valueOf(curMapBounds.northeast.longitude);
+                    mGoogleMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 
-			coordinateRange[0] = minLatitude;
-			coordinateRange[1] = maxLatitude;
-			coordinateRange[2] = minLongitude;
-			coordinateRange[3] = maxLongitude;
-		}
+                        @Override
+                        public void onMapLongClick(LatLng latLng) {
+                            // Remove existing add marker if it exists
+                            if (mAddDiveSiteMarker != null) {
+                                mAddDiveSiteMarker.remove();
+                            }
 
-		return coordinateRange;
-	}
-	
-	private Location getLocation() {
-		if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient) != null) {
-			return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-		} else {
-			return mDiveSiteManager.getLastLocation();
-		}
-	}
+                            // Add marker for user to click to add a new dive site
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(latLng)
+                                    .title(getResources().getString(
+                                            R.string.divesite_add_divesite_here))
+                                    .icon(BitmapDescriptorFactory
+                                            .fromResource(R.drawable.divesite_add_marker));
+
+                            mAddDiveSiteMarker = mGoogleMap.addMarker(markerOptions);
+                            mAddDiveSiteMarker.showInfoWindow();
+                        }
+                    });
+
+                    mGoogleMap.setOnMapClickListener(new OnMapClickListener() {
+
+                        @Override
+                        public void onMapClick(LatLng arg0) {
+                            // Remove existing add marker if it exists
+                            if (mAddDiveSiteMarker != null) {
+                                mAddDiveSiteMarker.remove();
+                            }
+
+                            // Hide data
+                            hideCurrentlyDisplayedData();
+                        }
+                    });
+
+                    mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            if (mVisibleNDBCStationMarkers.containsValue(marker)) {
+
+                                // Load buoy data then show data toolbar
+                                NDBCStation selectedStation = null;
+                                Object[] ndbcStations = mVisibleNDBCStationMarkers.keySet()
+                                        .toArray();
+                                for (Object ndbcStation : Objects.requireNonNull(ndbcStations)) {
+                                    if (Objects.equals(mVisibleNDBCStationMarkers.get(ndbcStation), marker)) {
+                                        selectedStation = (NDBCStation) ndbcStation;
+                                        break;
+                                    }
+                                }
+
+                                loadDataForStation(selectedStation);
+                            }
+
+                            return false;
+                        }
+
+                    });
+
+                    mGoogleMap
+                            .setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+                                @Override
+                                public void onInfoWindowClick(Marker marker) {
+                                    // If user clicked add marker, add a new one, otherwise
+                                    // search for existing dive site
+                                    if (marker.equals(mAddDiveSiteMarker)) {
+                                        // Open the dive site in edit mode
+                                        mPrefs.edit()
+                                                .putBoolean(
+                                                        DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
+                                                        true).apply();
+
+                                        // Add a new dive site with the selected markers
+                                        // location and switch to Dive Site view
+                                        DiveSite diveSite = new DiveSite(mDiveSiteManager
+                                                .getLoggedInDiverId(), mDiveSiteManager
+                                                .getLoggedInDiverUsername());
+                                        diveSite.setLatitude(marker.getPosition().latitude);
+                                        diveSite.setLongitude(marker.getPosition().longitude);
+
+                                        mDiveSiteManager.insertDiveSite(diveSite);
+                                        openDiveSite(diveSite);
+                                    } else {
+                                        mPrefs.edit()
+                                                .putBoolean(
+                                                        DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
+                                                        false).apply();
+
+                                        // Display Dive Site info
+                                        Object[] diveSites = mVisibleDiveSiteMarkers
+                                                .keySet().toArray();
+                                        for (Object diveSite : Objects.requireNonNull(diveSites)) {
+                                            if (Objects.requireNonNull(mVisibleDiveSiteMarkers.get(diveSite))
+                                                    .equals(marker)) {
+                                                // Dive Site found
+                                                openDiveSite((DiveSite) diveSite);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                    mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+                        @Override
+                        public void onCameraChange(CameraPosition cameraPosition) {
+                            // Only refresh dive sites and station data if we're zoomed in
+                            // enough, otherwise display message
+                            if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
+                                refreshDiveSiteList();
+                                refreshVisibleNDBCStations();
+                                if (!mArchives) {
+                                    refreshOnlineDiveSites();
+                                }
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(),
+                                        R.string.divesite_map_zoom_view_data,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    });
+
+                    if (getLocation() != null) {
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(getLocation().getLatitude(),
+                                        getLocation().getLongitude())).zoom(7).build();
+                        mGoogleMap.animateCamera(CameraUpdateFactory
+                                .newCameraPosition(cameraPosition));
+                    }
+                }
+            });
+
+            MapsInitializer.initialize(Objects.requireNonNull(getActivity()));
+        }
+    }
 
 	private static class DiveSiteListCursorLoader extends SQLiteCursorLoader {
 
@@ -1597,9 +1503,9 @@ public class DiveSiteFullMapFragment extends Fragment implements
 		private String mMinLatitude, mMaxLatitude;
 		private String mMinLongitude, mMaxLongitude;
 
-		public DiveSiteListCursorLoader(Context context, boolean archives,
-				String minLatitude, String maxLatitude, String minLongitude,
-				String maxLongitude) {
+		DiveSiteListCursorLoader(Context context, boolean archives,
+                                 String minLatitude, String maxLatitude, String minLongitude,
+                                 String maxLongitude) {
 			super(context);
 
 			mArchives = archives;
@@ -1626,16 +1532,17 @@ public class DiveSiteFullMapFragment extends Fragment implements
 		}
 	}
 
-	@Override
+	@NonNull
+    @Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String coordinateRange[] = getCoordinateRange();
+		String coordinateRange[] = getCoordinateRange(mGoogleMap);
 		return new DiveSiteListCursorLoader(getActivity(), mArchives,
 				coordinateRange[0], coordinateRange[1], coordinateRange[2],
 				coordinateRange[3]);
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+	public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
 		// Add markers for dive sites in cursor to map
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -1678,12 +1585,12 @@ public class DiveSiteFullMapFragment extends Fragment implements
 	private Marker getMarkerForDiveSiteLocalID(long localID) {
 		Marker marker = null;
 		Object[] diveSites = mVisibleDiveSiteMarkers.keySet().toArray();
-		for (int i = 0; i < diveSites.length; i++) {
-			if (((DiveSite) diveSites[i]).getLocalId() == localID) {
-				marker = mVisibleDiveSiteMarkers.get(diveSites[i]);
-				break;
-			}
-		}
+        for (Object diveSite : Objects.requireNonNull(diveSites)) {
+            if (((DiveSite) diveSite).getLocalId() == localID) {
+                marker = mVisibleDiveSiteMarkers.get(diveSite);
+                break;
+            }
+        }
 
 		return marker;
 	}
@@ -1691,105 +1598,20 @@ public class DiveSiteFullMapFragment extends Fragment implements
 	private Marker getMarkerForDiveSiteOnlineID(long onlineID) {
 		Marker marker = null;
 		Object[] diveSites = mVisibleDiveSiteMarkers.keySet().toArray();
-		for (int i = 0; i < diveSites.length; i++) {
-			if (((DiveSite) diveSites[i]).getOnlineId() == onlineID) {
-				marker = mVisibleDiveSiteMarkers.get(diveSites[i]);
-				break;
-			}
-		}
+        for (Object diveSite : Objects.requireNonNull(diveSites)) {
+            if (((DiveSite) diveSite).getOnlineId() == onlineID) {
+                marker = mVisibleDiveSiteMarkers.get(diveSite);
+                break;
+            }
+        }
 
 		return marker;
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 	}
 
-	 /**
-     * Show a dialog returned by Google Play services for the
-     * connection error code
-     *
-     * @param errorCode An error code returned from onConnectionFailed
-     */
-    private void showErrorDialog(int errorCode) {
-
-        // Get the error dialog from Google Play services
-        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-            errorCode,
-            getActivity(),
-            DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-        // If Google Play services can provide an error dialog
-        if (errorDialog != null) {
-
-            // Create a new DialogFragment in which to show the error dialog
-            ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-
-            // Set the dialog in the DialogFragment
-            errorFragment.setDialog(errorDialog);
-
-            // Show the error dialog in the DialogFragment
-            errorFragment.show(getActivity().getSupportFragmentManager(), TAG);
-        }
-    }
-	
-	/*
-     * Called by Location Services when the request to connect the
-     * client finishes successfully. At this point, you can
-     * request the current location or start periodic updates
-     */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        if (mLocationEnabled) {
-            mLocationRequest = LocationRequest.create();
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(1000); // Update location every second
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has been suspend");
-    }
-    
-    /*
-     * Called by Location Services if the attempt to
-     * Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                		getActivity(),
-                        DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
-            showErrorDialog(connectionResult.getErrorCode());
-        }
-    }
-    
     /**
      * Report location updates to the UI.
      *
@@ -1797,7 +1619,7 @@ public class DiveSiteFullMapFragment extends Fragment implements
      */
     @Override
     public void onLocationChanged(Location location) {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationController.getLocationControler().stopLocationUpdates(getActivity());
     	mDiveSiteManager.saveLastLocation(location);
     	
     	CameraPosition cameraPosition = new CameraPosition.Builder()

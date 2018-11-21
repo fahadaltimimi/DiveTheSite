@@ -2,12 +2,14 @@ package com.fahadaltimimi.divethesite.view;
 
 import java.util.ArrayList;
 
+import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager.ErrorDialogFragment;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.DiveLog;
 import com.fahadaltimimi.divethesite.model.DiveSite;
+import com.fahadaltimimi.view.LocationFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,20 +34,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public abstract class DiveSitePageFragment extends Fragment implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+public abstract class DiveSitePageFragment extends LocationFragment {
 
 	private static final String TAG = "DiveSitePageFragment";
 
 	public static final int LOAD_DIVESITES = 0;
 
 	protected DiveSiteManager mDiveSiteManager;
-
-	private LocationRequest mLocationRequest;
-    protected GoogleApiClient mGoogleApiClient;
-	private boolean mLocationEnabled;
 
 	protected DiveSite mDiveSite;
 	protected DiveLog mDiveLog;
@@ -71,20 +66,6 @@ public abstract class DiveSitePageFragment extends Fragment implements
 		setHasOptionsMenu(true);
 
 		mDiveSiteManager = DiveSiteManager.get(getActivity());
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mLocationEnabled = false;
-            Toast.makeText(getActivity(), "Enable location services for accurate data", Toast.LENGTH_SHORT).show();
-        } else {
-        	mLocationEnabled = true;
-        }
 		
 		mPrefs = getActivity().getSharedPreferences(DiveSiteManager.PREFS_FILE,
 				Context.MODE_PRIVATE);
@@ -98,6 +79,11 @@ public abstract class DiveSitePageFragment extends Fragment implements
 			mDiveSite = args.getParcelable(DiveSiteTabFragment.ARG_DIVESITE);
 			mDiveLog = args.getParcelable(DiveLogFragment.ARG_DIVELOG);
 		}
+	}
+
+	@Override
+	protected int getLayoutView() {
+		return R.layout.fragment_divesite_details;
 	}
 
 	@Override
@@ -308,22 +294,6 @@ public abstract class DiveSitePageFragment extends Fragment implements
 		}
 	}
 
-	@Override
-	public void onStart() {
-        super.onStart();
-
-        // Connect the client.
-        mGoogleApiClient.connect();
-    }
-
-	@Override
-	public void onStop() {
-        // Disconnecting the client invalidates it.
-        mGoogleApiClient.disconnect();
-				
-		super.onStop();
-	}
-	
 	protected void updateUI() {
 		// Read edit mode preference
 		if (mPrefs != null) {
@@ -335,10 +305,6 @@ public abstract class DiveSitePageFragment extends Fragment implements
 
 	public void setOnDiveSiteChangedListener(DiveSitePageListener listen) {
 		mDiveSitePageListener = listen;
-	}
-
-	protected void OnInitializeDiveSiteLoader() {
-		// Do nothing here, may be inherited;
 	}
 
 	protected void DoDiveSiteAvailable() {
@@ -377,91 +343,6 @@ public abstract class DiveSitePageFragment extends Fragment implements
 	public void onResume() {
 		super.onResume();
 	}
-	
-	/**
-     * Show a dialog returned by Google Play services for the
-     * connection error code
-     *
-     * @param errorCode An error code returned from onConnectionFailed
-     */
-    private void showErrorDialog(int errorCode) {
-
-        // Get the error dialog from Google Play services
-        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-            errorCode,
-            getActivity(),
-            DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-        // If Google Play services can provide an error dialog
-        if (errorDialog != null) {
-
-            // Create a new DialogFragment in which to show the error dialog
-            ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-
-            // Set the dialog in the DialogFragment
-            errorFragment.setDialog(errorDialog);
-
-            // Show the error dialog in the DialogFragment
-            errorFragment.show(getActivity().getSupportFragmentManager(), TAG);
-        }
-    }
-	
-	/*
-     * Called by Location Services when the request to connect the
-     * client finishes successfully. At this point, you can
-     * request the current location or start periodic updates
-     */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        if (mLocationEnabled) {
-            mLocationRequest = LocationRequest.create();
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(1000); // Update location every second
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has been suspend");
-    }
-    
-    /*
-     * Called by Location Services if the attempt to
-     * Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                		getActivity(),
-                        DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
-            showErrorDialog(connectionResult.getErrorCode());
-        }
-    }
     
     /**
      * Report location updates to the UI.
@@ -470,7 +351,7 @@ public abstract class DiveSitePageFragment extends Fragment implements
      */
     @Override
     public void onLocationChanged(Location location) {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationController.getLocationControler().stopLocationUpdates(getActivity());
     	mDiveSiteManager.saveLastLocation(location);
     }
 }

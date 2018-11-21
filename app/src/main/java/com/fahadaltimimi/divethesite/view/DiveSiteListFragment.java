@@ -1,10 +1,12 @@
 package com.fahadaltimimi.divethesite.view;
 
+import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager.ErrorDialogFragment;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.DiveSite;
+import com.fahadaltimimi.view.LocationListFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -63,20 +65,15 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class DiveSiteListFragment extends ListFragment implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+import java.util.Objects;
+
+public class DiveSiteListFragment extends LocationListFragment {
 
 	public static final String TAG = "DiveSiteListFragment";
 
 	protected static final int REQUEST_NEW_DIVESITE = 0;
 
 	protected DiveSiteManager mDiveSiteManager;
-
-	protected LocationRequest mLocationRequest;
-    protected GoogleApiClient mGoogleApiClient;
-	protected boolean mLocationEnabled;
 
 	protected Bundle mSavedInstanceState;
 
@@ -121,23 +118,9 @@ public class DiveSiteListFragment extends ListFragment implements
 		mSavedInstanceState = savedInstanceState;
 		mDiveSiteManager = DiveSiteManager.get(getActivity());
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mLocationEnabled = false;
-            Toast.makeText(getActivity(), "Enable location services for accurate data", Toast.LENGTH_SHORT).show();
-        } else {
-        	mLocationEnabled = true;
-        }
-
 		mProgressDialog = new ProgressDialog(getActivity());
 
-		mPrefs = getActivity().getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE);
+		mPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(DiveSiteManager.PREFS_FILE, Context.MODE_PRIVATE);
 
 		Bundle args = getArguments();
 		if (args != null) {
@@ -151,9 +134,9 @@ public class DiveSiteListFragment extends ListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_divesite_list, parent, false);
+		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-		mFilterNotificationContainer = v
+		mFilterNotificationContainer = Objects.requireNonNull(v)
 				.findViewById(R.id.divesite_list_filter_notification_container);
 		mFilterNotification = v
 				.findViewById(R.id.divesite_list_filter_notification);
@@ -186,8 +169,8 @@ public class DiveSiteListFragment extends ListFragment implements
 					int count) {
 				// Save text and reset list view
 				String filterTitle = c.toString().trim();
-				if (!mPrefs.getString(
-						DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, "")
+				if (!Objects.requireNonNull(mPrefs.getString(
+						DiveSiteManager.PREF_FILTER_DIVELOG_DIVESITE_TITLE, ""))
 						.equals(filterTitle)) {
 					if (mSetToDiveLog) {
 						mPrefs.edit()
@@ -227,8 +210,8 @@ public class DiveSiteListFragment extends ListFragment implements
 				String filterCountry = (String) parentView
 						.getItemAtPosition(position);
 
-				if (!mPrefs.getString(
-						DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, "")
+				if (!Objects.requireNonNull(mPrefs.getString(
+						DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY, ""))
 						.equals(filterCountry)) {
 					if (filterCountry.isEmpty()) {
 						filterCountry = getResources().getString(
@@ -257,8 +240,8 @@ public class DiveSiteListFragment extends ListFragment implements
 				// Save text and reset list view
 				String filterState = c.toString().trim();
 
-				if (!mPrefs.getString(
-						DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "").equals(
+				if (!Objects.requireNonNull(mPrefs.getString(
+						DiveSiteManager.PREF_FILTER_DIVESITE_STATE, "")).equals(
 						filterState)) {
 					mPrefs.edit()
 							.putString(
@@ -287,8 +270,8 @@ public class DiveSiteListFragment extends ListFragment implements
 				// Save text and reset list view
 				String filterCity = c.toString().trim();
 
-				if (!mPrefs.getString(
-						DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "").equals(
+				if (!Objects.requireNonNull(mPrefs.getString(
+						DiveSiteManager.PREF_FILTER_DIVESITE_CITY, "")).equals(
 						filterCity)) {
 					mPrefs.edit()
 							.putString(
@@ -374,12 +357,7 @@ public class DiveSiteListFragment extends ListFragment implements
 
         mDiveSiteItemMapView = v.findViewById(R.id.divesite_list_item_mapView);
         mDiveSiteItemMapView.onCreate(savedInstanceState);
-        mDiveSiteItemMapView.onResume();
-        mDiveSiteItemMapView.getLayoutParams().height = (getActivity()
-                .getWindowManager().getDefaultDisplay().getHeight()
-                - getTitleBarHeight() - getStatusBarHeight()) / 2;
-        MapsInitializer.initialize(getActivity());
-        mDiveSiteItemMapView.setVisibility(View.GONE);
+        initializeMap();
 
         mDiveSiteItemMapViewSnapShot = v.findViewById(R.id.divesite_list_item_mapView_snapShot);
         mDiveSiteItemMapViewSnapShot.setVisibility(View.GONE);
@@ -388,6 +366,31 @@ public class DiveSiteListFragment extends ListFragment implements
 
 		return v;
 	}
+
+	@Override
+	protected int getLayoutView() {
+		return R.layout.fragment_divesite_list;
+	}
+
+	protected Location getLocation() {
+		return LocationController.getLocationControler().getLocation(getActivity(), mDiveSiteManager.getLastLocation());
+	}
+
+	@Override
+	protected void onLocationPermissionGranted() {
+		initializeMap();
+	}
+
+    private void initializeMap() {
+        if (checkLocationPermission()) {
+            mDiveSiteItemMapView.onResume();
+            mDiveSiteItemMapView.getLayoutParams().height = (Objects.requireNonNull(getActivity())
+                    .getWindowManager().getDefaultDisplay().getHeight()
+                    - getTitleBarHeight() - getStatusBarHeight()) / 2;
+            MapsInitializer.initialize(getActivity());
+            mDiveSiteItemMapView.setVisibility(View.GONE);
+        }
+    }
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
@@ -442,7 +445,7 @@ public class DiveSiteListFragment extends ListFragment implements
 	protected void setSelectedDiveSite(DiveSite diveSite) {
 		if (mSelectedDiveSite != diveSite) {
 			mSelectedDiveSite = diveSite;
-			getActivity().invalidateOptionsMenu();
+			Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
 		}
 	}
 
@@ -463,7 +466,7 @@ public class DiveSiteListFragment extends ListFragment implements
 		if (mFilterCountry != null) {
 			// Initialize values and modify first blank entry to read 'All'
 			ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
-					getActivity(), android.R.layout.simple_spinner_item,
+					Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item,
 					android.R.id.text1);
 			spinnerAdapter
 					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -481,7 +484,7 @@ public class DiveSiteListFragment extends ListFragment implements
 					DiveSiteManager.PREF_FILTER_DIVESITE_COUNTRY,
 					getResources().getString(R.string.filter_list_all));
 			for (int i = 0; i < spinnerAdapter.getCount(); i++) {
-				if (spinnerAdapter.getItem(i).toString()
+				if (Objects.requireNonNull(spinnerAdapter.getItem(i)).toString()
 						.equals(currentFilterCountry)) {
 					mFilterCountry.setSelection(i);
 					break;
@@ -556,27 +559,15 @@ public class DiveSiteListFragment extends ListFragment implements
 
 	public int getStatusBarHeight() {
 		Rect r = new Rect();
-		Window w = getActivity().getWindow();
+		Window w = Objects.requireNonNull(getActivity()).getWindow();
 		w.getDecorView().getWindowVisibleDisplayFrame(r);
 		return r.top;
 	}
 
 	public int getTitleBarHeight() {
-		int viewTop = getActivity().getWindow()
+		int viewTop = Objects.requireNonNull(getActivity()).getWindow()
 				.findViewById(Window.ID_ANDROID_CONTENT).getTop();
 		return (viewTop - getStatusBarHeight());
-	}
-
-	protected Location getLocation() {
-		if ((ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-				== PackageManager.PERMISSION_GRANTED) &&
-				mGoogleApiClient != null && mGoogleApiClient.isConnected() &&
-				LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient) != null) {
-			return  LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-		}
-		else {
-			return mDiveSiteManager.getLastLocation();
-		}
 	}
 
     protected void setDiveSiteMap(final DiveSite diveSite, ViewGroup mapContainer) {
@@ -651,107 +642,6 @@ public class DiveSiteListFragment extends ListFragment implements
 			}
 		});
     }
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-        // Connect the client.
-        mGoogleApiClient.connect();
-	}
-
-	@Override
-	public void onStop() {
-        // Disconnecting the client invalidates it.
-        mGoogleApiClient.disconnect();
-				
-		super.onStop();
-	}
-	
-	/**
-     * Show a dialog returned by Google Play services for the
-     * connection error code
-     *
-     * @param errorCode An error code returned from onConnectionFailed
-     */
-    private void showErrorDialog(int errorCode) {
-
-        // Get the error dialog from Google Play services
-        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-            errorCode,
-            getActivity(),
-            DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-        // If Google Play services can provide an error dialog
-        if (errorDialog != null) {
-
-            // Create a new DialogFragment in which to show the error dialog
-            ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-
-            // Set the dialog in the DialogFragment
-            errorFragment.setDialog(errorDialog);
-
-            // Show the error dialog in the DialogFragment
-            errorFragment.show(getActivity().getSupportFragmentManager(), TAG);
-        }
-    }
-	
-	/*
-     * Called by Location Services when the request to connect the
-     * client finishes successfully. At this point, you can
-     * request the current location or start periodic updates
-     */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-    	if (mLocationEnabled) {
-            mLocationRequest = LocationRequest.create();
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(1000); // Update location every second
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-    	}
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has been suspend");
-    }
-
-    /*
-     * Called by Location Services if the attempt to
-     * Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                		getActivity(),
-                        DiveSiteManager.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
-            showErrorDialog(connectionResult.getErrorCode());
-        }
-    }
     
     /**
      * Report location updates to the UI.
@@ -760,7 +650,7 @@ public class DiveSiteListFragment extends ListFragment implements
      */
     @Override
     public void onLocationChanged(Location location) {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationController.getLocationControler().stopLocationUpdates(getActivity());
     	mDiveSiteManager.saveLastLocation(location);
     }
 }
