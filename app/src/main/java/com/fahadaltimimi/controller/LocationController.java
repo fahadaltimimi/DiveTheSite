@@ -37,10 +37,11 @@ public class LocationController {
     }
 
     public void startLocationUpdates(Context context, LocationCallback locationCallback) {
-        if (isLocationEnabled(context) &&
-            (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) &&
-            (locationCallback != null)) {
+        if (context != null && isLocationEnabled(context.getApplicationContext()) &&
+                (ContextCompat.checkSelfPermission(context.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) &&
+                (locationCallback != null) && (mCurrentLocationCallback != locationCallback)) {
+            stopLocationUpdates(context);
 
             // Create the location request to start receiving updates
             LocationRequest locationRequest = LocationRequest.create();
@@ -54,32 +55,35 @@ public class LocationController {
             LocationSettingsRequest locationSettingsRequest = builder.build();
 
             // Check whether location settings are satisfied
-            SettingsClient settingsClient = LocationServices.getSettingsClient(context);
+            SettingsClient settingsClient = LocationServices.getSettingsClient(context.getApplicationContext());
             settingsClient.checkLocationSettings(locationSettingsRequest);
 
             mCurrentLocationCallback = locationCallback;
-            getFusedLocationProviderClient(context).requestLocationUpdates(locationRequest, mCurrentLocationCallback, Looper.myLooper());
+            getFusedLocationProviderClient(context.getApplicationContext()).requestLocationUpdates(locationRequest, mCurrentLocationCallback, Looper.myLooper());
         }
     }
 
     public void stopLocationUpdates(Context context) {
-        LocationServices.getFusedLocationProviderClient(context).removeLocationUpdates(mCurrentLocationCallback);
+        if (context != null && mCurrentLocationCallback != null) {
+            LocationServices.getFusedLocationProviderClient(context.getApplicationContext()).removeLocationUpdates(mCurrentLocationCallback);
+            mCurrentLocationCallback = null;
+        }
     }
 
     public Location getLocation(Context context, Location defaultLocation) {
-        if ((ContextCompat.checkSelfPermission(context,
+        if ((ContextCompat.checkSelfPermission(context.getApplicationContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) &&
-                LocationServices.getFusedLocationProviderClient(context).getLastLocation().isComplete() &&
-                LocationServices.getFusedLocationProviderClient(context).getLastLocation().getResult() != null) {
-            return LocationServices.getFusedLocationProviderClient(context).getLastLocation().getResult();
+                LocationServices.getFusedLocationProviderClient(context.getApplicationContext()).getLastLocation().isComplete() &&
+                LocationServices.getFusedLocationProviderClient(context.getApplicationContext()).getLastLocation().getResult() != null) {
+            return LocationServices.getFusedLocationProviderClient(context.getApplicationContext()).getLastLocation().getResult();
         } else {
             return defaultLocation;
         }
     }
 
     public boolean isLocationEnabled(Context context) {
-        android.location.LocationManager manager = (android.location.LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        android.location.LocationManager manager = (android.location.LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         return (manager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER) && manager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER));
     }
 }

@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.location.Address;
@@ -23,7 +21,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Display;
@@ -1342,8 +1339,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                 public void onMapReady(GoogleMap googleMap) {
                     mGoogleMap = googleMap;
 
-                    if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_COARSE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+                    if (checkLocationPermission()) {
                         mGoogleMap.setMyLocationEnabled(true);
                     }
 
