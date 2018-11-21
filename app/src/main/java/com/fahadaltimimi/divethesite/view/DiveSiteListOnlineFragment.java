@@ -31,7 +31,6 @@ import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.DiveLogActivity;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.DiveSitePicture;
-import com.google.android.gms.location.LocationServices;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
