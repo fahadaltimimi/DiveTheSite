@@ -48,6 +48,7 @@ import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCSpectralWaveData;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.data.SQLiteCursorLoader;
 import com.fahadaltimimi.divethesite.model.DiveSite;
+import com.fahadaltimimi.view.FAMapView;
 import com.fahadaltimimi.view.LocationFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,7 +58,6 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -84,7 +84,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	private SharedPreferences mPrefs;
     private boolean mArchives = false;
 
-	private MapView mMapView;
+	private FAMapView mMapView;
 	private GoogleMap mGoogleMap;
 
     private LinearLayout mDiveSiteLatestMeteorologicalData;

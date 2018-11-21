@@ -47,13 +47,13 @@ import com.fahadaltimimi.divethesite.model.ScheduledDiveDiveSite;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
+import com.fahadaltimimi.view.FAMapView;
 import com.fahadaltimimi.view.LocationFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -104,7 +104,7 @@ public class HomeFragment extends LocationFragment {
     private Button mDiveSiteListNoDataLabel;
 	
 	private Button mMapTitle;
-	private MapView mMapView;
+	private FAMapView mMapView;
 	private GoogleMap mGoogleMap = null;
 
     private View mScheduledDiveListProgress;

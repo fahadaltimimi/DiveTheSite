@@ -104,7 +104,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		// Register list view with context menu
-		ListView listView = (ListView) v.findViewById(android.R.id.list);
+		ListView listView = v.findViewById(android.R.id.list);
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -844,7 +844,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		}
 
 		// Title
-		TextView title = (TextView) view.findViewById(R.id.scheduleddive_item_title);
+		TextView title = view.findViewById(R.id.scheduleddive_item_title);
 		if (scheduledDive.getTitle().trim().isEmpty()) {
 			title.setText(getResources().getString(R.string.scheduleddive_default_title) + 
 					" " + scheduledDive.getTimestampStringLong());
@@ -853,20 +853,20 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		}
 		
 		// Timestamp
-		TextView timeStamp = (TextView) view.findViewById(R.id.scheduleddive_item_timestamp);
+		TextView timeStamp = view.findViewById(R.id.scheduleddive_item_timestamp);
 		timeStamp.setText(dateTimeFormat.format(scheduledDive.getTimestamp()));
 		
 		// Comment
-		TextView commentView = (TextView) view.findViewById(R.id.scheduleddive_comment);
+		TextView commentView = view.findViewById(R.id.scheduleddive_comment);
 		commentView.setText(scheduledDive.getComment());
 
 		// Diver Count
-		TextView diverCountView = (TextView) view.findViewById(R.id.scheduleddive_item_divercount);
+		TextView diverCountView = view.findViewById(R.id.scheduleddive_item_divercount);
 		diverCountView.setText(String.format(getResources().getString(R.string.scheduleddive_list_diver_count), 0));
 		diverCountView.setTag(0);
 		
 		// Determine which button to show
-		Button scheduledDiveAttend = (Button) view.findViewById(R.id.scheduleddive_item_attend);
+		Button scheduledDiveAttend = view.findViewById(R.id.scheduleddive_item_attend);
 		scheduledDiveAttend.setTag(scheduledDive);
 		scheduledDiveAttend.setOnClickListener(new View.OnClickListener() {
 			
@@ -997,7 +997,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 			}
 		});
 		
-		Button scheduledDiveBail = (Button) view.findViewById(R.id.scheduleddive_item_bail);
+		Button scheduledDiveBail = view.findViewById(R.id.scheduleddive_item_bail);
 		scheduledDiveBail.setTag(scheduledDive);
 		scheduledDiveBail.setOnClickListener(new View.OnClickListener() {
 			
@@ -1128,7 +1128,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		});
 		
 		// Button to create a log from the scheduled dives dive sites
-		Button scheduledDiveLog = (Button) view.findViewById(R.id.scheduleddive_item_log);
+		Button scheduledDiveLog = view.findViewById(R.id.scheduleddive_item_log);
 		scheduledDiveLog.setTag(scheduledDive);		
 		scheduledDiveLog.setOnClickListener(new View.OnClickListener() {
 			
@@ -1255,7 +1255,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		}
 		
 		// Submitter
-		ImageButton submitterView = (ImageButton) view.findViewById(R.id.scheduleddive_item_picture);
+		ImageButton submitterView = view.findViewById(R.id.scheduleddive_item_picture);
 		mScheduledDiveListItemDiverImageView.put(scheduledDive.getLocalId(), submitterView);
 		
 		if (mDiverProfileImageCache.get(scheduledDive.getSubmitterId()) == null) {
@@ -1323,10 +1323,10 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		});
 
 		// Indicators
-		ImageButton scheduledDivePublished = 
-			(ImageButton) view.findViewById(R.id.scheduleddive_indicate_isPublished);
-		ImageButton scheduledDiveUnpublished = 
-			(ImageButton) view.findViewById(R.id.scheduleddive_indicate_isUnpublished);
+		ImageButton scheduledDivePublished =
+				view.findViewById(R.id.scheduleddive_indicate_isPublished);
+		ImageButton scheduledDiveUnpublished =
+				view.findViewById(R.id.scheduleddive_indicate_isUnpublished);
 		if (scheduledDive.isPublished()) {
 			scheduledDivePublished.setVisibility(View.VISIBLE);
 			scheduledDiveUnpublished.setVisibility(View.GONE);
@@ -1335,8 +1335,8 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 			scheduledDiveUnpublished.setVisibility(View.VISIBLE);
 		}
 
-		ImageButton scheduledDiveSaved = 
-			(ImageButton) view.findViewById(R.id.scheduleddive_indicate_isSaved);
+		ImageButton scheduledDiveSaved =
+				view.findViewById(R.id.scheduleddive_indicate_isSaved);
 		if (scheduledDive.getLocalId() != -1) {
 			scheduledDiveSaved.setVisibility(View.VISIBLE);
 		} else {
@@ -1344,7 +1344,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		}
 		
 		ImageButton requiresRefresh =
-				(ImageButton)view.findViewById(R.id.scheduleddive_indicate_refresh_required);
+				view.findViewById(R.id.scheduleddive_indicate_refresh_required);
         if (scheduledDive.requiresRefresh()) {
             requiresRefresh.setVisibility(View.VISIBLE);
             requiresRefresh.setEnabled(mScheduledDiveUpdates.get(scheduledDive.getLocalId()) != null);
@@ -1410,7 +1410,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 
         // Initialize visibility secondary view
         View secondaryView = view.findViewById(R.id.scheduleddive_item_secondary_view);
-        final ViewGroup mapContainer = (ViewGroup) view.findViewById(R.id.scheduleddive_list_item_mapView_container);
+        final ViewGroup mapContainer = view.findViewById(R.id.scheduleddive_list_item_mapView_container);
         if (mSelectedScheduledDive != null && scheduledDive.getLocalId() == mSelectedScheduledDive.getLocalId()) {
             view.setBackgroundColor(getResources().getColor(R.color.diveSiteSelected));
             secondaryView.setVisibility(View.VISIBLE);
@@ -1516,7 +1516,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 				long scheduledDiveID = 
 						((ScheduledDiveDiveSiteCursor) cursor).getScheduledDiveDiveSite().getScheduledDiveLocalId();
 				View view = mScheduledDiveListItemViews.get(scheduledDiveID);
-				LinearLayout sitesListView = (LinearLayout) view.findViewById(R.id.scheduleddive_item_site_list);
+				LinearLayout sitesListView = view.findViewById(R.id.scheduleddive_item_site_list);
 				sitesListView.removeAllViews();
 			}
 			
@@ -1532,8 +1532,8 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 							mScheduledDiveListItemViews.get(scheduledDiveDiveSite.getScheduledDiveLocalId());
 					if (scheduledDiveView != null) {
 						// Found the view, now find the site list
-						LinearLayout scheduledDiveDiveSiteListView = 
-								(LinearLayout) scheduledDiveView.findViewById(R.id.scheduleddive_item_site_list);
+						LinearLayout scheduledDiveDiveSiteListView =
+								scheduledDiveView.findViewById(R.id.scheduleddive_item_site_list);
 						scheduledDiveDiveSiteListView.setTag(
 								R.id.scheduleddive_local_view_tag, 
 								scheduledDiveView);
@@ -1612,21 +1612,21 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 						scheduledDiveDiveSiteListView.addView(scheduledDiveDiveSiteView);
 	
 						// Set scheduled dive site view fields
-						ImageButton scheduledDiveDiveSiteRemove = (ImageButton)scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_remove);
+						ImageButton scheduledDiveDiveSiteRemove = scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_remove);
 						scheduledDiveDiveSiteRemove.setVisibility(View.GONE);
 						
-						TextView scheduledDiveDiveSiteName = (TextView) scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_name);
+						TextView scheduledDiveDiveSiteName = scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_name);
 						scheduledDiveDiveSiteName.setText(diveSite.getName());
 						
-						TextView scheduledDiveDiveSiteLocation = (TextView) scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_location);
+						TextView scheduledDiveDiveSiteLocation = scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_location);
 						scheduledDiveDiveSiteLocation.setText(diveSite.getFullLocation());
 						
-						TextView scheduledDiveDiveSiteVoteCount = (TextView) scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_vote_count);
+						TextView scheduledDiveDiveSiteVoteCount = scheduledDiveDiveSiteView.findViewById(R.id.scheduleddive_site_vote_count);
 						scheduledDiveDiveSiteVoteCount.setText(String.format(getResources().getString(R.string.scheduleddive_list_vote_count), 
 								scheduledDiveDiveSite.getVoteCount()));
 
                         // Initialize visibility map view
-                        final ViewGroup mapContainer = (ViewGroup) scheduledDiveView.findViewById(R.id.scheduleddive_list_item_mapView_container);
+                        final ViewGroup mapContainer = scheduledDiveView.findViewById(R.id.scheduleddive_list_item_mapView_container);
                         if (mSelectedScheduledDive != null && scheduledDive.getLocalId() == mSelectedScheduledDive.getLocalId()) {
                             setScheduledDiveMap(scheduledDive, mapContainer);
                         } else if (mScheduledDiveItemMapView.getParent() == mapContainer) {
@@ -1646,7 +1646,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 				long scheduledDiveID = 
 						((ScheduledDiveUserCursor) cursor).getScheduledDiveUser().getScheduledDiveLocalId();
 				View view = mScheduledDiveListItemViews.get(scheduledDiveID);
-				LinearLayout usersListView = (LinearLayout) view.findViewById(R.id.scheduleddive_item_user_list);
+				LinearLayout usersListView = view.findViewById(R.id.scheduleddive_item_user_list);
 				usersListView.removeAllViews();
 			}
 
@@ -1692,8 +1692,8 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 				if (scheduledDiveView != null) {
 					// Update diver count
 					if (scheduledDiveUser.getAttendState() == ScheduledDiveUser.AttendState.ATTENDING) {
-						TextView diverCountView = 
-								(TextView) scheduledDiveView.findViewById(R.id.scheduleddive_item_divercount);
+						TextView diverCountView =
+								scheduledDiveView.findViewById(R.id.scheduleddive_item_divercount);
 						int newDiverCount = (Integer) diverCountView.getTag() + 1;
 						diverCountView.setText(String.format(
 								getResources().getString(R.string.scheduleddive_list_diver_count), newDiverCount));
@@ -1701,7 +1701,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 					}
 
 					// Found the view, now find the user list
-					LinearLayout scheduledDiveUserListView = (LinearLayout) scheduledDiveView.findViewById(R.id.scheduleddive_item_user_list);
+					LinearLayout scheduledDiveUserListView = scheduledDiveView.findViewById(R.id.scheduleddive_item_user_list);
                     scheduledDiveUserListView.setOnLongClickListener(contextClickListener);
                     scheduledDiveUserListView.setOnClickListener(selectionClickListener);
                     scheduledDiveUserListView.setTag(R.id.scheduleddive_local_view_tag, scheduledDiveView);
@@ -1714,9 +1714,9 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 					}
 					((ScheduledDive)scheduledDiveView.getTag()).getScheduledDiveUsers().add(scheduledDiveUser);
 					
-					Button scheduledDiveAttend = (Button) scheduledDiveView.findViewById(R.id.scheduleddive_item_attend);
-					Button scheduledDiveBail = (Button) scheduledDiveView.findViewById(R.id.scheduleddive_item_bail);
-					Button scheduledDiveLog = (Button) scheduledDiveView.findViewById(R.id.scheduleddive_item_log);
+					Button scheduledDiveAttend = scheduledDiveView.findViewById(R.id.scheduleddive_item_attend);
+					Button scheduledDiveBail = scheduledDiveView.findViewById(R.id.scheduleddive_item_bail);
+					Button scheduledDiveLog = scheduledDiveView.findViewById(R.id.scheduleddive_item_log);
 					
 					if (((ScheduledDive)scheduledDiveView.getTag()).getTimestamp().getTime() < (new Date()).getTime()) {
 						// Scheduled Dive in the past, show log button				
@@ -1751,7 +1751,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 						
 						if (scheduledDiveUser.getUserId() != -1 && 
 								scheduledDiveUser.getAttendState() == ScheduledDiveUser.AttendState.ATTENDING) {
-							ImageButton userProfile = (ImageButton) scheduledDiveUserView.findViewById(R.id.scheduleddive_user_picture);
+							ImageButton userProfile = scheduledDiveUserView.findViewById(R.id.scheduleddive_user_picture);
 
 							mScheduledDiveListItemDiverImageView.put(scheduledDiveUser.getLocalId(), userProfile);
 
@@ -1819,7 +1819,7 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 								userProfile.setImageBitmap(mDiverProfileImageCache.get(scheduledDiveUser.getUserId()));
 							}
 							
-							ImageButton scheduledDiveUserRemove = (ImageButton)scheduledDiveUserView.findViewById(R.id.scheduleddive_user_remove);
+							ImageButton scheduledDiveUserRemove = scheduledDiveUserView.findViewById(R.id.scheduleddive_user_remove);
 							scheduledDiveUserRemove.setVisibility(View.GONE);
 						}
 					}

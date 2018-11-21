@@ -42,10 +42,10 @@ import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCDriftingBuoyData;
 import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCMeteorologicalData;
 import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCSpectralWaveData;
 import com.fahadaltimimi.model.LoadOnlineImageTask;
+import com.fahadaltimimi.view.FAMapView;
 import com.fahadaltimimi.view.ObservableScrollView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -66,7 +66,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
     private static final String ARG_DIVESITE = "DIVESITE";
 
-	private static final int MAPVIEW_HEIGHT_BUFFER = 200;
+	private static final int MAPVIEW_HEIGHT_BUFFER = 500;
 
     private boolean mDisableSave = false;
 	private Boolean mRefreshingOnlineNDBCData = false;
@@ -79,7 +79,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 			mDiveSiteLocationEditContainer;
 	private RelativeLayout mDiveSiteCoordinatesEditContainer;
 
-	private MapView mMapView;
+	private FAMapView mMapView;
 	private GoogleMap mGoogleMap = null;
     private ImageView mMapViewSnapShot;
 
@@ -783,7 +783,13 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
         mMapViewSnapShot = view.findViewById(R.id.divesite_view_mapView_snapShot);
 
 		setDiveSiteAvailable(mDiveSite);
-		updateUI();
+
+		view.post(new Runnable() {
+            @Override
+            public void run() {
+                updateUI();
+            }
+        });
 
 		return view;
 	}
