@@ -1,13 +1,5 @@
 package com.fahadaltimimi.divethesite.view;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,15 +32,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fahadaltimimi.controller.LocationController;
+import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
+import com.fahadaltimimi.divethesite.model.DiveLog;
+import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.NDBCStation;
 import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCDriftingBuoyData;
 import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCMeteorologicalData;
 import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCSpectralWaveData;
-import com.fahadaltimimi.divethesite.R;
-import com.fahadaltimimi.divethesite.model.DiveLog;
-import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.model.LoadOnlineImageTask;
 import com.fahadaltimimi.view.ObservableScrollView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,6 +53,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 
@@ -80,7 +80,7 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
 	private RelativeLayout mDiveSiteCoordinatesEditContainer;
 
 	private MapView mMapView;
-	private GoogleMap mGoogleMap;
+	private GoogleMap mGoogleMap = null;
     private ImageView mMapViewSnapShot;
 
 	private DiveSiteOnlineDatabaseLink mNDBCDataOnlineDatabase = null;
@@ -798,6 +798,12 @@ public class DiveSiteInfoPageFragment extends DiveSitePageFragment {
             mMapView.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
+                    mGoogleMap = googleMap;
+
+                    if (checkLocationPermission()) {
+                        mGoogleMap.setMyLocationEnabled(true);
+                    }
+
                     if (mDiveSite != null) {
                         LatLng latLng = new LatLng(mDiveSite.getLatitude(), mDiveSite.getLongitude());
 

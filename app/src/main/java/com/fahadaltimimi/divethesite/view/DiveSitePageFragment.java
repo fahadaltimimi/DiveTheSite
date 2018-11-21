@@ -153,7 +153,7 @@ public abstract class DiveSitePageFragment extends LocationFragment {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
-									// Create and initializ progress dialog
+									// Create and initialize progress dialog
 									mProgressDialog
 											.setMessage(getString(R.string.publish_divesite_progress));
 									mProgressDialog.setCancelable(false);
