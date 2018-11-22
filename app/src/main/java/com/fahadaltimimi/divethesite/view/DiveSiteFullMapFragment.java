@@ -1448,13 +1448,12 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                                 }
                             });
 
-                    mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
-
+                    mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                         @Override
-                        public void onCameraChange(CameraPosition cameraPosition) {
+                        public void onCameraIdle() {
                             // Only refresh dive sites and station data if we're zoomed in
                             // enough, otherwise display message
-                            if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
+                            if (mGoogleMap.getCameraPosition().zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
                                 refreshDiveSiteList();
                                 refreshVisibleNDBCStations();
                                 if (!mArchives) {
@@ -1466,7 +1465,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
-
                     });
 
                     if (getLocation() != null) {
