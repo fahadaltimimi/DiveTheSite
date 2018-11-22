@@ -1,6 +1,5 @@
 package com.fahadaltimimi.divethesite.view;
 
-import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +33,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.ListViewHelper;
 import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
@@ -52,7 +52,6 @@ import com.fahadaltimimi.view.FAMapView;
 import com.fahadaltimimi.view.LocationFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapsInitializer;
@@ -71,7 +70,6 @@ public class HomeFragment extends LocationFragment {
 
 	private static int LIST_ITEMS_BUFFER_MULTIPLIER = 3;
 	private static double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
-	private static int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
 	
 	private int mSitesAdditionalItemsToLoad = 0;
@@ -1076,17 +1074,10 @@ public class HomeFragment extends LocationFragment {
 	private void refreshDiveSiteList() {
 		((DiveSiteAdapter) mDiveSiteListView.getAdapter()).notifyDataSetChanged();
 
-        if (!refreshAdditionalDiveSiteListRequired()) {
+        if (!ListViewHelper.shouldRefreshAdditionalListViewItems(mDiveSiteListView, LIST_ITEMS_BUFFER_MULTIPLIER)) {
             cancelOnlineDiveSiteRefresh();
         }
 	}
-
-    private boolean refreshAdditionalDiveSiteListRequired() {
-        int lastItemPosition = mDiveSiteListView.getLastVisiblePosition();
-        return !(lastItemPosition >= 0 && mDiveSiteListView.getChildCount() > 0 && mDiveSiteListView.getParent() != null &&
-                 mDiveSiteListView.getChildAt(mDiveSiteListView.getChildCount() - 1).getBottom() >= ((ViewGroup) mDiveSiteListView.getParent()).getHeight() &&
-                 mDiveSiteListView.getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER);
-    }
 
 	private ScheduledDive getScheduledDiveOnlineId(ScheduledDive scheduledDive) {
 		ScheduledDive scheduledDiveDuplicate = null;
@@ -1103,18 +1094,11 @@ public class HomeFragment extends LocationFragment {
 	private void refreshScheduledDiveList() {
 		((ScheduledDiveAdapter) mScheduledDiveListView.getAdapter()).notifyDataSetChanged();
 
-        if (!refreshAdditionalScheduledDiveListRequired()) {
+        if (!ListViewHelper.shouldRefreshAdditionalListViewItems(mScheduledDiveListView, LIST_ITEMS_BUFFER_MULTIPLIER)) {
             cancelOnlineScheduledDiveRefresh();
         }
 	}
 
-    private boolean refreshAdditionalScheduledDiveListRequired() {
-        int lastItemPosition = mScheduledDiveListView.getLastVisiblePosition();
-        return !(lastItemPosition >= 0 && mScheduledDiveListView.getChildCount() > 0 &&
-                 mScheduledDiveListView.getChildAt(mScheduledDiveListView.getChildCount() - 1).getBottom() >= ((ViewGroup) mScheduledDiveListView.getParent()).getHeight() &&
-                 mScheduledDiveListView.getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER);
-    }
-	
 	private int getNDBCIndex(NDBCStation ndbcStation) {
 		int index = -1;
 		for (int i = 0; i < mNDBCListView.getAdapter().getCount(); i++) {
@@ -1142,17 +1126,10 @@ public class HomeFragment extends LocationFragment {
 	private void refreshNDBCList() {
 		((NDBCAdapter) mNDBCListView.getAdapter()).notifyDataSetChanged();
 
-        if (!refreshAdditionalNDBCListRequired()) {
+        if (!ListViewHelper.shouldRefreshAdditionalListViewItems(mNDBCListView, LIST_ITEMS_BUFFER_MULTIPLIER)) {
             cancelOnlineNDBCRefresh();
         }
 	}
-
-    private boolean refreshAdditionalNDBCListRequired() {
-        int lastItemPosition = mNDBCListView.getLastVisiblePosition();
-        return !(lastItemPosition >= 0 && mNDBCListView.getChildCount() > 0 &&
-                 mNDBCListView.getChildAt(mNDBCListView.getChildCount() - 1).getBottom() >= ((ViewGroup) mNDBCListView.getParent()).getHeight() &&
-                 mNDBCListView.getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER);
-    }
 	
 	private void clearDiveSites() {
 		// Clears list and resets adapter
@@ -1272,13 +1249,13 @@ public class HomeFragment extends LocationFragment {
 			mMapView.onResume();
 		}
 
-        if (refreshAdditionalDiveSiteListRequired()) {
+        if (ListViewHelper.shouldRefreshAdditionalListViewItems(mDiveSiteListView, LIST_ITEMS_BUFFER_MULTIPLIER)) {
             refreshOnlineDiveSites();
         }
-        if (refreshAdditionalScheduledDiveListRequired()) {
+        if (ListViewHelper.shouldRefreshAdditionalListViewItems(mScheduledDiveListView, LIST_ITEMS_BUFFER_MULTIPLIER)) {
             refreshOnlineScheduledDives();
         }
-        if (refreshAdditionalNDBCListRequired()) {
+        if (ListViewHelper.shouldRefreshAdditionalListViewItems(mNDBCListView, LIST_ITEMS_BUFFER_MULTIPLIER)) {
             refreshOnlineNDBCs();
         }
 
@@ -1365,11 +1342,7 @@ public class HomeFragment extends LocationFragment {
 			title.setText(Objects.requireNonNull(diveSite).getName());
 			location.setText(diveSite.getFullLocation());
 
-            if (mDiveSiteListView.getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
-                mSitesAdditionalItemsToLoad = LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD;
-            } else {
-                mSitesAdditionalItemsToLoad = mDiveSiteListView.getCount();
-            }
+            mSitesAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(mDiveSiteListView);
 			
 			return view;
 		}
@@ -1474,11 +1447,7 @@ public class HomeFragment extends LocationFragment {
 				scheduledDiveDiveSiteName.setText(getResources().getString(R.string.scheduleddive_no_sites));
 			}
 
-            if (mScheduledDiveListView.getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
-                mScheduledDivesAdditionalItemsToLoad = LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD;
-            } else {
-                mScheduledDivesAdditionalItemsToLoad = mScheduledDiveListView.getCount();
-            }
+            mScheduledDivesAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(mScheduledDiveListView);
 
 			return view;
 		}
@@ -1966,11 +1935,7 @@ public class HomeFragment extends LocationFragment {
                 windWaveDirectionContainer.setVisibility(View.GONE);
 			}
 
-            if (mNDBCListView.getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
-                mNDBCAdditionalItemsToLoad = LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD;
-            } else {
-                mNDBCAdditionalItemsToLoad = mNDBCListView.getCount();
-            }
+            mNDBCAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(mNDBCListView);
 			
 			return view;
 		}

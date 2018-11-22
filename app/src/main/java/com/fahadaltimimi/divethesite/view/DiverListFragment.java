@@ -35,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.ListViewHelper;
 import com.fahadaltimimi.divethesite.data.DiveCursorLoaders.DiverListCursorLoader;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
@@ -45,10 +46,8 @@ import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.DiverCertification;
 
 public class DiverListFragment extends ListFragment {
-	
-	private int LIST_ITEMS_BUFFER_MULTIPLIER = 2;
+
 	private double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.75;
-	private int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
 
 	protected DiveSiteManager mDiveSiteManager;
 	private Bundle mSavedInstanceState;
@@ -563,11 +562,7 @@ public class DiverListFragment extends ListFragment {
 							mRefreshMenuItem.setActionView(null);
 						}
 
-                        if (mListView.getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
-                            mAdditionalItemsToLoad = LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD;
-                        } else {
-                            mAdditionalItemsToLoad = mListView.getCount();
-                        }
+						mAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(mListView);
 					}
 
 					@Override
@@ -637,21 +632,19 @@ public class DiverListFragment extends ListFragment {
 	private void refreshDiverList() {
 		updateFilterNotification();
 		((DiverAdapter) getListAdapter()).notifyDataSetChanged();
-		
+
 		if (mAdditionalItemsToLoad == 0) {
 			// Check if limit reached and still loading online
 			int lastItemPosition = mListView.getLastVisiblePosition();
 			if (lastItemPosition >= 0) {
-				
-				if (mListView.getChildAt(lastItemPosition) != null &&
-						mListView.getChildAt(lastItemPosition).getBottom() >= mListView.getHeight() &&
-								mListView.getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER) {
+
+				if (!ListViewHelper.shouldRefreshAdditionalListViewItems(mListView)) {
 					cancelOnlineRefresh();
 				}
 			}
 		}
 	}
-	
+
 	protected void filterDiverList() {
 		if (onlineFilterChanged()) {
 			// Filter changed

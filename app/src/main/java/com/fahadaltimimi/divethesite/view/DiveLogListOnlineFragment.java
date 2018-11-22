@@ -27,6 +27,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.ListViewHelper;
 import com.fahadaltimimi.divethesite.model.DiveLogStop;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
@@ -39,10 +40,8 @@ import com.fahadaltimimi.divethesite.model.Diver;
 
 public class DiveLogListOnlineFragment extends DiveLogListFragment {
 
-	private int LIST_ITEMS_BUFFER_MULTIPLIER = 2;
 	private double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
-	private int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
-	
+
 	private ListView mListView = null;
 	private int mAdditionalItemsToLoad = 0;
 	
@@ -216,7 +215,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
     public void onResume() {
         super.onResume();
 
-        if (refreshAdditionalDiveLogListRequired()) {
+        if (ListViewHelper.shouldRefreshAdditionalListViewItems(mListView)) {
             refreshOnlineDiveLogs();
         }
     }
@@ -387,17 +386,10 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 		updateFilterNotification();
 		((DiveLogAdapter) getListAdapter()).notifyDataSetChanged();
 
-        if (!refreshAdditionalDiveLogListRequired()) {
+        if (!ListViewHelper.shouldRefreshAdditionalListViewItems(mListView)) {
             cancelOnlineRefresh();
         }
 	}
-
-    private boolean refreshAdditionalDiveLogListRequired() {
-        int lastItemPosition = mListView.getLastVisiblePosition();
-        return !(lastItemPosition >= 0 && mListView.getChildCount() > 0 && mListView.getParent() != null &&
-                mListView.getChildAt(mListView.getChildCount() - 1).getBottom() >= ((ViewGroup) mListView.getParent()).getHeight() &&
-                mListView.getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER);
-    }
 
 	private void clearDiveLogs() {
 		// Clears list and resets adapter
@@ -895,11 +887,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
                 mapContainer.setVisibility(View.GONE);
             }
 
-            if (mListView.getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
-                mAdditionalItemsToLoad = LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD;
-            } else {
-                mAdditionalItemsToLoad = mListView.getCount();
-            }
+            mAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(mListView);
 
 			return view;
 		}

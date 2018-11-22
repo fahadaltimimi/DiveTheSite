@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.ListViewHelper;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
 import com.fahadaltimimi.model.LoadOnlineImageTask;
@@ -44,10 +45,8 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 	private int ONLINE_FILTER_COUNTRY_INDEX = 1;
 	private int ONLINE_FILTER_STATE_INDEX = 2;
 	private int ONLINE_FILTER_CITY_INDEX = 3;
-	
-	private int LIST_ITEMS_BUFFER_MULTIPLIER = 2;
+
 	private double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
-	private int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
 
 	private ListView mListView = null;
 	private int mAdditionalItemsToLoad = 0;
@@ -636,17 +635,10 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 		updateFilterNotification();
 		((DiveSiteAdapter) getListAdapter()).notifyDataSetChanged();
 
-        if (!refreshAdditionalDiveSiteListRequired()) {
+        if (!ListViewHelper.shouldRefreshAdditionalListViewItems(mListView)) {
             cancelOnlineRefresh();
         }
 	}
-
-    private boolean refreshAdditionalDiveSiteListRequired() {
-        int lastItemPosition = mListView.getLastVisiblePosition();
-        return !(lastItemPosition >= 0 && mListView.getChildCount() > 0 && mListView.getParent() != null &&
-                mListView.getChildAt(mListView.getChildCount() - 1).getBottom() >= ((ViewGroup) mListView.getParent()).getHeight() &&
-                mListView.getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER);
-    }
 
 	@Override
 	protected void filterDiveSiteList() {
@@ -728,7 +720,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
     public void onResume() {
         super.onResume();
 
-        if (refreshAdditionalDiveSiteListRequired()) {
+        if (ListViewHelper.shouldRefreshAdditionalListViewItems(mListView)) {
             refreshOnlineDiveSites();
         }
     }
@@ -908,11 +900,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
                 mapContainer.setVisibility(View.GONE);
             }
 
-            if (mListView.getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
-                mAdditionalItemsToLoad = LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD;
-            } else {
-                mAdditionalItemsToLoad = mListView.getCount();
-            }
+            mAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(mListView);
 
 			return view;
 		}

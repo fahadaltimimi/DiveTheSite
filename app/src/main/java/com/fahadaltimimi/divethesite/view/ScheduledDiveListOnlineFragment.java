@@ -34,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fahadaltimimi.controller.ListViewHelper;
 import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
@@ -57,10 +58,8 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 	private int ONLINE_FILTER_CITY_INDEX = 3;
 	private int ONLINE_FILTER_TIMESTAMP_START_INDEX = 4;
 	private int ONLINE_FILTER_TIMESTAMP_END_INDEX = 5;
-	
-	private int LIST_ITEMS_BUFFER_MULTIPLIER = 2;
+
 	private double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.60;
-	private int LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD = 20;
 
 	private int mAdditionalItemsToLoad = 0;
 	
@@ -248,7 +247,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
     public void onResume() {
         super.onResume();
 
-        if (refreshAdditionalScheduledDiveListRequired()) {
+        if (ListViewHelper.shouldRefreshAdditionalListViewItems(getListView())) {
             refreshOnlineScheduledDives();
         }
     }
@@ -559,17 +558,10 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		updateFilterNotification();
 		((ScheduledDiveAdapter) getListAdapter()).notifyDataSetChanged();
 
-        if (!refreshAdditionalScheduledDiveListRequired()) {
+        if (!ListViewHelper.shouldRefreshAdditionalListViewItems(getListView())) {
             cancelOnlineRefresh();
         }
 	}
-
-    private boolean refreshAdditionalScheduledDiveListRequired() {
-        int lastItemPosition = getListView().getLastVisiblePosition();
-        return !(lastItemPosition >= 0 && getListView().getChildCount() > 0 && getListView().getParent() != null &&
-                getListView().getChildAt(getListView().getChildCount() - 1).getBottom() >= ((ViewGroup) getListView().getParent()).getHeight() &&
-                getListView().getCount() >= lastItemPosition * LIST_ITEMS_BUFFER_MULTIPLIER);
-    }
 
 	@Override
 	protected void filterScheduledDiveList() {
@@ -1302,11 +1294,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
                 mapContainer.setVisibility(View.GONE);
             }
 
-            if (getListView().getCount() < LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD) {
-                mAdditionalItemsToLoad = LIST_ITEMS_MINIMUM_ADDITIONAL_LOAD;
-            } else {
-                mAdditionalItemsToLoad = getListView().getCount();
-            }
+            mAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(getListView());
 
 			return view;
 		}
