@@ -3,8 +3,8 @@ package com.fahadaltimimi.divethesite.model;
 import android.support.v4.app.Fragment;
 
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
-import com.fahadaltimimi.divethesite.view.DiveActivity;
-import com.fahadaltimimi.divethesite.view.DiveLogFragment;
+import com.fahadaltimimi.divethesite.view.activity.DiveActivity;
+import com.fahadaltimimi.divethesite.view.fragment.DiveLogFragment;
 
 public class DiveLogActivity extends DiveActivity {
 

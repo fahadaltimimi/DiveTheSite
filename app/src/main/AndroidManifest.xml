@@ -34,7 +34,7 @@
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".view.activity.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,45 +43,45 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.DiveSiteListActivity"
+            android:name=".view.activity.DiveSiteListActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.DiveSiteFullMapActivity"
+            android:name=".view.activity.DiveSiteFullMapActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.DiveSiteActivity"
+            android:name=".view.activity.DiveSiteActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.DiverListActivity"
+            android:name=".view.activity.DiverListActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.DiverActivity"
+            android:name=".view.activity.DiverActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".view.DiveLogListActivity"
+            android:name=".view.activity.DiveLogListActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".model.DiveLogActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.ScheduledDiveListActivity"
+            android:name=".view.activity.ScheduledDiveListActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.ScheduledDiveActivity"
+            android:name=".view.activity.ScheduledDiveActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.RegisterActivity"
+            android:name=".view.activity.RegisterActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".view.HomeActivity"
+            android:name=".view.activity.HomeActivity"
             android:label="@string/app_name" />
         
         <activity
-            android:name=".view.SettingsActivity"
+            android:name=".view.activity.SettingsActivity"
             android:label="@string/settings_title" >
         </activity>
-        <activity android:name=".view.DiveActivity" />
+        <activity android:name=".view.activity.DiveActivity" />
 
         <service android:name=".controller.PollService" />
 
