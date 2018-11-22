@@ -75,7 +75,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		// Register list view with context menu
-		mListView = (ListView) v.findViewById(android.R.id.list);
+		mListView = v.findViewById(android.R.id.list);
 		
 		mListView.setOnScrollListener(new OnScrollListener(){
 
@@ -359,7 +359,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 
 	private int getDiveLogIndex(DiveLog diveLog) {
 		int index = -1;
-		for (int i = 0; i < ((DiveLogAdapter) getListAdapter()).getCount(); i++) {
+		for (int i = 0; i < getListAdapter().getCount(); i++) {
 			if (((DiveLogAdapter) getListAdapter()).getItem(i).getOnlineId() == diveLog
 					.getOnlineId()) {
 				index = i;
@@ -371,7 +371,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 
 	private DiveLog getDiveLogOnlineId(DiveLog diveLog) {
 		DiveLog diveLogDuplicate = null;
-		for (int i = 0; i < ((DiveLogAdapter) getListAdapter()).getCount(); i++) {
+		for (int i = 0; i < getListAdapter().getCount(); i++) {
 			if (((DiveLogAdapter) getListAdapter()).getItem(i).getOnlineId() == diveLog
 					.getOnlineId()) {
 				diveLogDuplicate = ((DiveLogAdapter) getListAdapter())
@@ -469,10 +469,10 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 			}
 
 			// Remove buddies and sites before loading them
-			LinearLayout buddyListView = (LinearLayout) view
+			LinearLayout buddyListView = view
 					.findViewById(R.id.divelog_item_buddy_list);
 			buddyListView.removeAllViews();
-			LinearLayout stopListView = (LinearLayout) view
+			LinearLayout stopListView = view
 					.findViewById(R.id.divelog_item_stop_list);
 			stopListView.removeAllViews();
 
@@ -489,7 +489,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				buddyListView.addView(buddyView);
 
 				if (diveLogBuddy.getDiverOnlineId() != -1) {
-					ImageButton buddyProfile = (ImageButton) buddyView
+					ImageButton buddyProfile = buddyView
 							.findViewById(R.id.divelog_buddy_picture);
 
 					mDiveLogListItemBuddyImageView.put(
@@ -567,7 +567,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				}
 
 				// Set buddy view fields
-				TextView buddyName = (TextView) buddyView
+				TextView buddyName = buddyView
 						.findViewById(R.id.divelog_buddy_name);
 				buddyName.setText(diveLogBuddy.getDiverUsername());
 			}
@@ -584,12 +584,12 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				stopListView.addView(stopView);
 
 				// Set stop view fields
-				TextView stopTime = (TextView) stopView
+				TextView stopTime = stopView
 						.findViewById(R.id.divelog_stop_time);
 				stopTime.setText(diveLogStop.getTime() + " "
 						+ getResources().getString(R.string.unit_minutes));
 
-				TextView stopDepth = (TextView) stopView
+				TextView stopDepth = stopView
 						.findViewById(R.id.divelog_stop_depth);
 				stopDepth.setText(diveLogStop.getDepth().toString());
 			}
@@ -604,7 +604,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 			}
 
 			// Dive Site Title
-            Button diveSiteTitle = (Button) view.findViewById(R.id.divelog_item_divesite);
+            Button diveSiteTitle = view.findViewById(R.id.divelog_item_divesite);
             String diveSiteTitleString = "";
 			if (diveSite != null) {
                 diveSiteTitleString = diveSite.getName();
@@ -633,9 +633,9 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 
 			// Dive Log Diver
 			View diverView = view.findViewById(R.id.divelog_item_diver);
-			ImageButton diverButton = (ImageButton) diverView
+			ImageButton diverButton = diverView
 					.findViewById(R.id.divelog_buddy_picture);
-			TextView diverUsername = (TextView) diverView
+			TextView diverUsername = diverView
 					.findViewById(R.id.divelog_buddy_name);
 			mDiveLogListItemDiverImageView.put(diveLog.getOnlineId(),
 					diverButton);
@@ -725,29 +725,29 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 			});
 
 			// Timestamp
-			TextView diveLogDate = (TextView) view
+			TextView diveLogDate = view
 					.findViewById(R.id.divelog_item_timestamp);
 			diveLogDate.setText(logItemDateFormat.format(diveLog.getTimestamp()) + " "
 					+ logItemTimeFormat.format(diveLog.getTimestamp()));
 
 			// Rating Bar
-			RatingBar diveLogRating = (RatingBar) view
+			RatingBar diveLogRating = view
 					.findViewById(R.id.divelog_item_rating);
 			diveLogRating.setRating((float) diveLog.getRating());
 
 			// Dive Time
-			TextView diveLogDiveTime = (TextView) view
+			TextView diveLogDiveTime = view
 					.findViewById(R.id.divelog_item_dive_time);
 			diveLogDiveTime.setText(String.valueOf(diveLog.getDiveTime()) + ' '
 					+ getResources().getString(R.string.unit_minutes));
 
 			// Gax Mix
-			TextView diveLogGasMix = (TextView) view
+			TextView diveLogGasMix = view
 					.findViewById(R.id.divelog_item_gas_mix);
 			diveLogGasMix.setText(diveLog.getAirType());
 
 			// Pressure Change
-			TextView diveLogPressureChange = (TextView) view
+			TextView diveLogPressureChange = view
 					.findViewById(R.id.divelog_item_pressure_change);
 			if (diveLog.getStartPressure() != ' ' && diveLog.getEndPressure() != ' ') {
 				diveLogPressureChange.setText(String.format(getResources()
@@ -758,56 +758,56 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 			}
 
             // Air Change
-            TextView diveLogAirChange = (TextView) view.findViewById(R.id.divelog_item_air_usage);
+            TextView diveLogAirChange = view.findViewById(R.id.divelog_item_air_usage);
             diveLogAirChange.setText(String.format(getResources()
                     .getString(R.string.values_change),
                     diveLog.getStartAir().toString(), diveLog.getEndAir().toString()));
 
 			// Max Depth
-			TextView diveLogMaxDepth = (TextView) view
+			TextView diveLogMaxDepth = view
 					.findViewById(R.id.divelog_item_max_depth);
 			diveLogMaxDepth.setText(diveLog.getMaxDepth().toString());
 
 			// Average Depth
-			TextView diveLogAverageDepth = (TextView) view
+			TextView diveLogAverageDepth = view
 					.findViewById(R.id.divelog_item_average_depth);
 			diveLogAverageDepth.setText(diveLog.getAverageDepth().toString());
 
 			// Air Temperature
-			TextView diveLogAirTemperature = (TextView) view
+			TextView diveLogAirTemperature = view
 					.findViewById(R.id.divelog_item_air_temperature);
 			diveLogAirTemperature.setText(diveLog.getSurfaceTemperature()
 					.toString());
 
 			// Water Temperature
-			TextView diveLogWaterTemperature = (TextView) view
+			TextView diveLogWaterTemperature = view
 					.findViewById(R.id.divelog_item_water_temperature);
 			diveLogWaterTemperature.setText(diveLog.getWaterTemperature()
 					.toString());
 
 			// Comment
-			TextView diveLogComment = (TextView) view
+			TextView diveLogComment = view
 					.findViewById(R.id.divelog_item_comment);
 			diveLogComment.setText(diveLog.getComments());
 
 			// Visibility
-			TextView diveLogVisibility = (TextView) view
+			TextView diveLogVisibility = view
 					.findViewById(R.id.divelog_item_visibility);
 			diveLogVisibility.setText(diveLog.getVisibility().toString());
 
 			// Weights
-			TextView diveLogWeights = (TextView) view
+			TextView diveLogWeights = view
 					.findViewById(R.id.divelog_item_weights);
 			diveLogWeights.setText(diveLog.getWeightsRequired().toString());
 
 			// Surface Time
-			TextView diveLogSurfaceTime = (TextView) view
+			TextView diveLogSurfaceTime = view
 					.findViewById(R.id.divelog_item_surface_time);
 			diveLogSurfaceTime.setText(String.valueOf(diveLog.getSurfaceTime())
 					+ ' ' + getResources().getString(R.string.unit_minutes));
 
 			// Indicators
-			ImageButton diveLogDayIndicator = (ImageButton) view
+			ImageButton diveLogDayIndicator = view
 					.findViewById(R.id.divelog_item_day_indicator);
 			if (diveLog.isNight()) {
 				diveLogDayIndicator.setVisibility(View.GONE);
@@ -815,7 +815,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogDayIndicator.setVisibility(View.VISIBLE);
 			}
 
-			ImageButton diveLogNightIndicator = (ImageButton) view
+			ImageButton diveLogNightIndicator = view
 					.findViewById(R.id.divelog_item_night_indicator);
 			if (!diveLog.isNight()) {
 				diveLogNightIndicator.setVisibility(View.GONE);
@@ -823,7 +823,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogNightIndicator.setVisibility(View.VISIBLE);
 			}
 
-			ImageButton diveLogPhotoIndicator = (ImageButton) view
+			ImageButton diveLogPhotoIndicator = view
 					.findViewById(R.id.divelog_item_photo_indicator);
 			if (diveLog.isPhotoVideo()) {
 				diveLogPhotoIndicator.setVisibility(View.VISIBLE);
@@ -831,7 +831,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogPhotoIndicator.setVisibility(View.GONE);
 			}
 
-			ImageButton diveLogDeepIndicator = (ImageButton) view
+			ImageButton diveLogDeepIndicator = view
 					.findViewById(R.id.divelog_item_deep_indicator);
 			if (diveLog.isDeep()) {
 				diveLogDeepIndicator.setVisibility(View.VISIBLE);
@@ -839,7 +839,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogDeepIndicator.setVisibility(View.GONE);
 			}
 
-			ImageButton diveLogIceIndicator = (ImageButton) view
+			ImageButton diveLogIceIndicator = view
 					.findViewById(R.id.divelog_item_ice_indicator);
 			if (diveLog.isIce()) {
 				diveLogIceIndicator.setVisibility(View.VISIBLE);
@@ -847,7 +847,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogIceIndicator.setVisibility(View.GONE);
 			}
 
-			ImageButton diveLogCourseIndicator = (ImageButton) view
+			ImageButton diveLogCourseIndicator = view
 					.findViewById(R.id.divelog_item_course_indicator);
 			if (diveLog.isCourse()) {
 				diveLogCourseIndicator.setVisibility(View.VISIBLE);
@@ -855,7 +855,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogCourseIndicator.setVisibility(View.GONE);
 			}
 
-			ImageButton diveLogInstructorIndicator = (ImageButton) view
+			ImageButton diveLogInstructorIndicator = view
 					.findViewById(R.id.divelog_item_instructor_indicator);
 			if (diveLog.isInstructing()) {
 				diveLogInstructorIndicator.setVisibility(View.VISIBLE);
@@ -863,9 +863,9 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogInstructorIndicator.setVisibility(View.GONE);
 			}
 			
-			ImageButton diveLogPublished = (ImageButton) view
+			ImageButton diveLogPublished = view
 					.findViewById(R.id.divelog_indicate_isPublished);
-			ImageButton diveLogUnpublished = (ImageButton) view
+			ImageButton diveLogUnpublished = view
 					.findViewById(R.id.divelog_indicate_isUnpublished);
 			if (diveLog.isPublished()) {
 				diveLogPublished.setVisibility(View.VISIBLE);
@@ -875,7 +875,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 				diveLogUnpublished.setVisibility(View.VISIBLE);
 			}
 
-			ImageButton diveLogSaved = (ImageButton) view
+			ImageButton diveLogSaved = view
 					.findViewById(R.id.divelog_indicate_isSaved);
 			if (diveLog.getLocalId() != -1) {
 				diveLogSaved.setVisibility(View.VISIBLE);
@@ -885,7 +885,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 
             // Initialize visibility secondary view
             View secondaryView = view.findViewById(R.id.divelog_item_secondary_view);
-            final ViewGroup mapContainer = (ViewGroup) view.findViewById(R.id.divelog_list_item_mapView_container);
+            final ViewGroup mapContainer = view.findViewById(R.id.divelog_list_item_mapView_container);
             if (diveLog == mSelectedDiveLog) {
                 view.setBackgroundColor(getResources().getColor(R.color.diveSiteSelected));
                 secondaryView.setVisibility(View.VISIBLE);

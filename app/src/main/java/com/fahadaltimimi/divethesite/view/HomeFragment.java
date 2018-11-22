@@ -1,5 +1,6 @@
 package com.fahadaltimimi.divethesite.view;
 
+import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2019,31 +2020,29 @@ public class HomeFragment extends LocationFragment {
 
                         });
 
-                        mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+                        mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                           @Override
+                           public void onCameraIdle() {
+                             if (mGoogleMap.getCameraPosition().zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
+                               refreshOnlineDiveSitesMap();
+                             }
+                           }
+                         });
 
-                            @Override
-                            public void onCameraChange(CameraPosition cameraPosition) {
-                                // Only refresh dive sites and station data if we're zoomed in
-                                // enough, otherwise display message
-                                if (cameraPosition.zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
-                                    refreshOnlineDiveSitesMap();
-                                }
-                            }
-
-                        });
                         mGoogleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-                            @Override
-                            public void onInfoWindowClick(Marker marker) {
-                                // Display Dive Site info
-                                Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
-								for (Object diveSite : Objects.requireNonNull(diveSites)) {
-									if (Objects.requireNonNull(mDiveSiteMarkers.get(diveSite)).equals(marker)) {
-										// Dive Site found
-										openDiveSite((DiveSite) diveSite);
-										break;
-									}
-								}
+                              @Override
+                              public void onInfoWindowClick(Marker marker) {
+                            // Display Dive Site info
+                            Object[] diveSites = mDiveSiteMarkers.keySet().toArray();
+                            for (Object diveSite : Objects.requireNonNull(diveSites)) {
+                              if (Objects.requireNonNull(mDiveSiteMarkers.get(diveSite))
+                                  .equals(marker)) {
+                                // Dive Site found
+                                openDiveSite((DiveSite) diveSite);
+                                break;
+                              }
                             }
+                          }
                         });
                     }
                 }
