@@ -873,7 +873,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 		
 		if (mResultList.size() == 0) {
@@ -1138,7 +1138,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 	
@@ -1449,7 +1449,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 	
@@ -1544,7 +1544,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 
@@ -2589,7 +2589,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 	

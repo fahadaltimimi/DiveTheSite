@@ -3,16 +3,16 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.fahadaltimimi.divethesite.view.activity.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
     <header
-        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$DiveSitePreferenceFragment"
+        android:fragment="com.fahadaltimimi.divethesite.view.activity.SettingsActivity$DiveSitePreferenceFragment"
         android:title="@string/pref_header_divesites" />
     <header
-        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$DiveLogPreferenceFragment"
+        android:fragment="com.fahadaltimimi.divethesite.view.activity.SettingsActivity$DiveLogPreferenceFragment"
         android:title="@string/pref_header_divelogs" />
     <header
-        android:fragment="com.fahadaltimimi.divethesite.view.SettingsActivity$ScheduledDivePreferenceFragment"
+        android:fragment="com.fahadaltimimi.divethesite.view.activity.SettingsActivity$ScheduledDivePreferenceFragment"
         android:title="@string/pref_header_scheduleddives" />
 
 </preference-headers>
