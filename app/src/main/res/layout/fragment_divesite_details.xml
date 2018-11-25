@@ -587,7 +587,7 @@
                         android:paddingBottom="10dp"
                         android:visibility="invisible"/>
 
-                    <com.google.android.gms.maps.MapView
+                    <com.fahadaltimimi.view.FAMapView
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         xmlns:map="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/divesite_view_mapView"
@@ -600,7 +600,7 @@
                         map:uiCompass="true"
                         map:uiZoomControls="true"
                         android:background="#FFFFFFFF" >
-                    </com.google.android.gms.maps.MapView>
+                    </com.fahadaltimimi.view.FAMapView>
 
                 </FrameLayout>
 			    

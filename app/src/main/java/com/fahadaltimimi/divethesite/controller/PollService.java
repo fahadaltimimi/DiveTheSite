@@ -22,13 +22,13 @@ import com.fahadaltimimi.divethesite.data.DiveSiteDatabaseHelper.ScheduledDiveCu
 import com.fahadaltimimi.divethesite.model.DiveLog;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
-import com.fahadaltimimi.divethesite.view.DiveApplication;
-import com.fahadaltimimi.divethesite.view.DiveLogListActivity;
-import com.fahadaltimimi.divethesite.view.DiveLogListTabFragment;
-import com.fahadaltimimi.divethesite.view.DiveSiteListActivity;
-import com.fahadaltimimi.divethesite.view.DiveSiteListTabFragment;
-import com.fahadaltimimi.divethesite.view.ScheduledDiveListActivity;
-import com.fahadaltimimi.divethesite.view.ScheduledDiveListTabFragment;
+import com.fahadaltimimi.divethesite.DiveApplication;
+import com.fahadaltimimi.divethesite.view.activity.DiveLogListActivity;
+import com.fahadaltimimi.divethesite.view.fragment.DiveLogListTabFragment;
+import com.fahadaltimimi.divethesite.view.activity.DiveSiteListActivity;
+import com.fahadaltimimi.divethesite.view.fragment.DiveSiteListTabFragment;
+import com.fahadaltimimi.divethesite.view.activity.ScheduledDiveListActivity;
+import com.fahadaltimimi.divethesite.view.fragment.ScheduledDiveListTabFragment;
 
 public class PollService extends IntentService {
 	
