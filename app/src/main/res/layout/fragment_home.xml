@@ -225,7 +225,7 @@
         android:layout_weight="1"
         android:orientation="horizontal" >
 		
-        <com.google.android.gms.maps.MapView
+        <com.fahadaltimimi.view.FAMapView
 		    xmlns:android="http://schemas.android.com/apk/res/android"
 		    xmlns:map="http://schemas.android.com/apk/res-auto"
 		    android:id="@+id/home_item_mapView"
@@ -236,7 +236,7 @@
 	  		android:animateLayoutChanges="true"
 		    map:uiCompass="true"
 		    map:uiZoomControls="true" >
-		</com.google.android.gms.maps.MapView>
+		</com.fahadaltimimi.view.FAMapView>
         
         <FrameLayout
             android:layout_width="0dp"

@@ -172,7 +172,7 @@
         android:paddingBottom="10dp"
         android:visibility="invisible"/>
 
-    <com.google.android.gms.maps.MapView
+    <com.fahadaltimimi.view.FAMapView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/divesite_list_item_mapView"
@@ -188,7 +188,7 @@
         map:uiZoomControls="true"
         android:background="#00000000"
         android:visibility="visible" >
-    </com.google.android.gms.maps.MapView>
+    </com.fahadaltimimi.view.FAMapView>
 
 	<ListView
 	    android:id="@android:id/list"

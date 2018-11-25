@@ -15,7 +15,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fahadaltimimi.divethesite.view.LoginActivity;
+import com.fahadaltimimi.divethesite.view.activity.LoginActivity;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableNotifiedException;

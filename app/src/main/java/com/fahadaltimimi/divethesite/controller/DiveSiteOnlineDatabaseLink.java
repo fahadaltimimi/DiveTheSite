@@ -3,10 +3,7 @@ package com.fahadaltimimi.divethesite.controller;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -876,7 +873,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 		
 		if (mResultList.size() == 0) {
@@ -1141,7 +1138,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 	
@@ -1452,7 +1449,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 	
@@ -1547,7 +1544,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 
@@ -2592,7 +2589,7 @@ public class DiveSiteOnlineDatabaseLink extends
 				e.printStackTrace();
 			}
 		} else {
-			publishProgress(null);
+			publishProgress();
 		}
 	}
 	
