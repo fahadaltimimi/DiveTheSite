@@ -261,46 +261,14 @@ public class HomeFragment extends LocationFragment {
 		}
 
         Button diverList = view.findViewById(R.id.home_item_diver_list);
-
-	    View.OnClickListener diverListClickListener = new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), DiverListActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-			}
-		};
-		
-		diverList.setOnClickListener(diverListClickListener);
-
-        Button refresh = view.findViewById(R.id.home_item_refresh);
-		refresh.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				mDiveSiteListView.setVisibility(View.GONE);
-                mDiveSiteListNoDataLabel.setVisibility(View.GONE);
-				mScheduledDiveListView.setVisibility(View.GONE);
-				mScheduledDiveListNoDataLabel.setVisibility(View.GONE);
-				mNDBCListView.setVisibility(View.GONE);
-				mNDBCListNoDataLabel.setVisibility(View.GONE);
-
-                cancelOnlineDiveSiteMapRefresh();
-                clearDiveSites();
-                clearScheduledDives();
-                clearNDBCs();
-
-                if (startLocationUpdates()) {
-                    mForceLocationDataRefresh = true;
-		    	} else {
-					refreshOnlineDiveSites();
-					refreshOnlineDiveSitesMap();
-					refreshOnlineScheduledDives();
-					refreshOnlineNDBCs();
-		    	}
-			}
-		});
+		diverList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), DiverListActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        });
 
         Button diveSiteListTitle = view.findViewById(R.id.home_item_dive_site_title);
 	    
