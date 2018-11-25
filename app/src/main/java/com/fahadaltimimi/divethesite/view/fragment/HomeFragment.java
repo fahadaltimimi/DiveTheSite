@@ -104,10 +104,6 @@ public class HomeFragment extends LocationFragment {
 	
 	private DiveSiteManager mDiveSiteManager;
 
-    private View mProfileProgress;
-	private ImageButton mProfileImageButton;
-	private Button mProfileNoImageButton;
-
 	private SwipeRefreshLayout mDiveSiteRefreshLayout;
 	private ListView mDiveSiteListView;
     private Button mDiveSiteListNoDataLabel;
@@ -160,115 +156,6 @@ public class HomeFragment extends LocationFragment {
                 }
 			}
 		});
-	    
-	    mProfileProgress = view.findViewById(R.id.home_item_profile_progress_bar);
-	    
-	    Drawable profileImage = null;
-	    if (mProfileImageButton != null) {
-	    	profileImage = mProfileImageButton.getDrawable();
-	    }
-	    mProfileImageButton = view.findViewById(R.id.home_item_profile);
-	    if (profileImage != null) {
-	    	mProfileImageButton.setImageDrawable(profileImage);
-	    	mProfileProgress.setVisibility(View.GONE);
-	    	mProfileImageButton.setVisibility(View.VISIBLE);
-	    }
-	    
-	    mProfileNoImageButton = view.findViewById(R.id.home_item_profile_button);
-	    
-	    View.OnClickListener profileClickListener = new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), DiverActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-				long diver_id = mDiveSiteManager.getLoggedInDiverId();
-				String diver_username = mDiveSiteManager.getLoggedInDiverUsername();
-				i.putExtra(DiverActivity.EXTRA_DIVER_ID, diver_id);
-				i.putExtra(DiverActivity.EXTRA_DIVER_USERNAME, diver_username);
-				startActivity(i);
-			}
-		};
-		
-		mProfileProgress.setOnClickListener(profileClickListener);
-		mProfileImageButton.setOnClickListener(profileClickListener);
-		mProfileNoImageButton.setOnClickListener(profileClickListener);
-		
-		if (mDiveSiteManager.getLoggedInDiverId() != -1) {
-
-            Bitmap profileImageBitmap = mDiveSiteManager.getLoggedInDiverProfileImage();
-            if (profileImageBitmap != null) {
-                mProfileImageButton.setImageBitmap(profileImageBitmap);
-                mProfileProgress.setVisibility(View.GONE);
-                mProfileImageButton.setVisibility(View.VISIBLE);
-                mProfileNoImageButton.setVisibility(View.GONE);
-            }
-
-			mDiveSiteOnlineDatabaseUser = 
-					new DiveSiteOnlineDatabaseLink(getActivity());
-			mDiveSiteOnlineDatabaseUser.setDiveSiteOnlineLoaderListener(new DiveSiteOnlineDatabaseLink.OnlineDiveDataListener() {
-	
-						@Override
-						public void onOnlineDiveDataRetrievedComplete(
-								ArrayList<Object> resultList,
-								String message, Boolean isError) {
-							if (resultList.size() > 0) {							
-								// Now get bitmap profile image for diver
-								Diver diver = (Diver) resultList.get(0);
-								LoadOnlineImageTask task = new LoadOnlineImageTask(mProfileImageButton) {
-	
-									@Override
-									protected void onPostExecute(Bitmap result) {
-										super.onPostExecute(result);
-                                        DiveSiteManager.get(getActivity()).saveLoggedInDiverProfileImage(result);
-										if (result != null) {
-											mProfileProgress.setVisibility(View.GONE);
-											mProfileImageButton.setVisibility(View.VISIBLE);
-											mProfileNoImageButton.setVisibility(View.GONE);
-										} else {
-											mProfileProgress.setVisibility(View.GONE);
-											mProfileImageButton.setVisibility(View.GONE);
-											mProfileNoImageButton.setVisibility(View.VISIBLE);
-										}
-									}
-	
-								};
-								task.execute(diver.getPictureURL());
-							}
-						}
-	
-						@Override
-						public void onOnlineDiveDataProgress(
-								Object result) {
-							// TODO Auto-generated method stub
-	
-						}
-	
-						@Override
-						public void onOnlineDiveDataPostBackground(
-								ArrayList<Object> resultList,
-								String message) {
-							// TODO Auto-generated method stub
-	
-						}
-					});
-			mDiveSiteOnlineDatabaseUser.getUser(String.valueOf(mDiveSiteManager.getLoggedInDiverId()), "", "");
-		} else {
-			mProfileProgress.setVisibility(View.GONE);
-			mProfileImageButton.setVisibility(View.GONE);
-			mProfileNoImageButton.setVisibility(View.VISIBLE);
-		}
-
-        Button diverList = view.findViewById(R.id.home_item_diver_list);
-		diverList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), DiverListActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-            }
-        });
 
         Button diveSiteListTitle = view.findViewById(R.id.home_item_dive_site_title);
 	    
@@ -313,6 +200,15 @@ public class HomeFragment extends LocationFragment {
 				startActivity(i);
 			}
 		});
+
+        mDiveSiteListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                DiveSite diveSite =
+                        (DiveSite) mDiveSiteListView.getAdapter().getItem(position);
+                openDiveSite(diveSite);
+            }
+        });
 
 	    mDiveSiteListView.setOnScrollListener(new OnScrollListener(){
 
