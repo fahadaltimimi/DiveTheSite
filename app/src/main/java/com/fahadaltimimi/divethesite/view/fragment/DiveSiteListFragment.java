@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -52,7 +51,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import java.util.Objects;
 
-public class DiveSiteListFragment extends LocationListFragment {
+abstract class DiveSiteListFragment extends LocationListFragment {
 
 	public static final String TAG = "DiveSiteListFragment";
 
@@ -66,7 +65,6 @@ public class DiveSiteListFragment extends LocationListFragment {
 
 	protected View mLastDisplayedListItemView = null;
 	protected TextView mLastDisplayedTitleView = null;
-	protected MenuItem mRefreshMenuItem = null;
 
 	protected LinearLayout mListFilter = null;
 
@@ -122,29 +120,29 @@ public class DiveSiteListFragment extends LocationListFragment {
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		mFilterNotificationContainer = Objects.requireNonNull(v)
-				.findViewById(R.id.divesite_list_filter_notification_container);
+				.findViewById(R.id.list_filter_notification_container);
 		mFilterNotification = v
-				.findViewById(R.id.divesite_list_filter_notification);
+				.findViewById(R.id.list_filter_notification);
 
 		// Initialize filter panel
-		mListFilter = v.findViewById(R.id.divesite_list_filter);
+		mListFilter = v.findViewById(R.id.list_filter);
 
 		mFilterTitle = mListFilter
-				.findViewById(R.id.divesite_list_filter_title);
+				.findViewById(R.id.list_filter_title);
 		mFilterCountry = mListFilter
-				.findViewById(R.id.divesite_list_filter_country);
+				.findViewById(R.id.list_filter_country);
 		mFilterState = mListFilter
-				.findViewById(R.id.divesite_list_filter_state);
+				.findViewById(R.id.list_filter_state);
 		mFilterCity = mListFilter
-				.findViewById(R.id.divesite_list_filter_city);
+				.findViewById(R.id.list_filter_city);
 		mFilterPublished = mListFilter
-				.findViewById(R.id.divesite_list_filter_published);
+				.findViewById(R.id.filter_published);
 		mFilterUnpublished = mListFilter
-				.findViewById(R.id.divesite_list_filter_unpublished);
+				.findViewById(R.id.list_filter_unpublished);
 		mFilterClear = mListFilter
-				.findViewById(R.id.divesite_list_clear_filter);
+				.findViewById(R.id.list_clear_filter);
 		mFilterClose = mListFilter
-				.findViewById(R.id.divesite_list_close_filter);
+				.findViewById(R.id.list_close_filter);
 
 		setFilterViews();
 
@@ -357,6 +355,11 @@ public class DiveSiteListFragment extends LocationListFragment {
 		return R.layout.fragment_divesite_list;
 	}
 
+	@Override
+	protected int getSwipeRefreshLayout() {
+		return R.id.list_swipe_refresh;
+	}
+
 	protected Location getLocation() {
 		return LocationController.getLocationControler().getLocation(getActivity(), mDiveSiteManager.getLastLocation());
 	}
@@ -502,15 +505,6 @@ public class DiveSiteListFragment extends LocationListFragment {
 
 	}
 
-	protected boolean updateFilterNotification() {
-		// Inherited
-		return false;
-	}
-
-	protected void refreshDiveSiteList() {
-		// Inherited
-	}
-
 	protected void filterDiveSiteList() {
 		refreshDiveSiteList();
 	}
@@ -638,4 +632,7 @@ public class DiveSiteListFragment extends LocationListFragment {
         LocationController.getLocationControler().stopLocationUpdates(getActivity());
     	mDiveSiteManager.saveLastLocation(location);
     }
+
+	abstract boolean updateFilterNotification();
+	abstract void refreshDiveSiteList();
 }

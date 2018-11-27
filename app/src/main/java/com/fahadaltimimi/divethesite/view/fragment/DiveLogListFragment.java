@@ -12,10 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -32,6 +30,7 @@ import com.fahadaltimimi.divethesite.model.DiveLogActivity;
 import com.fahadaltimimi.divethesite.model.DiveSite;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.view.FAMapView;
+import com.fahadaltimimi.view.fragment.BaseListFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
@@ -41,7 +40,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DiveLogListFragment extends ListFragment {
+public class DiveLogListFragment extends BaseListFragment {
 
     protected static final SimpleDateFormat logItemDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     protected static final SimpleDateFormat logItemTimeFormat = new SimpleDateFormat("HH:mm");
@@ -58,8 +57,6 @@ public class DiveLogListFragment extends ListFragment {
 
     protected FAMapView mDiveLogItemMapView;
     protected ImageView mDiveLogItemMapViewSnapShot;
-
-	protected MenuItem mRefreshMenuItem = null;
 
 	protected View mLastDisplayedListItemView = null;
 
@@ -117,13 +114,12 @@ public class DiveLogListFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
 			Bundle savedInstanceState) {
-		View v = inflater
-				.inflate(R.layout.fragment_divelog_list, parent, false);
+		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		mFilterNotificationContainer = v
-				.findViewById(R.id.divesite_list_filter_notification_container);
+				.findViewById(R.id.list_filter_notification_container);
 		mFilterNotification = v
-				.findViewById(R.id.divesite_list_filter_notification);
+				.findViewById(R.id.list_filter_notification);
 
         mDiveLogItemMapView = v.findViewById(R.id.divelog_list_item_mapView);
         mDiveLogItemMapView.onCreate(savedInstanceState);
@@ -142,7 +138,17 @@ public class DiveLogListFragment extends ListFragment {
 		return v;
 	}
 
-	@Override
+    @Override
+    protected int getLayoutView() {
+        return R.layout.fragment_divelog_list;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayout() {
+        return R.id.list_swipe_refresh;
+    }
+
+    @Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		DiveLog diveLog = getDiveLogItemClick(position, id);
 
@@ -205,7 +211,7 @@ public class DiveLogListFragment extends ListFragment {
 	}
 
 	protected void refreshDiveLogList() {
-		// Inherited
+        super.refreshListView();
 	}
 
 	protected void openDiveLog(DiveLog diveLog) {

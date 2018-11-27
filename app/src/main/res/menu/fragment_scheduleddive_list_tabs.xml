@@ -4,11 +4,6 @@
 
     android:id="@+id/dive_action_menu" >
     
-    <item android:id="@+id/menu_item_refresh_scheduleddive"
-        DiveTheSite:showAsAction="always"
-    	android:icon="@drawable/ic_menu_refresh"
-    	android:title="@string/refresh" />
-    
     <item android:id="@+id/menu_item_add_scheduleddive"
         DiveTheSite:showAsAction="always"
         android:icon="@drawable/ic_menu_add"

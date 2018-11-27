@@ -13,86 +13,10 @@
         <Button style="@style/HomeItemTitle"
             android:id="@+id/home_welcome"
             android:layout_margin="0dp"
-            android:textSize="22sp"
+            android:textSize="30sp"
             android:gravity="center" >
         </Button>
     </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-     
-        <FrameLayout
-            android:layout_width="0dp"
-		    android:layout_height="match_parent"
-		    android:layout_weight="1" >
-			        
-           <LinearLayout
-		        android:id="@+id/home_item_profile_progress_bar"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:gravity="center"
-		        android:orientation="vertical"
-		        android:animateLayoutChanges="true" >
-		        
-			    <ProgressBar
-			        android:layout_width="match_parent"
-			        android:layout_height="match_parent"
-                    android:indeterminateDrawable ="@drawable/divesite_progress" >
-			    </ProgressBar>
-		    </LinearLayout>
-	    
-            <Button style="?android:attr/buttonBarButtonStyle"
-		        android:id="@+id/home_item_profile_button"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:gravity="center"
-		        android:text="@string/diver_profile"
-		        android:visibility="gone" >
-		    </Button>	
-           
-            <ImageButton style="?android:attr/buttonBarButtonStyle"
-		        android:id="@+id/home_item_profile"
-		        android:layout_width="wrap_content"
-		        android:layout_height="100dp"
-		        android:padding="5dp"
-		        android:layout_gravity="center"
-		        android:adjustViewBounds="true"
-		        android:contentDescription="@string/diver_profile"
-		        android:scaleType="fitCenter"
-		        android:visibility="gone"
-		        android:animateLayoutChanges="true" >
-		    </ImageButton>
-		</FrameLayout>
-        
-        <LinearLayout
-            android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-	        android:layout_gravity="center"
-	 		android:orientation="vertical" >
-            
-            <Button style="?android:attr/buttonBarButtonStyle"
-		        android:id="@+id/home_item_refresh"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="1"
-                android:textColor="@color/Black"
-		        android:text="@string/refresh" >
-		    </Button>	
-		    
-	        <Button style="?android:attr/buttonBarButtonStyle"
-		        android:id="@+id/home_item_diver_list"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="1"
-                android:textColor="@color/Black"
-		        android:text="@string/home_diverList" >
-		    </Button>	
-	        
-        </LinearLayout>
-    </LinearLayout>     
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -121,32 +45,18 @@
             android:layout_width="0dp"
 		    android:layout_height="match_parent"
 		    android:layout_weight="1" >
-               
-            <LinearLayout
-		        android:id="@+id/home_item_site_list_progress_bar"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:gravity="center"
-		        android:orientation="vertical"
-		        android:animateLayoutChanges="true" >
-		        
-			    <ProgressBar
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-                    android:indeterminateDrawable ="@drawable/divesite_progress" >
-			    </ProgressBar>
-		    </LinearLayout>
-               
-       	    <ListView
-       	        android:id="@+id/home_item_site_list"
-       	    	android:layout_width="match_parent"
-       	    	android:layout_height="wrap_content"
-       	    	android:layout_margin="2dp"
-       	    	android:orientation="vertical"
-       	    	android:animateLayoutChanges="true"
-    			android:background="@color/home_list_background"
-       	    	android:visibility="gone" >   
-       	    </ListView>
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/home_item_site_swipe_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ListView style="@style/HomeListView"
+                    android:id="@+id/home_item_site_list" >
+                </ListView>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <Button style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/home_item_site_list_no_data"
@@ -162,41 +72,27 @@
            	android:layout_width="0dp"
 		    android:layout_height="match_parent"
 		    android:layout_weight="1" >
-       	    
-            <LinearLayout
-		        android:id="@+id/home_item_scheduled_list_progress_bar"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:gravity="center"
-		        android:orientation="vertical"
-		        android:animateLayoutChanges="true" >
-		        
-			    <ProgressBar
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-                    android:indeterminateDrawable ="@drawable/divesite_progress" >
-			    </ProgressBar>
-		    </LinearLayout>
-               
-            <ListView
-       	        android:id="@+id/home_item_scheduled_list"
-       	    	android:layout_width="match_parent"
-       	    	android:layout_height="wrap_content"
-       	    	android:layout_margin="2dp"
-       	    	android:orientation="vertical"
-       	    	android:animateLayoutChanges="true"
-    			android:background="@color/home_list_background"
-       	    	android:visibility="gone" >   
-       	    </ListView>
-       	    
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/home_item_scheduled_list_swipe_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ListView style="@style/HomeListView"
+                    android:id="@+id/home_item_scheduled_list" >
+                </ListView>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
             <Button style="?android:attr/buttonBarButtonStyle"
-		        android:id="@+id/home_item_scheduled_list_no_data"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:gravity="center"
-		        android:text="@string/nothingFound"
-		        android:visibility="gone" >
-		    </Button>
+                android:id="@+id/home_item_scheduled_list_no_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/nothingFound"
+                android:visibility="gone" >
+            </Button>
             
         </FrameLayout>
         
@@ -242,34 +138,19 @@
             android:layout_width="0dp"
 		    android:layout_height="match_parent"
 		    android:layout_weight="1" >
-		    
-            <LinearLayout
-		        android:id="@+id/home_item_ndbc_list_progress_bar"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:gravity="center"
-		        android:orientation="vertical"
-		        android:animateLayoutChanges="true" >
-		        
-			    <ProgressBar
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-                    android:indeterminateDrawable ="@drawable/divesite_progress" >
-			    </ProgressBar>
-		    </LinearLayout>
-               
-               
-            <ListView
-       	        android:id="@+id/home_item_ndbc_list"
-       	    	android:layout_width="match_parent"
-       	    	android:layout_height="wrap_content"
-       	    	android:layout_margin="2dp"
-       	    	android:orientation="vertical"
-       	    	android:animateLayoutChanges="true"
-    			android:background="@color/home_list_background"
-       	    	android:visibility="gone" >   
-    	    </ListView>
-    	    
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/home_item_ndbc_list_swipe_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ListView style="@style/HomeListView"
+                    android:id="@+id/home_item_ndbc_list" >
+                </ListView>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
             <Button style="?android:attr/buttonBarButtonStyle"
 		        android:id="@+id/home_item_ndbc_list_no_data"
 		        android:layout_width="match_parent"

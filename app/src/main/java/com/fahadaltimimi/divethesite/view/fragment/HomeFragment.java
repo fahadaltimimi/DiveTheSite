@@ -11,11 +11,10 @@ import java.util.Objects;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -41,10 +39,7 @@ import com.fahadaltimimi.divethesite.view.activity.DiveActivity;
 import com.fahadaltimimi.divethesite.view.activity.DiveSiteActivity;
 import com.fahadaltimimi.divethesite.view.activity.DiveSiteFullMapActivity;
 import com.fahadaltimimi.divethesite.view.activity.DiveSiteListActivity;
-import com.fahadaltimimi.divethesite.view.activity.DiverActivity;
-import com.fahadaltimimi.divethesite.view.activity.DiverListActivity;
 import com.fahadaltimimi.divethesite.view.activity.ScheduledDiveListActivity;
-import com.fahadaltimimi.model.LoadOnlineImageTask;
 import com.fahadaltimimi.divethesite.model.NDBCStation;
 import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCDriftingBuoyData;
 import com.fahadaltimimi.divethesite.model.NDBCStation.NDBCMeteorologicalData;
@@ -53,7 +48,6 @@ import com.fahadaltimimi.divethesite.controller.PollService;
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.ScheduledDiveDiveSite;
 import com.fahadaltimimi.divethesite.model.DiveSite;
-import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.ScheduledDive;
 import com.fahadaltimimi.view.FAMapView;
 import com.fahadaltimimi.view.fragment.LocationFragment;
@@ -101,11 +95,7 @@ public class HomeFragment extends LocationFragment {
 	
 	private DiveSiteManager mDiveSiteManager;
 
-    private View mProfileProgress;
-	private ImageButton mProfileImageButton;
-	private Button mProfileNoImageButton;
-
-    private View mDiveSiteListProgress;
+	private SwipeRefreshLayout mDiveSiteRefreshLayout;
 	private ListView mDiveSiteListView;
     private Button mDiveSiteListNoDataLabel;
 	
@@ -113,11 +103,11 @@ public class HomeFragment extends LocationFragment {
 	private FAMapView mMapView;
 	private GoogleMap mGoogleMap = null;
 
-    private View mScheduledDiveListProgress;
+    private SwipeRefreshLayout mScheduledDiveRefreshLayout;
 	private ListView mScheduledDiveListView;
 	private Button mScheduledDiveListNoDataLabel;
 
-	private View mNDBCListProgress;
+    private SwipeRefreshLayout mNDBCRefreshLayout;
 	private ListView mNDBCListView;
 	private Button mNDBCListNoDataLabel;
 	
@@ -157,154 +147,8 @@ public class HomeFragment extends LocationFragment {
                 }
 			}
 		});
-	    
-	    mProfileProgress = view.findViewById(R.id.home_item_profile_progress_bar);
-	    
-	    Drawable profileImage = null;
-	    if (mProfileImageButton != null) {
-	    	profileImage = mProfileImageButton.getDrawable();
-	    }
-	    mProfileImageButton = view.findViewById(R.id.home_item_profile);
-	    if (profileImage != null) {
-	    	mProfileImageButton.setImageDrawable(profileImage);
-	    	mProfileProgress.setVisibility(View.GONE);
-	    	mProfileImageButton.setVisibility(View.VISIBLE);
-	    }
-	    
-	    mProfileNoImageButton = view.findViewById(R.id.home_item_profile_button);
-	    
-	    View.OnClickListener profileClickListener = new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), DiverActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-				long diver_id = mDiveSiteManager.getLoggedInDiverId();
-				String diver_username = mDiveSiteManager.getLoggedInDiverUsername();
-				i.putExtra(DiverActivity.EXTRA_DIVER_ID, diver_id);
-				i.putExtra(DiverActivity.EXTRA_DIVER_USERNAME, diver_username);
-				startActivity(i);
-			}
-		};
-		
-		mProfileProgress.setOnClickListener(profileClickListener);
-		mProfileImageButton.setOnClickListener(profileClickListener);
-		mProfileNoImageButton.setOnClickListener(profileClickListener);
-		
-		if (mDiveSiteManager.getLoggedInDiverId() != -1) {
-
-            Bitmap profileImageBitmap = mDiveSiteManager.getLoggedInDiverProfileImage();
-            if (profileImageBitmap != null) {
-                mProfileImageButton.setImageBitmap(profileImageBitmap);
-                mProfileProgress.setVisibility(View.GONE);
-                mProfileImageButton.setVisibility(View.VISIBLE);
-                mProfileNoImageButton.setVisibility(View.GONE);
-            }
-
-			mDiveSiteOnlineDatabaseUser = 
-					new DiveSiteOnlineDatabaseLink(getActivity());
-			mDiveSiteOnlineDatabaseUser.setDiveSiteOnlineLoaderListener(new DiveSiteOnlineDatabaseLink.OnlineDiveDataListener() {
-	
-						@Override
-						public void onOnlineDiveDataRetrievedComplete(
-								ArrayList<Object> resultList,
-								String message, Boolean isError) {
-							if (resultList.size() > 0) {							
-								// Now get bitmap profile image for diver
-								Diver diver = (Diver) resultList.get(0);
-								LoadOnlineImageTask task = new LoadOnlineImageTask(mProfileImageButton) {
-	
-									@Override
-									protected void onPostExecute(Bitmap result) {
-										super.onPostExecute(result);
-                                        DiveSiteManager.get(getActivity()).saveLoggedInDiverProfileImage(result);
-										if (result != null) {
-											mProfileProgress.setVisibility(View.GONE);
-											mProfileImageButton.setVisibility(View.VISIBLE);
-											mProfileNoImageButton.setVisibility(View.GONE);
-										} else {
-											mProfileProgress.setVisibility(View.GONE);
-											mProfileImageButton.setVisibility(View.GONE);
-											mProfileNoImageButton.setVisibility(View.VISIBLE);
-										}
-									}
-	
-								};
-								task.execute(diver.getPictureURL());
-							}
-						}
-	
-						@Override
-						public void onOnlineDiveDataProgress(
-								Object result) {
-							// TODO Auto-generated method stub
-	
-						}
-	
-						@Override
-						public void onOnlineDiveDataPostBackground(
-								ArrayList<Object> resultList,
-								String message) {
-							// TODO Auto-generated method stub
-	
-						}
-					});
-			mDiveSiteOnlineDatabaseUser.getUser(String.valueOf(mDiveSiteManager.getLoggedInDiverId()), "", "");
-		} else {
-			mProfileProgress.setVisibility(View.GONE);
-			mProfileImageButton.setVisibility(View.GONE);
-			mProfileNoImageButton.setVisibility(View.VISIBLE);
-		}
-
-        Button diverList = view.findViewById(R.id.home_item_diver_list);
-
-	    View.OnClickListener diverListClickListener = new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), DiverListActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-			}
-		};
-		
-		diverList.setOnClickListener(diverListClickListener);
-
-        Button refresh = view.findViewById(R.id.home_item_refresh);
-		refresh.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				mDiveSiteListView.setVisibility(View.GONE);
-                mDiveSiteListNoDataLabel.setVisibility(View.GONE);
-				mDiveSiteListProgress.setVisibility(View.VISIBLE);
-				mScheduledDiveListView.setVisibility(View.GONE);
-				mScheduledDiveListNoDataLabel.setVisibility(View.GONE);
-				mScheduledDiveListProgress.setVisibility(View.VISIBLE);
-				mNDBCListView.setVisibility(View.GONE);
-				mNDBCListProgress.setVisibility(View.VISIBLE);
-				mNDBCListNoDataLabel.setVisibility(View.GONE);
-
-                cancelOnlineDiveSiteMapRefresh();
-                clearDiveSites();
-                clearScheduledDives();
-                clearNDBCs();
-
-                if (startLocationUpdates()) {
-                    mForceLocationDataRefresh = true;
-		    	} else {
-					refreshOnlineDiveSites();
-					refreshOnlineDiveSitesMap();
-					refreshOnlineScheduledDives();
-					refreshOnlineNDBCs();
-		    	}
-			}
-		});
 
         Button diveSiteListTitle = view.findViewById(R.id.home_item_dive_site_title);
-	    mDiveSiteListProgress = view.findViewById(R.id.home_item_site_list_progress_bar);
-        mDiveSiteListNoDataLabel = view.findViewById(R.id.home_item_site_list_no_data);
 	    
 	    // Retain list view adapter if available
 	    ListAdapter siteAdapter;
@@ -315,42 +159,47 @@ public class HomeFragment extends LocationFragment {
 	    } else {
 	    	siteAdapter = new DiveSiteAdapter(new ArrayList<DiveSite>());
 	    }
+        mDiveSiteRefreshLayout = view.findViewById(R.id.home_item_site_swipe_refresh);
+        mDiveSiteRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshOnlineDiveSites();
+            }
+        });
 	    mDiveSiteListView = view.findViewById(R.id.home_item_site_list);
 	    mDiveSiteListView.setAdapter(siteAdapter);
 	    
 	    if (showSiteList) {
 	    	refreshDiveSiteList();
 	    	mDiveSiteListView.setVisibility(View.VISIBLE);
-	    	mDiveSiteListProgress.setVisibility(View.GONE);
 	    }
 
-        mDiveSiteListProgress.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), DiveSiteListActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-			}
-		});
+        mDiveSiteListNoDataLabel = view.findViewById(R.id.home_item_site_list_no_data);
+        mDiveSiteListNoDataLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshOnlineDiveSites();
+            }
+        });
+
 	    diveSiteListTitle.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), DiveSiteListActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-			}
-		});
-	    mDiveSiteListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-				DiveSite diveSite = 
-						(DiveSite) mDiveSiteListView.getAdapter().getItem(position);
-				openDiveSite(diveSite);
+			public void onClick(View v) {
+				Intent i = new Intent(getActivity(), DiveSiteListActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
 			}
-	    });
+		});
+
+        mDiveSiteListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                DiveSite diveSite =
+                        (DiveSite) mDiveSiteListView.getAdapter().getItem(position);
+                openDiveSite(diveSite);
+            }
+        });
 
 	    mDiveSiteListView.setOnScrollListener(new OnScrollListener(){
 
@@ -382,9 +231,7 @@ public class HomeFragment extends LocationFragment {
         initializeMap();
 
         Button scheduledDiveTitle = view.findViewById(R.id.home_item_scheduled_dive_title);
-	    mScheduledDiveListProgress = view.findViewById(R.id.home_item_scheduled_list_progress_bar);
-	    mScheduledDiveListNoDataLabel = view.findViewById(R.id.home_item_scheduled_list_no_data);
-	    
+
 	    // Retain list view adapter if available
 	    ListAdapter scheduledAdapter;
 	    boolean showScheduledList = false;
@@ -394,34 +241,45 @@ public class HomeFragment extends LocationFragment {
 	    }  else {
 	    	scheduledAdapter = new ScheduledDiveAdapter(new ArrayList<ScheduledDive>());
 	    }
+        mScheduledDiveRefreshLayout = view.findViewById(R.id.home_item_scheduled_list_swipe_refresh);
+	    mScheduledDiveRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshOnlineScheduledDives();
+            }
+        });
 	    mScheduledDiveListView = view.findViewById(R.id.home_item_scheduled_list);
-	    mScheduledDiveListView.setAdapter(scheduledAdapter);	
-	    
+	    mScheduledDiveListView.setAdapter(scheduledAdapter);
+
+        View.OnClickListener scheduledDiveClickListener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), ScheduledDiveListActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        };
+
+        mScheduledDiveListNoDataLabel = view.findViewById(R.id.home_item_scheduled_list_no_data);
+        mScheduledDiveListNoDataLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshOnlineScheduledDives();
+            }
+        });
 	    if (showScheduledList) {
 	    	refreshScheduledDiveList();
 	    	if (mScheduledDiveListView.getAdapter().getCount() > 0) {
 				mScheduledDiveListView.setVisibility(View.VISIBLE);
-				mScheduledDiveListProgress.setVisibility(View.GONE);
 				mScheduledDiveListNoDataLabel.setVisibility(View.GONE);
 			} else {
 				mScheduledDiveListView.setVisibility(View.GONE);
-				mScheduledDiveListProgress.setVisibility(View.GONE);
 				mScheduledDiveListNoDataLabel.setVisibility(View.VISIBLE);
 			}
 	    }	    
-	    
-	    View.OnClickListener scheduledDiveClickListener = new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), ScheduledDiveListActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-			}
-		};
-		mScheduledDiveListProgress.setOnClickListener(scheduledDiveClickListener);
+
 	    scheduledDiveTitle.setOnClickListener(scheduledDiveClickListener);
-	    mScheduledDiveListNoDataLabel.setOnClickListener(scheduledDiveClickListener);
 	    mScheduledDiveListView.setOnItemClickListener(new OnItemClickListener() {
 	    	@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
@@ -454,8 +312,13 @@ public class HomeFragment extends LocationFragment {
 			
 		});
 
-	    mNDBCListProgress = view.findViewById(R.id.home_item_ndbc_list_progress_bar);
 	    mNDBCListNoDataLabel = view.findViewById(R.id.home_item_ndbc_list_no_data);
+	    mNDBCListNoDataLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshOnlineNDBCs();
+            }
+        });
 	    
 	    // Retain list view adapter if available
 	    ListAdapter ndbcAdapter;
@@ -466,6 +329,13 @@ public class HomeFragment extends LocationFragment {
 	    }  else {
 	    	ndbcAdapter = new NDBCAdapter(new ArrayList<NDBCStation>());
 	    }
+        mNDBCRefreshLayout = view.findViewById(R.id.home_item_ndbc_list_swipe_refresh);
+        mNDBCRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshOnlineNDBCs();
+            }
+        });
 	    mNDBCListView = view.findViewById(R.id.home_item_ndbc_list);
 	    mNDBCListView.setAdapter(ndbcAdapter);	
 	    
@@ -474,11 +344,9 @@ public class HomeFragment extends LocationFragment {
 	    	
 	    	if (mNDBCListView.getAdapter().getCount() > 0) {
 				mNDBCListView.setVisibility(View.VISIBLE);
-				mNDBCListProgress.setVisibility(View.GONE);
 				mNDBCListNoDataLabel.setVisibility(View.GONE);
 			} else {
 				mNDBCListView.setVisibility(View.GONE);
-				mNDBCListProgress.setVisibility(View.GONE);
 				mNDBCListNoDataLabel.setVisibility(View.VISIBLE);
 			}
 	    }
@@ -579,7 +447,8 @@ public class HomeFragment extends LocationFragment {
 		if (mRefreshingOnlineDiveSites) {
 			cancelOnlineDiveSiteRefresh();
 		}
-		
+
+		mDiveSiteRefreshLayout.setRefreshing(true);
 		mRefreshingOnlineDiveSites = true;
 
 		mDiveSitesOnlineDatabase = new DiveSiteOnlineDatabaseLink(getActivity());
@@ -598,13 +467,13 @@ public class HomeFragment extends LocationFragment {
 
                         if (mDiveSiteListView.getAdapter().getCount() > 0) {
                             mDiveSiteListView.setVisibility(View.VISIBLE);
-                            mDiveSiteListProgress.setVisibility(View.GONE);
                             mDiveSiteListNoDataLabel.setVisibility(View.GONE);
                         } else {
                             mDiveSiteListView.setVisibility(View.GONE);
-                            mDiveSiteListProgress.setVisibility(View.GONE);
                             mDiveSiteListNoDataLabel.setVisibility(View.VISIBLE);
                         }
+
+                        mDiveSiteRefreshLayout.setRefreshing(false);
 					}
 
 					@Override
@@ -652,7 +521,6 @@ public class HomeFragment extends LocationFragment {
 						}
 						
 						mDiveSiteListView.setVisibility(View.VISIBLE);
-						mDiveSiteListProgress.setVisibility(View.GONE);
 					}
 
 					@Override
@@ -791,7 +659,8 @@ public class HomeFragment extends LocationFragment {
 		if (mRefreshingOnlineScheduledDives) {
 			cancelOnlineScheduledDiveRefresh();
 		}
-		
+
+		mScheduledDiveRefreshLayout.setRefreshing(true);
 		mRefreshingOnlineScheduledDives = true;
 
 		mScheduledDivesOnlineDatabase = new DiveSiteOnlineDatabaseLink(getActivity());
@@ -810,13 +679,13 @@ public class HomeFragment extends LocationFragment {
 						
 						if (mScheduledDiveListView.getAdapter().getCount() > 0) {
 							mScheduledDiveListView.setVisibility(View.VISIBLE);
-							mScheduledDiveListProgress.setVisibility(View.GONE);
 							mScheduledDiveListNoDataLabel.setVisibility(View.GONE);
 						} else {
 							mScheduledDiveListView.setVisibility(View.GONE);
-							mScheduledDiveListProgress.setVisibility(View.GONE);
 							mScheduledDiveListNoDataLabel.setVisibility(View.VISIBLE);
 						}
+
+                        mScheduledDiveRefreshLayout.setRefreshing(false);
 					}
 
 					@Override
@@ -863,7 +732,6 @@ public class HomeFragment extends LocationFragment {
 						}
 						
 						mScheduledDiveListView.setVisibility(View.VISIBLE);
-						mScheduledDiveListProgress.setVisibility(View.GONE);
 					}
 
 					@Override
@@ -910,7 +778,8 @@ public class HomeFragment extends LocationFragment {
 		if (mRefreshingOnlineNDBCs) {
 			cancelOnlineNDBCRefresh();
 		}
-		
+
+        mNDBCRefreshLayout.setRefreshing(true);
 		mRefreshingOnlineNDBCs = true;
 
 		mNDBCOnlineDatabase = new DiveSiteOnlineDatabaseLink(getActivity());
@@ -929,13 +798,13 @@ public class HomeFragment extends LocationFragment {
 				
 				if (mNDBCListView.getAdapter().getCount() == 0) {
 					mNDBCListView.setVisibility(View.GONE);
-					mNDBCListProgress.setVisibility(View.GONE);
 					mNDBCListNoDataLabel.setVisibility(View.VISIBLE);
 				} else {
                     mNDBCListView.setVisibility(View.VISIBLE);
-                    mNDBCListProgress.setVisibility(View.GONE);
                     mNDBCListNoDataLabel.setVisibility(View.GONE);
                 }
+
+                mNDBCRefreshLayout.setRefreshing(false);
 			}
 
 			@Override
@@ -1000,14 +869,12 @@ public class HomeFragment extends LocationFragment {
 					refreshNDBCList();
 
 					mNDBCListView.setVisibility(View.VISIBLE);
-					mNDBCListProgress.setVisibility(View.GONE);
 					mNDBCListNoDataLabel.setVisibility(View.GONE);
 				} else {
 					cancelOnlineNDBCRefresh();
 				}
 				
 				mNDBCListView.setVisibility(View.VISIBLE);
-				mNDBCListProgress.setVisibility(View.GONE);
 			}
 
 			@Override
@@ -1156,6 +1023,7 @@ public class HomeFragment extends LocationFragment {
 		}
 		
 		mRefreshingOnlineDiveSites = false;
+        mDiveSiteRefreshLayout.setRefreshing(false);
 	}
 	
 	private void cancelOnlineDiveSiteMapRefresh() {
@@ -1185,6 +1053,7 @@ public class HomeFragment extends LocationFragment {
 		}
 		
 		mRefreshingOnlineScheduledDives = false;
+        mScheduledDiveRefreshLayout.setRefreshing(false);
 	}
 	
 	private void clearNDBCs() {
@@ -1207,6 +1076,7 @@ public class HomeFragment extends LocationFragment {
 		}
 		
 		mRefreshingOnlineNDBCs = false;
+        mNDBCRefreshLayout.setRefreshing(false);
 	}
 	
 	private void cancelOnlineNDBCDataRefresh() {
@@ -1307,12 +1177,9 @@ public class HomeFragment extends LocationFragment {
                 // Clear and refresh lists
                 mDiveSiteListView.setVisibility(View.GONE);
                 mDiveSiteListNoDataLabel.setVisibility(View.GONE);
-                mDiveSiteListProgress.setVisibility(View.VISIBLE);
                 mScheduledDiveListView.setVisibility(View.GONE);
                 mScheduledDiveListNoDataLabel.setVisibility(View.GONE);
-                mScheduledDiveListProgress.setVisibility(View.VISIBLE);
                 mNDBCListView.setVisibility(View.GONE);
-                mNDBCListProgress.setVisibility(View.VISIBLE);
                 mNDBCListNoDataLabel.setVisibility(View.GONE);
 
                 clearDiveSites();

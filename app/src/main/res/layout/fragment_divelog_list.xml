@@ -7,9 +7,9 @@
 	android:background="@color/defaultBackground"
 	android:showDividers="middle"
     android:divider="?android:dividerHorizontal" >
-    
+
     <LinearLayout
-        android:id="@+id/divesite_list_filter_notification_container"
+        android:id="@+id/list_filter_notification_container"
         android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 		android:paddingLeft="5dp"
@@ -17,22 +17,22 @@
 	    android:orientation="horizontal"
 	    android:background="@color/filterNotificationBackground"
 	    android:visibility="gone" >
-	    
+
         <TextView
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"	 
+	        android:layout_height="wrap_content"
 	        android:textColor="@color/filterNotificationTextColor"
 	        android:textStyle="bold"
-	        android:text="@string/active_filter" /> 
-	        
+	        android:text="@string/active_filter" />
+
 	    <TextView
-	        android:id="@+id/divesite_list_filter_notification"
+	        android:id="@+id/list_filter_notification"
 	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="5dp"
 	        android:layout_weight="1"
 	        android:textColor="@color/filterNotificationTextColor" />
-	    
+
 	</LinearLayout>
 
     <ImageView
@@ -59,11 +59,15 @@
         map:uiCompass="true"
         map:uiZoomControls="true" >
     </com.fahadaltimimi.view.FAMapView>
-   
-	<ListView
-	    android:id="@android:id/list"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:animateLayoutChanges="true" >
-	</ListView>
+
+	<android.support.v4.widget.SwipeRefreshLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/list_swipe_refresh"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<ListView style="@style/FragmentListView" >
+		</ListView>
+
+	</android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
