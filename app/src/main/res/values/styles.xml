@@ -278,6 +278,13 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="FragmentListView">
+        <item name="android:id">@android:id/list</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:animateLayoutChanges">true</item>
+    </style>
+
     <style name="NavBarHeaderTextItem">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>

@@ -7,12 +7,7 @@
     <item android:id="@+id/menu_item_select_divesite"
         DiveTheSite:showAsAction="always"
         android:title="@string/select" />
-    
-    <item android:id="@+id/menu_item_refresh_divesites"
-        DiveTheSite:showAsAction="always"
-    	android:icon="@drawable/ic_menu_refresh"
-    	android:title="@string/refresh" /> 
-    
+
     <item android:id="@+id/menu_item_add_divesite"
         DiveTheSite:showAsAction="always"
         android:icon="@drawable/ic_menu_add"
