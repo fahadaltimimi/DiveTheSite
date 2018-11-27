@@ -253,7 +253,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
         }
     }
 
-        @Override
+    @Override
 	public void onStop() {
 		super.onStop();
 		cancelOnlineRefresh();
@@ -263,12 +263,6 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_scheduleddive_list_online, menu);
-
-		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_scheduleddive);
-
-		if (mRefreshingOnlineScheduledDive && mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 	}
 
 	@Override
@@ -279,22 +273,6 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-
-		case R.id.menu_item_refresh_scheduleddive:
-            if (canRequestLocationUpdates()) {
-                if (mRefreshMenuItem != null) {
-                    mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-                }
-                mForceLocationDataRefresh = true;
-                if (!startLocationUpdates()) {
-                    clearScheduledDives();
-                    refreshOnlineScheduledDives();
-				}
-            } else {
-                clearScheduledDives();
-                refreshOnlineScheduledDives();
-            }
-			return true;
 
 		case R.id.menu_item_add_scheduleddive:
 			// If user not registered, don't allow
@@ -392,16 +370,27 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		mFilterNotification.setText(filterNotification.toString());
 	}
 
+	@Override
+    protected void refreshListView() {
+        if (canRequestLocationUpdates()) {
+            mForceLocationDataRefresh = true;
+            if (!startLocationUpdates()) {
+                clearScheduledDives();
+                refreshOnlineScheduledDives();
+            }
+        } else {
+            clearScheduledDives();
+            refreshOnlineScheduledDives();
+        }
+    }
+
 	private void refreshOnlineScheduledDives() {
 		if (mRefreshingOnlineScheduledDive) {
 			cancelOnlineRefresh();
 		}
-		
+
+        startRefresh();
 		mRefreshingOnlineScheduledDive = true;
-		
-		if (mRefreshMenuItem != null){
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 
 		String titleFilter;
 		titleFilter = Objects.requireNonNull(mPrefs.getString(
@@ -460,9 +449,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 
 						mRefreshingOnlineScheduledDive = false;
 
-						if (mRefreshMenuItem != null) {
-							mRefreshMenuItem.setActionView(null);
-						}
+                        stopRefresh();
 					}
 
 					@Override
@@ -597,10 +584,7 @@ public class ScheduledDiveListOnlineFragment extends ScheduledDiveListFragment {
 		}
 		
 		mRefreshingOnlineScheduledDive = false;
-		
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(null);
-		}
+        stopRefresh();
 	}
 	
 	protected boolean onlineFilterChanged() {

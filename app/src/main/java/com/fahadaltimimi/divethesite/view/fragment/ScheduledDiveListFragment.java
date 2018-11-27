@@ -21,7 +21,6 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -75,8 +74,6 @@ public class ScheduledDiveListFragment extends LocationListFragment {
 	protected Bundle mSavedInstanceState;
 
 	protected DiveSiteOnlineDatabaseLink mDiveSiteOnlineDatabase;
-
-	protected MenuItem mRefreshMenuItem = null;
 	
 	protected LinearLayout mListFilter = null;
 
@@ -149,9 +146,9 @@ public class ScheduledDiveListFragment extends LocationListFragment {
         View view = super.onCreateView(inflater, parent, savedInstanceState);
 
 		mFilterNotificationContainer =
-				Objects.requireNonNull(view).findViewById(R.id.scheduleddive_list_filter_notification_container);
+				Objects.requireNonNull(view).findViewById(R.id.list_filter_notification_container);
 		mFilterNotification =
-                view.findViewById(R.id.scheduleddive_list_filter_notification);
+                view.findViewById(R.id.list_filter_notification);
 
 		// Initialize filter panel
 		mListFilter = view.findViewById(R.id.scheduleddive_list_filter);
@@ -328,7 +325,7 @@ public class ScheduledDiveListFragment extends LocationListFragment {
 				//
 			}
 		});
-		
+
 		mFilterNextDays.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence c, int start, int before,
@@ -445,6 +442,11 @@ public class ScheduledDiveListFragment extends LocationListFragment {
     protected int getLayoutView() {
         return R.layout.fragment_scheduleddive_list;
     }
+
+	@Override
+	protected int getSwipeRefreshLayout() {
+		return R.id.list_swipe_refresh;
+	}
 
     @Override
     protected void onLocationPermissionGranted() {
@@ -678,7 +680,7 @@ public class ScheduledDiveListFragment extends LocationListFragment {
 	}
 
 	protected void refreshScheduledDiveList() {
-		// Inherited
+        super.refreshListView();
 	}
 	
 	protected void filterScheduledDiveList() {

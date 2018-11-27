@@ -12,9 +12,5 @@
         DiveTheSite:showAsAction="always"
         android:icon="@drawable/ic_menu_sort_by_size"
         android:title="@string/filter_list_title" />
-    
-    <item android:id="@+id/menu_item_refresh_divers"
-        DiveTheSite:showAsAction="always"
-    	android:icon="@drawable/ic_menu_refresh"
-    	android:title="@string/refresh" />
+
 </menu>

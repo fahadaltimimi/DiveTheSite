@@ -51,10 +51,8 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 
 	private boolean mArchives = false;
 	private boolean mPublishMode = false;
-
-	private DiveSiteListCursorLoader mDiveSiteListLoader = null;
-
     private HashMap<Long, DiveSite> mDiveSiteUpdates = new HashMap<Long, DiveSite>();
+    private DiveSiteListCursorLoader mDiveSiteListLoader;
 
     private int mDiveSiteCount = 0;
 
@@ -73,10 +71,6 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 		super.onCreate(savedInstanceState);
 
 		// Initialize the loader to load the list of Dive Sites
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
-
         updateDiveSiteCount();
 
 		mDiveSiteListLoader = (DiveSiteListCursorLoader) getLoaderManager()
@@ -416,8 +410,6 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_divesite_list_local, menu);
 
-		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_divesites);
-		
 		MenuItem showDiveSitesArchivesMenuItem = menu
 				.findItem(R.id.menu_item_showDiveSitesArchives);
 
@@ -507,12 +499,6 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 			// Add a new dive site and switch to Dive Site view
 			DiveSite diveSite = mDiveSiteManager.insertDiveSite();
 			openDiveSite(diveSite);
-			return true;
-			
-		case R.id.menu_item_refresh_divesites:
-			if (!startLocationUpdates()); {
-				refreshDiveSiteList();
-			}
 			return true;
 
 		case R.id.menu_item_filter_divesite_list:
@@ -638,11 +624,13 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 	}
 
 	@Override
+	protected void refreshListView() {
+		super.refreshListView();
+		refreshDiveSiteList();
+	}
+
+	@Override
 	protected void refreshDiveSiteList() {
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
-		
 		updateFilterNotification();
         updateDiveSiteCount();
 
@@ -1222,10 +1210,8 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 		} else {
 			((DiveSiteCursorAdapter) getListAdapter()).changeCursor(cursor);
 		}
-		
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(null);
-		}
+
+		stopRefresh();
 	}
 
 	@Override

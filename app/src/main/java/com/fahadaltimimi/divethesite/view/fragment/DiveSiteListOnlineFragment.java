@@ -303,11 +303,11 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 
 		// Hide published, unpublished filter for online fragment
 		CheckBox filterPublished = mListFilter
-				.findViewById(R.id.divesite_list_filter_published);
+				.findViewById(R.id.filter_published);
 		filterPublished.setVisibility(View.GONE);
 
 		CheckBox filterUnpublished = mListFilter
-				.findViewById(R.id.divesite_list_filter_unpublished);
+				.findViewById(R.id.list_filter_unpublished);
 		filterUnpublished.setVisibility(View.GONE);
 
 		return v;
@@ -317,12 +317,6 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_divesite_list_online, menu);
-
-		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_divesites);
-
-		if (mRefreshingOnlineDiveSites && mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 	}
 
 	@Override
@@ -359,13 +353,6 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
 				getActivity().finish();
 			}
-			return true;
-
-		case R.id.menu_item_refresh_divesites:
-			if (!startLocationUpdates()) {
-                clearDiveSites();
-                refreshOnlineDiveSites();
-	    	}
 			return true;
 
 		case R.id.menu_item_add_divesite:
@@ -483,17 +470,22 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 		return !filterNotification.toString().equals(currentFilter);
 	}
 
-	protected void refreshOnlineDiveSites() {
+	@Override
+    protected void refreshListView() {
+        if (!startLocationUpdates()) {
+            clearDiveSites();
+            refreshOnlineDiveSites();
+        }
+    }
+
+	private void refreshOnlineDiveSites() {
 		// Look for more dive sites and set menu item icon to spin
 		if (mRefreshingOnlineDiveSites) {
 			cancelOnlineRefresh();
 		}
-		
+
+		startRefresh();
 		mRefreshingOnlineDiveSites = true;
-		
-		if (mRefreshMenuItem != null){
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 
 		String titleFilter;
 		if (mSetToDiveLog) {
@@ -535,10 +527,8 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 						}
 
 						mRefreshingOnlineDiveSites = false;
-						
-						if (mRefreshMenuItem != null) {
-							mRefreshMenuItem.setActionView(null);
-						}
+
+						stopRefresh();
 					}
 
 					@Override
@@ -673,10 +663,7 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 		}
 		
 		mRefreshingOnlineDiveSites = false;
-		
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(null);
-		}
+		stopRefresh();
 	}
 
 	protected boolean onlineFilterChanged() {
