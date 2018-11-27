@@ -87,12 +87,6 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		Bundle loaderArgs = new Bundle();
 		loaderArgs.putLong(ARG_LOADER_DIVER_ID, mRestrictToDiverID);
 		loaderArgs.putParcelable(ARG_LOADER_DIVESITE, mDiveSite);
-
-		// Initialize the loader to load the list of Scheduled Dives
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
-
         updateScheduledDiveCount();
 		
 		mScheduledDiveListLoader = 
@@ -451,8 +445,6 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_scheduleddive_list_local, menu);
 
-		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_scheduleddive);
-		
 		MenuItem publishModeMenuItem = 
 			menu.findItem(R.id.menu_item_publishMode);
 
@@ -490,10 +482,6 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 			}
 						
 			openScheduledDive(null);
-			return true;
-			
-		case R.id.menu_item_refresh_scheduleddive:
-			refreshScheduledDiveList();
 			return true;
 
 		case R.id.menu_item_publishMode:
@@ -631,12 +619,16 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 		mFilterNotification.setText(filterNotification.toString());
 	}
 
+    @Override
+    protected void refreshListView() {
+        super.refreshListView();
+        refreshScheduledDiveList();
+    }
+
 	@Override
 	protected void refreshScheduledDiveList() {
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
-		
+		super.refreshScheduledDiveList();
+
 		updateFilterNotification();
         updateScheduledDiveCount();
 
@@ -1503,10 +1495,8 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 			} else {
 				((ScheduledDiveCursorAdapter) getListAdapter()).changeCursor(cursor);
 			}
-			
-			if (mRefreshMenuItem != null) {
-				mRefreshMenuItem.setActionView(null);
-			}
+
+            stopRefresh();
 
 		} else if (cursor instanceof ScheduledDiveDiveSiteCursor) {
 			cursor.moveToFirst();

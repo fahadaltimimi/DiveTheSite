@@ -267,6 +267,23 @@
         <item name="android:textColor">@color/White</item>
         <item name="android:textAllCaps">true</item>
     </style>
+    
+    <style name="HomeListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:animateLayoutChanges">true</item>
+        <item name="android:background">@color/home_list_background</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="FragmentListView">
+        <item name="android:id">@android:id/list</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:animateLayoutChanges">true</item>
+    </style>
 
     <style name="NavBarHeaderTextItem">
         <item name="android:textSize">22sp</item>

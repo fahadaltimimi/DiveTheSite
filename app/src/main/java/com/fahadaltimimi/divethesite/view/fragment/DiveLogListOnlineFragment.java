@@ -232,12 +232,6 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_divelog_list_online, menu);
-
-		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_divelogs);
-
-		if (mRefreshingOnlineDiveLogs && mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 	}
 
 	@Override
@@ -248,11 +242,6 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-
-		case R.id.menu_item_refresh_divelogs:
-			clearDiveLogs();
-			refreshOnlineDiveLogs();
-			return true;
 
 		case R.id.menu_item_add_divelog:
 			// If user not registered, don't allow
@@ -284,16 +273,20 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 		mFilterNotification.setText(filterNotification.toString());
 	}
 
+	@Override
+	protected void refreshListView() {
+		clearDiveLogs();
+		refreshOnlineDiveLogs();
+	}
+
+
 	private void refreshOnlineDiveLogs() {
 		if (mRefreshingOnlineDiveLogs) {
 			cancelOnlineRefresh();
 		}
-		
+
+        startRefresh();
 		mRefreshingOnlineDiveLogs = true;
-		
-		if (mRefreshMenuItem != null){
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 
 		mDiveSiteOnlineDatabase = new DiveSiteOnlineDatabaseLink(getActivity());
 		mDiveSiteOnlineDatabase
@@ -310,9 +303,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 
 						mRefreshingOnlineDiveLogs = false;
 
-						if (mRefreshMenuItem != null) {
-							mRefreshMenuItem.setActionView(null);
-						}
+                        stopRefresh();
 					}
 
 					@Override
@@ -346,7 +337,7 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 		if (mDiveSite != null) {
 			diveSiteID = mDiveSite.getOnlineId();
 		}
-		
+
 		if (mAdditionalItemsToLoad == 0) {
 			mDiveSiteOnlineDatabase.getDiveLogList(new Date(0),
 					mRestrictToDiverID, diveSiteID, "", "", "", "", "", "");
@@ -417,10 +408,8 @@ public class DiveLogListOnlineFragment extends DiveLogListFragment {
 		}
 		
 		mRefreshingOnlineDiveLogs = false;
-		
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(null);
-		}
+
+        stopRefresh();
 	}
 
 	@Override

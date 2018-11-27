@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v4.util.LruCache;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,8 +44,9 @@ import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.model.DiveLogActivity;
 import com.fahadaltimimi.divethesite.model.Diver;
 import com.fahadaltimimi.divethesite.model.DiverCertification;
+import com.fahadaltimimi.view.fragment.BaseListFragment;
 
-public class DiverListFragment extends ListFragment {
+public class DiverListFragment extends BaseListFragment {
 
 	private double LIST_ITEMS_TRIGGER_REFRESH_AT_COUNT = 0.75;
 
@@ -59,8 +59,6 @@ public class DiverListFragment extends ListFragment {
 	private int mAdditionalItemsToLoad = 0;
 	
 	private View mLastDisplayedListItemView = null;
-
-	private MenuItem mRefreshMenuItem = null;
 
 	private LinearLayout mListFilter = null;
 	private LinearLayout mFilterNotificationContainer;
@@ -139,7 +137,7 @@ public class DiverListFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_diver_list, parent, false);
+		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		getActivity().setTitle(R.string.diverListTitle);
 
@@ -168,9 +166,9 @@ public class DiverListFragment extends ListFragment {
 		});
 		
 		mFilterNotificationContainer = v
-				.findViewById(R.id.diver_list_filter_notification_container);
+				.findViewById(R.id.list_filter_notification_container);
 		mFilterNotification = v
-				.findViewById(R.id.diver_list_filter_notification);
+				.findViewById(R.id.list_filter_notification);
 
 		// Initialize filter panel
 		mListFilter = v.findViewById(R.id.diver_list_filter);
@@ -351,7 +349,17 @@ public class DiverListFragment extends ListFragment {
 		return v;
 	}
 
-	@Override
+    @Override
+    protected int getLayoutView() {
+        return R.layout.fragment_diver_list;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayout() {
+        return R.id.list_swipe_refresh;
+    }
+
+    @Override
 	public void onStop() {
 		super.onStop();
 
@@ -409,12 +417,6 @@ public class DiverListFragment extends ListFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_diver_list, menu);
-
-		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_divers);
-
-		if (mRefreshingOnlineDivers) {
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 	}
 
 	@Override
@@ -449,11 +451,6 @@ public class DiverListFragment extends ListFragment {
 				mListFilter.setVisibility(View.GONE);
 			}
 
-			return true;
-
-		case R.id.menu_item_refresh_divers:
-            clearDivers();
-			refreshOnlineDivers();
 			return true;
 
 		default:
@@ -512,8 +509,16 @@ public class DiverListFragment extends ListFragment {
 		mFilterNotification.setText(filterNotification.toString());
 	}
 
+	@Override
+	protected void refreshListView() {
+        clearDivers();
+        refreshOnlineDivers();
+    }
+
 	private void refreshOnlineDivers() {
 		// Look for more divers and set menu item icon to spin
+		startRefresh();
+
 		String nameFilter = mPrefs.getString(
 				DiveSiteManager.PREF_FILTER_DIVER_NAME, "").trim();
 		String countryFilter = mPrefs.getString(
@@ -535,12 +540,8 @@ public class DiverListFragment extends ListFragment {
 		if (mRefreshingOnlineDivers) {
 			cancelOnlineRefresh();
 		}
-		
+
 		mRefreshingOnlineDivers = true;
-		
-		if (mRefreshMenuItem != null){
-			mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 
 		mDiveSiteOnlineDatabase = new DiveSiteOnlineDatabaseLink(getActivity());
 		mDiveSiteOnlineDatabase
@@ -558,11 +559,7 @@ public class DiverListFragment extends ListFragment {
 						}
 
 						mRefreshingOnlineDivers = false;
-
-						if (mRefreshMenuItem != null) {
-							mRefreshMenuItem.setActionView(null);
-						}
-
+						stopRefresh();
 						mAdditionalItemsToLoad = ListViewHelper.additionalItemCountToLoad(mListView);
 					}
 
@@ -594,13 +591,13 @@ public class DiverListFragment extends ListFragment {
 						//
 					}
 				});
-		
+
 		if (mAdditionalItemsToLoad == 0) {
 			mDiveSiteOnlineDatabase.getDiverList(new Date(0), nameFilter,
 					countryFilter, stateFilter, cityFilter, "", "");
 		} else {
 			mDiveSiteOnlineDatabase.getDiverList(new Date(0), nameFilter,
-					countryFilter, stateFilter, cityFilter, 
+					countryFilter, stateFilter, cityFilter,
 					String.valueOf(mListView.getCount()),
 					String.valueOf(mAdditionalItemsToLoad));
 		}
@@ -631,6 +628,7 @@ public class DiverListFragment extends ListFragment {
 	}
 
 	private void refreshDiverList() {
+		super.refreshListView();
 		updateFilterNotification();
 		((DiverAdapter) getListAdapter()).notifyDataSetChanged();
 
@@ -653,29 +651,26 @@ public class DiverListFragment extends ListFragment {
 			refreshOnlineDivers();
 		}
 	}
-	
+
 	private void clearDivers() {
 		// Clears list and resets adapter
 		cancelOnlineRefresh();
 		mAdditionalItemsToLoad = 0;
-		
+
 		((DiverAdapter) getListAdapter()).clear();
 		DiverAdapter adapter = new DiverAdapter(new ArrayList<Diver>());
 		setListAdapter(adapter);
 		((DiverAdapter) getListAdapter()).notifyDataSetChanged();
 	}
-	
+
 	private void cancelOnlineRefresh() {
 		if (mDiveSiteOnlineDatabase != null && mDiveSiteOnlineDatabase.getActive()) {
 			mDiveSiteOnlineDatabase.stopBackground();
 			mDiveSiteOnlineDatabase.cancel(true);
 		}
-		
+
 		mRefreshingOnlineDivers = false;
-		
-		if (mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(null);
-		}
+		stopRefresh();
 	}
 
 	protected boolean onlineFilterChanged() {
