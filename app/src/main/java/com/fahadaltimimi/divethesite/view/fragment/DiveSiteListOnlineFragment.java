@@ -327,17 +327,6 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 		if (selectDiveSiteMenuItem != null) {
 			selectDiveSiteMenuItem.setVisible(mSetToDiveLog && mSelectedDiveSite != null);
 		}
-
-		MenuItem addDiveSiteMenuItem = menu.findItem(R.id.menu_item_add_divesite);
-
-		if (addDiveSiteMenuItem != null) {
-			// Only show add button if were looking at our own sites
-			if (mRestrictToDiverID != -1 && mRestrictToDiverID != mDiveSiteManager.getLoggedInDiverId()) {
-				addDiveSiteMenuItem.setVisible(false);
-			} else {
-				addDiveSiteMenuItem.setVisible(true);
-			}	
-		}
 	}
 
 	@Override
@@ -353,24 +342,6 @@ public class DiveSiteListOnlineFragment extends DiveSiteListFragment {
 				Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
 				getActivity().finish();
 			}
-			return true;
-
-		case R.id.menu_item_add_divesite:
-			// If user not registered, don't allow
-			if (mDiveSiteManager.getLoggedInDiverId() == -1) {
-				Toast.makeText(getActivity(), R.string.not_registered_create_site, Toast.LENGTH_LONG).show();
-				return true;
-			}
-						
-			// Open the dive site in edit mode
-			mPrefs.edit()
-					.putBoolean(
-							DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-							true).apply();
-
-			// Add a new dive site and switch to Dive Site view
-			DiveSite diveSite = mDiveSiteManager.insertDiveSite();
-			openDiveSite(diveSite);
 			return true;
 
 		case R.id.menu_item_filter_divesite_list:

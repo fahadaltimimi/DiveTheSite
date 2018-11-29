@@ -27,6 +27,7 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -347,7 +349,33 @@ abstract class DiveSiteListFragment extends LocationListFragment {
 
 		updateFilterNotification();
 
+        FloatingActionButton fab = v.findViewById(R.id.fab_action_add);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+				addNewDiveSite();
+            }
+        });
+
+        if (mRestrictToDiverID != -1 && mRestrictToDiverID != mDiveSiteManager.getLoggedInDiverId()) {
+            fab.hide();
+        }
+
 		return v;
+	}
+
+	protected void addNewDiveSite() {
+		if (mDiveSiteManager.getLoggedInDiverId() == -1) {
+			Toast.makeText(getActivity(), R.string.not_registered_create_site, Toast.LENGTH_LONG).show();
+		}
+		else {
+			// Open the dive site in edit mode
+			mPrefs.edit().putBoolean(DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE, true).apply();
+
+			// Add a new dive site and switch to Dive Site view
+			DiveSite diveSite = mDiveSiteManager.insertDiveSite();
+			openDiveSite(diveSite);
+		}
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.fahadaltimimi.controller.ListViewHelper;
 import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
+import com.fahadaltimimi.divethesite.model.DiveLogActivity;
 import com.fahadaltimimi.divethesite.view.activity.DiveActivity;
 import com.fahadaltimimi.divethesite.view.activity.DiveSiteActivity;
 import com.fahadaltimimi.divethesite.view.activity.DiveSiteFullMapActivity;
@@ -62,6 +64,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import static com.fahadaltimimi.divethesite.view.fragment.DiveLogListFragment.REQUEST_NEW_DIVELOG;
 
 public class HomeFragment extends LocationFragment {
 
@@ -417,6 +421,21 @@ public class HomeFragment extends LocationFragment {
 
 			mGoogleMap.addMarker(markerOptions);
 		}
+
+        FloatingActionButton fab = view.findViewById(R.id.fab_action_add);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Add new dive log
+                if (mDiveSiteManager.getLoggedInDiverId() == -1) {
+                    Toast.makeText(getActivity(), R.string.not_registered_create_log, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent i = new Intent(getActivity(), DiveLogActivity.class);
+                    startActivityForResult(i, REQUEST_NEW_DIVELOG);
+                }
+            }
+        });
 
 		return view;
 	}

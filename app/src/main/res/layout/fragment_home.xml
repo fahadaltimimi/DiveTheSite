@@ -1,165 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/home_background" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/home_background" >
 
-        <Button style="@style/HomeItemTitle"
-            android:id="@+id/home_welcome"
-            android:layout_margin="0dp"
-            android:textSize="30sp"
-            android:gravity="center" >
-        </Button>
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        
-        <Button style="@style/HomeItemTitle"
-            android:id="@+id/home_item_dive_site_title"
-            android:text="@string/home_diveSiteList" >
-        </Button>
-           
-        <Button style="@style/HomeItemTitle"
-            android:id="@+id/home_item_scheduled_dive_title"
-            android:text="@string/home_upcomingDives" >
-        </Button>      	    
-         
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
-        
-        <FrameLayout
-            android:layout_width="0dp"
-		    android:layout_height="match_parent"
-		    android:layout_weight="1" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/home_item_site_swipe_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ListView style="@style/HomeListView"
-                    android:id="@+id/home_item_site_list" >
-                </ListView>
-
-            </android.support.v4.widget.SwipeRefreshLayout>
-
-            <Button style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/home_item_site_list_no_data"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/nothingFound"
-                android:visibility="gone" >
+            <Button style="@style/HomeItemTitle"
+                android:id="@+id/home_welcome"
+                android:layout_margin="0dp"
+                android:textSize="30sp"
+                android:gravity="center" >
             </Button>
-       	</FrameLayout>
-        
-        <FrameLayout
-           	android:layout_width="0dp"
-		    android:layout_height="match_parent"
-		    android:layout_weight="1" >
+        </LinearLayout>
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/home_item_scheduled_list_swipe_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-                <ListView style="@style/HomeListView"
-                    android:id="@+id/home_item_scheduled_list" >
-                </ListView>
-
-            </android.support.v4.widget.SwipeRefreshLayout>
-
-            <Button style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/home_item_scheduled_list_no_data"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/nothingFound"
-                android:visibility="gone" >
+            <Button style="@style/HomeItemTitle"
+                android:id="@+id/home_item_dive_site_title"
+                android:text="@string/home_diveSiteList" >
             </Button>
-            
-        </FrameLayout>
-        
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        
-        <Button style="@style/HomeItemTitle"
-            android:id="@+id/home_item_map_title"
-            android:text="@string/mapTitle" >
-        </Button>
-        
-        <Button style="@style/HomeItemTitle"
-	        android:id="@+id/home_item_ndbc_title"
-	        android:text="@string/home_ndbcList" >
-	    </Button>
-        
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
-		
-        <com.fahadaltimimi.view.FAMapView
-		    xmlns:android="http://schemas.android.com/apk/res/android"
-		    xmlns:map="http://schemas.android.com/apk/res-auto"
-		    android:id="@+id/home_item_mapView"
-		    android:layout_width="0dp"
-		    android:layout_height="match_parent"
-		    android:layout_weight="1"
-      	    android:layout_margin="2dp"
-	  		android:animateLayoutChanges="true"
-		    map:uiCompass="true"
-		    map:uiZoomControls="true" >
-		</com.fahadaltimimi.view.FAMapView>
-        
-        <FrameLayout
-            android:layout_width="0dp"
-		    android:layout_height="match_parent"
-		    android:layout_weight="1" >
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <Button style="@style/HomeItemTitle"
+                android:id="@+id/home_item_scheduled_dive_title"
+                android:text="@string/home_upcomingDives" >
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/home_item_site_swipe_refresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ListView style="@style/HomeListView"
+                        android:id="@+id/home_item_site_list" >
+                    </ListView>
+
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+                <Button style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/home_item_site_list_no_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/nothingFound"
+                    android:visibility="gone" >
+                </Button>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/home_item_scheduled_list_swipe_refresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ListView style="@style/HomeListView"
+                        android:id="@+id/home_item_scheduled_list" >
+                    </ListView>
+
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+                <Button style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/home_item_scheduled_list_no_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/nothingFound"
+                    android:visibility="gone" >
+                </Button>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button style="@style/HomeItemTitle"
+                android:id="@+id/home_item_map_title"
+                android:text="@string/mapTitle" >
+            </Button>
+
+            <Button style="@style/HomeItemTitle"
+                android:id="@+id/home_item_ndbc_title"
+                android:text="@string/home_ndbcList" >
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <com.fahadaltimimi.view.FAMapView
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/home_item_ndbc_list_swipe_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                xmlns:map="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/home_item_mapView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:animateLayoutChanges="true"
+                map:uiCompass="true"
+                map:uiZoomControls="true" >
+            </com.fahadaltimimi.view.FAMapView>
 
-                <ListView style="@style/HomeListView"
-                    android:id="@+id/home_item_ndbc_list" >
-                </ListView>
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
 
-            </android.support.v4.widget.SwipeRefreshLayout>
+                <android.support.v4.widget.SwipeRefreshLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/home_item_ndbc_list_swipe_refresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <Button style="?android:attr/buttonBarButtonStyle"
-		        android:id="@+id/home_item_ndbc_list_no_data"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:gravity="center"
-		        android:text="@string/nothingFound"
-		        android:visibility="gone" >
-		    </Button>
-       	</FrameLayout>
-        
+                    <ListView style="@style/HomeListView"
+                        android:id="@+id/home_item_ndbc_list" >
+                    </ListView>
+
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+                <Button style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/home_item_ndbc_list_no_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/nothingFound"
+                    android:visibility="gone" >
+                </Button>
+            </FrameLayout>
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_action_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:elevation="4dp"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/diveSiteBlue"
+        app:srcCompat="@drawable/add_log"/>
+
+</FrameLayout>

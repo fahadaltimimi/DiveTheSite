@@ -474,16 +474,6 @@ public class ScheduledDiveListLocalFragment extends ScheduledDiveListFragment im
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
-		case R.id.menu_item_add_scheduleddive:
-			// If user not registered, don't allow
-			if (mDiveSiteManager.getLoggedInDiverId() == -1) {
-				Toast.makeText(getActivity(), R.string.not_registered_create_scheduled, Toast.LENGTH_LONG).show();
-				return true;
-			}
-						
-			openScheduledDive(null);
-			return true;
-
 		case R.id.menu_item_publishMode:
 			mPublishMode = !mPublishMode;
 

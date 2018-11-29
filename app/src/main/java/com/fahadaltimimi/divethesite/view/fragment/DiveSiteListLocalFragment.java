@@ -440,7 +440,6 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 			selectDiveSiteMenuItem.setVisible(mSetToDiveLog && mSelectedDiveSite != null);
 		}
 
-		MenuItem addDiveSiteMenuItem = menu.findItem(R.id.menu_item_add_divesite);
 		MenuItem archiveDiveSiteMenuItem = menu.findItem(R.id.menu_item_showDiveSitesArchives);
 		MenuItem publishModeMenuItem = menu.findItem(R.id.menu_item_publishMode);
 
@@ -448,15 +447,9 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 		// sites
 		if (mRestrictToDiverID != -1 && 
 			mRestrictToDiverID != mDiveSiteManager.getLoggedInDiverId()) {
-			if (addDiveSiteMenuItem != null) {
-				addDiveSiteMenuItem.setVisible(false);
-			}
 			archiveDiveSiteMenuItem.setVisible(false);
 			publishModeMenuItem.setVisible(false);
 		} else {
-			if (addDiveSiteMenuItem != null) {
-				addDiveSiteMenuItem.setVisible(true);
-			}
 			publishModeMenuItem.setVisible(true);
 
 			// If we're in publish mode, don't allow archive to be selected
@@ -481,24 +474,6 @@ public class DiveSiteListLocalFragment extends DiveSiteListFragment implements
 				Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
 				getActivity().finish();
 			}
-			return true;
-
-		case R.id.menu_item_add_divesite:
-			// If user not registered, don't allow
-			if (mDiveSiteManager.getLoggedInDiverId() == -1) {
-				Toast.makeText(getActivity(), R.string.not_registered_create_site, Toast.LENGTH_LONG).show();
-				return true;
-			}
-						
-			// Open the dive site in edit mode
-			mPrefs.edit()
-					.putBoolean(
-							DiveSiteManager.PREF_CURRENT_DIVESITE_VIEW_MODE,
-							true).apply();
-
-			// Add a new dive site and switch to Dive Site view
-			DiveSite diveSite = mDiveSiteManager.insertDiveSite();
-			openDiveSite(diveSite);
 			return true;
 
 		case R.id.menu_item_filter_divesite_list:

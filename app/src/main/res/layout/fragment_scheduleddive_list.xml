@@ -1,237 +1,255 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical" 
-    android:animateLayoutChanges="true" 
-	android:background="@color/defaultBackground"
-	android:showDividers="middle"
-    android:divider="?android:dividerHorizontal" >
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/list_filter_notification_container"
-        android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-		android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-	    android:orientation="horizontal"
-	    android:background="@color/filterNotificationBackground"
-	    android:visibility="gone" >
-
-        <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@color/filterNotificationTextColor"
-	        android:textStyle="bold"
-	        android:text="@string/active_filter" />
-
-	    <TextView
-	        android:id="@+id/list_filter_notification"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginLeft="5dp"
-	        android:layout_weight="1"
-	        android:textColor="@color/filterNotificationTextColor" />
-
-	</LinearLayout>
-
-    <LinearLayout
-	    android:id="@+id/scheduleddive_list_filter"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-	    android:orientation="vertical"
-	    android:visibility="gone" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-	    	android:layout_height="wrap_content"
-	    	android:orientation="horizontal" >
-
-	        <TextView style="@style/FilterItemLabel"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	        	android:text="@string/filter_title" />
-
-	        <EditText style="@style/FilterItemField"
-		        android:id="@+id/scheduleddive_list_filter_title"
-		        android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:inputType="text"
-	            android:hint="@string/filter_list_all" />
-		</LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-	    	android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-	    	android:orientation="horizontal" >
-
-	        <TextView style="@style/FilterItemLabel"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	        	android:text="@string/filter_country" />
-
-	        <Spinner
-		        android:id="@+id/scheduleddive_list_filter_country"
-		        android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-		</LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-	    	android:layout_height="wrap_content"
-	    	android:orientation="horizontal" >
-
-	        <TextView  style="@style/FilterItemLabel"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	        	android:text="@string/filter_state" />
-
-	        <EditText style="@style/FilterItemField"
-		        android:id="@+id/scheduleddive_list_filter_state"
-		        android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:inputType="text"
-	            android:hint="@string/filter_list_all" />
-
-	        <TextView  style="@style/FilterItemLabel"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	        	android:text="@string/filter_city" />
-
-	        <EditText style="@style/FilterItemField"
-		        android:id="@+id/scheduleddive_list_filter_city"
-		        android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:inputType="text"
-	            android:hint="@string/filter_list_all" />
-		</LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView  style="@style/FilterItemLabel"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	        	android:text="@string/filter_daysPrevious" />
-
-	        <EditText style="@style/FilterItemField"
-		        android:id="@+id/scheduleddive_list_filter_daysPrevious"
-		        android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:inputType="number"
-	            android:hint="@string/filter_list_all" />
-
-	        <TextView  style="@style/FilterItemLabel"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	        	android:text="@string/filter_daysNext" />
-
-	        <EditText style="@style/FilterItemField"
-		        android:id="@+id/scheduleddive_list_filter_daysNext"
-		        android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:inputType="number"
-	            android:hint="@string/filter_list_all" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-	    	android:layout_height="wrap_content"
-	    	android:orientation="horizontal" >
-
-            <CheckBox style="@style/FilterItemField"
-            	android:id="@+id/scheduleddive_list_filter_published"
-            	android:checked="true"
-            	android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/filter_published" />
-
-            <CheckBox style="@style/FilterItemField"
-            	android:id="@+id/scheduleddive_list_filter_unpublished"
-            	android:checked="true"
-            	android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/filter_unpublished" />
-
-        </LinearLayout>
-
-        <LinearLayout style="?android:attr/buttonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-	        <Button style="?android:attr/buttonBarButtonStyle"
-		       	android:id="@+id/scheduleddive_list_clear_filter"
-		       	android:layout_width="0dp"
-		       	android:layout_height="wrap_content"
-		       	android:layout_weight="1"
-		       	android:textSize="16sp"
-                android:textColor="@color/Black"
-		       	android:text="@string/filter_list_clear_filter" />
-
-	        <Button style="?android:attr/buttonBarButtonStyle"
-		       	android:id="@+id/scheduleddive_list_close_filter"
-		       	android:layout_width="0dp"
-		       	android:layout_height="wrap_content"
-		       	android:layout_weight="1"
-		       	android:textSize="16sp"
-                android:textColor="@color/Black"
-		       	android:text="@string/filter_list_close" />
-	   </LinearLayout>
-	</LinearLayout>
-
-    <ImageView
-        android:id="@+id/scheduleddive_list_item_mapView_snapShot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:visibility="invisible"/>
-
-    <com.fahadaltimimi.view.FAMapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/scheduleddive_list_item_mapView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:focusableInTouchMode="true"
-        android:clickable="true"
-        android:focusable="true"
-        map:uiCompass="true"
-        map:uiZoomControls="true" >
-
-    </com.fahadaltimimi.view.FAMapView>
-
-	<android.support.v4.widget.SwipeRefreshLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:id="@+id/list_swipe_refresh"
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:animateLayoutChanges="true"
+		android:background="@color/defaultBackground"
+		android:showDividers="middle"
+		android:divider="?android:dividerHorizontal" >
 
-        <ListView style="@style/FragmentListView" >
-        </ListView>
+		<LinearLayout
+			android:id="@+id/list_filter_notification_container"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="5dp"
+			android:paddingRight="5dp"
+			android:orientation="horizontal"
+			android:background="@color/filterNotificationBackground"
+			android:visibility="gone" >
 
-	</android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/filterNotificationTextColor"
+				android:textStyle="bold"
+				android:text="@string/active_filter" />
+
+			<TextView
+				android:id="@+id/list_filter_notification"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp"
+				android:layout_weight="1"
+				android:textColor="@color/filterNotificationTextColor" />
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/scheduleddive_list_filter"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:orientation="vertical"
+			android:visibility="gone" >
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal" >
+
+				<TextView style="@style/FilterItemLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/filter_title" />
+
+				<EditText style="@style/FilterItemField"
+					android:id="@+id/scheduleddive_list_filter_title"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:inputType="text"
+					android:hint="@string/filter_list_all" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingBottom="10dp"
+				android:orientation="horizontal" >
+
+				<TextView style="@style/FilterItemLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/filter_country" />
+
+				<Spinner
+					android:id="@+id/scheduleddive_list_filter_country"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal" >
+
+				<TextView  style="@style/FilterItemLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="0"
+					android:text="@string/filter_state" />
+
+				<EditText style="@style/FilterItemField"
+					android:id="@+id/scheduleddive_list_filter_state"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:inputType="text"
+					android:hint="@string/filter_list_all" />
+
+				<TextView  style="@style/FilterItemLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="0"
+					android:text="@string/filter_city" />
+
+				<EditText style="@style/FilterItemField"
+					android:id="@+id/scheduleddive_list_filter_city"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:inputType="text"
+					android:hint="@string/filter_list_all" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal" >
+
+				<TextView  style="@style/FilterItemLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="0"
+					android:text="@string/filter_daysPrevious" />
+
+				<EditText style="@style/FilterItemField"
+					android:id="@+id/scheduleddive_list_filter_daysPrevious"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:inputType="number"
+					android:hint="@string/filter_list_all" />
+
+				<TextView  style="@style/FilterItemLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="0"
+					android:text="@string/filter_daysNext" />
+
+				<EditText style="@style/FilterItemField"
+					android:id="@+id/scheduleddive_list_filter_daysNext"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:inputType="number"
+					android:hint="@string/filter_list_all" />
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal" >
+
+				<CheckBox style="@style/FilterItemField"
+					android:id="@+id/scheduleddive_list_filter_published"
+					android:checked="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="@string/filter_published" />
+
+				<CheckBox style="@style/FilterItemField"
+					android:id="@+id/scheduleddive_list_filter_unpublished"
+					android:checked="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="@string/filter_unpublished" />
+
+			</LinearLayout>
+
+			<LinearLayout style="?android:attr/buttonBarStyle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal" >
+
+				<Button style="?android:attr/buttonBarButtonStyle"
+					android:id="@+id/scheduleddive_list_clear_filter"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:textSize="16sp"
+					android:textColor="@color/Black"
+					android:text="@string/filter_list_clear_filter" />
+
+				<Button style="?android:attr/buttonBarButtonStyle"
+					android:id="@+id/scheduleddive_list_close_filter"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:textSize="16sp"
+					android:textColor="@color/Black"
+					android:text="@string/filter_list_close" />
+		   </LinearLayout>
+		</LinearLayout>
+
+		<ImageView
+			android:id="@+id/scheduleddive_list_item_mapView_snapShot"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingBottom="10dp"
+			android:visibility="invisible"/>
+
+		<com.fahadaltimimi.view.FAMapView
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:map="http://schemas.android.com/apk/res-auto"
+			android:id="@+id/scheduleddive_list_item_mapView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingBottom="10dp"
+			android:focusableInTouchMode="true"
+			android:clickable="true"
+			android:focusable="true"
+			map:uiCompass="true"
+			map:uiZoomControls="true" >
+
+		</com.fahadaltimimi.view.FAMapView>
+
+		<android.support.v4.widget.SwipeRefreshLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/list_swipe_refresh"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<ListView style="@style/FragmentListView" >
+			</ListView>
+
+		</android.support.v4.widget.SwipeRefreshLayout>
+	</LinearLayout>
+
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/fab_action_add"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="end|bottom"
+		android:layout_margin="16dp"
+		android:elevation="4dp"
+		android:tint="@android:color/white"
+		app:backgroundTint="@color/diveSiteBlue"
+		app:srcCompat="@android:drawable/ic_input_add"/>
+
+</FrameLayout>
