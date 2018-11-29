@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.LruCache;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 
 import com.fahadaltimimi.controller.LocationController;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
@@ -435,8 +437,29 @@ public class ScheduledDiveListFragment extends LocationListFragment {
 
 		updateFilterNotification();
 
+		FloatingActionButton fab = view.findViewById(R.id.fab_action_add);
+		fab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				addNewScheduledDive();
+			}
+		});
+
+		if (mRestrictToDiverID != -1 && mRestrictToDiverID != mDiveSiteManager.getLoggedInDiverId()) {
+			fab.hide();
+		}
+
 		return view;
 	}
+
+	protected void addNewScheduledDive() {
+        // If user not registered, don't allow
+        if (mDiveSiteManager.getLoggedInDiverId() == -1) {
+            Toast.makeText(getActivity(), R.string.not_registered_create_log, Toast.LENGTH_LONG).show();
+        }
+
+        openScheduledDive(null);
+    }
 
     @Override
     protected int getLayoutView() {

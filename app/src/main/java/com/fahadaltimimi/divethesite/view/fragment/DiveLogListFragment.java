@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.controller.DiveSiteOnlineDatabaseLink;
@@ -135,8 +137,29 @@ public class DiveLogListFragment extends BaseListFragment {
 
 		updateFilterNotification();
 
+        FloatingActionButton fab = v.findViewById(R.id.fab_action_add);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addNewDiveLog();
+            }
+        });
+
+        if (mRestrictToDiverID != -1 && mRestrictToDiverID != mDiveSiteManager.getLoggedInDiverId()) {
+            fab.hide();
+        }
+
 		return v;
 	}
+
+	protected void addNewDiveLog() {
+        // If user not registered, don't allow
+        if (mDiveSiteManager.getLoggedInDiverId() == -1) {
+            Toast.makeText(getActivity(), R.string.not_registered_create_log, Toast.LENGTH_LONG).show();
+        }
+
+        openDiveLog(null);
+    }
 
     @Override
     protected int getLayoutView() {

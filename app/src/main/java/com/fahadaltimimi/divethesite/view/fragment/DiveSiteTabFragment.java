@@ -88,7 +88,7 @@ public class DiveSiteTabFragment extends Fragment {
 				getActivity().getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) view.findViewById(R.id.divesite_pages_pager);
+		mViewPager = view.findViewById(R.id.divesite_pages_pager);
 		mViewPager.setAdapter(mDiveSitePagesPagerAdapter);
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -124,7 +124,7 @@ public class DiveSiteTabFragment extends Fragment {
 			}
 		});
 
-		mDiveSiteTitleStrip = (PagerTitleStrip) view
+		mDiveSiteTitleStrip = view
 				.findViewById(R.id.divesite_pages_pager_title_strip);
 
 		return view;

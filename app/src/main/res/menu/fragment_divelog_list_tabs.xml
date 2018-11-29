@@ -3,8 +3,4 @@
       xmlns:DiveTheSite="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/dive_action_menu" >
-    <item android:id="@+id/menu_item_add_divelog"
-        DiveTheSite:showAsAction="always"
-        android:icon="@drawable/ic_menu_add"
-        android:title="@string/new_entry" />
 </menu>
