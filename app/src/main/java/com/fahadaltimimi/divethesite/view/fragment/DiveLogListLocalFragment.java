@@ -445,16 +445,6 @@ public class DiveLogListLocalFragment extends DiveLogListFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
-		case R.id.menu_item_add_divelog:
-			// If user not registered, don't allow
-			if (mDiveSiteManager.getLoggedInDiverId() == -1) {
-				Toast.makeText(getActivity(), R.string.not_registered_create_log, Toast.LENGTH_LONG).show();
-				return true;
-			}
-						
-			openDiveLog(null);
-			return true;
-
 		case R.id.menu_item_publishMode:
 			mPublishMode = !mPublishMode;
 

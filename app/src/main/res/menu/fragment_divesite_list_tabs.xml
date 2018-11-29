@@ -8,11 +8,6 @@
         DiveTheSite:showAsAction="always"
         android:title="@string/select" />
 
-    <item android:id="@+id/menu_item_add_divesite"
-        DiveTheSite:showAsAction="always"
-        android:icon="@drawable/ic_menu_add"
-        android:title="@string/divesite_add_divesite" />
-     
     <item android:id="@+id/menu_item_filter_divesite_list"
         DiveTheSite:showAsAction="always"
         android:icon="@drawable/ic_menu_sort_by_size"
