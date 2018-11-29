@@ -178,6 +178,6 @@
         android:elevation="4dp"
         android:tint="@android:color/white"
         app:backgroundTint="@color/diveSiteBlue"
-        app:srcCompat="@android:drawable/ic_input_add"/>
+        app:srcCompat="@drawable/add_log"/>
 
 </FrameLayout>
