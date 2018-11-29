@@ -457,8 +457,9 @@ public class ScheduledDiveListFragment extends LocationListFragment {
         if (mDiveSiteManager.getLoggedInDiverId() == -1) {
             Toast.makeText(getActivity(), R.string.not_registered_create_log, Toast.LENGTH_LONG).show();
         }
-
-        openScheduledDive(null);
+        else {
+            openScheduledDive(null);
+        }
     }
 
     @Override

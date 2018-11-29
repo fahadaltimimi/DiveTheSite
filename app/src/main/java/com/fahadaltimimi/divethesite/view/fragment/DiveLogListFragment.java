@@ -157,8 +157,9 @@ public class DiveLogListFragment extends BaseListFragment {
         if (mDiveSiteManager.getLoggedInDiverId() == -1) {
             Toast.makeText(getActivity(), R.string.not_registered_create_log, Toast.LENGTH_LONG).show();
         }
-
-        openDiveLog(null);
+        else {
+            openDiveLog(null);
+        }
     }
 
     @Override
