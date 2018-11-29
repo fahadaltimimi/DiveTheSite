@@ -1,7 +1,9 @@
 package com.fahadaltimimi.divethesite.model;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;
 import com.fahadaltimimi.divethesite.view.activity.DiveActivity;
 import com.fahadaltimimi.divethesite.view.fragment.DiveLogFragment;
@@ -17,5 +19,11 @@ public class DiveLogActivity extends DiveActivity {
         DiveSite diveSite = getIntent().getParcelableExtra(DiveSiteManager.EXTRA_DIVE_SITE);
 
 		return DiveLogFragment.newInstance(diveLog, diveSite);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setTitle(R.string.diveLogListTitle);
 	}
 }
