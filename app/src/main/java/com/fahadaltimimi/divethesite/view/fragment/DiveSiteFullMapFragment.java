@@ -461,6 +461,20 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                     R.string.timeSValue);
 		}
 
+		if (mNDBCMeteorologicalDataGrid.getChildCount() == 1) {
+		    mNDBCMeteorologicalDataGrid.setColumnCount(1);
+        }
+        else {
+            mNDBCMeteorologicalDataGrid.setColumnCount(2);
+        }
+
+        if (mNDBCWaveDataGrid.getChildCount() == 1) {
+            mNDBCWaveDataGrid.setColumnCount(1);
+        }
+        else {
+            mNDBCWaveDataGrid.setColumnCount(2);
+        }
+
         if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData) {
             mRefreshLayout.setRefreshing(false);
         }
