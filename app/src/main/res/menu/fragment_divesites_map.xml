@@ -33,10 +33,5 @@
     	android:icon="@drawable/ic_menu_search"
     	android:title="@string/divesite_search_divesite_list"
         DiveTheSite:actionViewClass="android.widget.SearchView" />
-    
-    <item android:id="@+id/menu_item_refresh_divesites"
-        DiveTheSite:showAsAction="never"
-    	android:icon="@drawable/ic_menu_refresh"
-    	android:title="@string/refresh" />
    
 </menu>

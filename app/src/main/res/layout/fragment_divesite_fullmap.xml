@@ -6,17 +6,25 @@
 	android:orientation="vertical"
     android:background="@android:color/transparent"
     android:paddingTop="?attr/actionBarSize" >
-    
-    <com.fahadaltimimi.view.FAMapView
+
+    <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/diveSite_fullMap_MapView"
-        android:layout_width="fill_parent" 
-        android:layout_height="fill_parent"
-        android:clickable="true"
-        map:uiCompass="true"
-	    map:uiZoomControls="true"
-	    android:background="#00000000" />
+        android:id="@+id/map_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.fahadaltimimi.view.FAMapView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/diveSite_fullMap_MapView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            map:uiCompass="true"
+            map:uiZoomControls="true"
+            android:background="#00000000" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 	<LinearLayout
 		android:id="@+id/diveSite_fullMap_data_view_container"

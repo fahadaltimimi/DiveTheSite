@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayout;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -80,11 +81,10 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 
 	protected DiveSiteManager mDiveSiteManager;
 
-    private MenuItem mRefreshMenuItem = null;
-
 	private SharedPreferences mPrefs;
     private boolean mArchives = false;
 
+    private SwipeRefreshLayout mRefreshLayout;
 	private FAMapView mMapView;
 	private GoogleMap mGoogleMap;
 
@@ -141,6 +141,9 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 		View v = super.onCreateView(inflater, parent, savedInstanceState);
 
 		Objects.requireNonNull(getActivity()).setTitle(R.string.mapTitle);
+
+		mRefreshLayout = v.findViewById(R.id.map_refresh);
+        mRefreshLayout.setEnabled(false);
 
 		mMapView = Objects.requireNonNull(v).findViewById(R.id.diveSite_fullMap_MapView);
 		mMapView.onCreate(savedInstanceState);
@@ -242,6 +245,9 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	}
 
 	public void loadDataForStation(NDBCStation station) {
+        mRefreshingOnlineNDBCData = true;
+        mRefreshLayout.setRefreshing(true);
+
 	    // Show loading incase user clicks between stations, don't show past station's data
         clearStationData();
 
@@ -250,11 +256,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 		if (station != null) {
 			if (station.getLastUserUpdate().before(
 					station.getLastOnlineUpdate())) {
-				mRefreshMenuItem
-						.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-				mRefreshMenuItem
-						.setActionView(R.layout.actionbar_indeterminate_progress);
 
+                mRefreshLayout.setRefreshing(true);
 				DiveSiteOnlineDatabaseLink diveSiteOnlineDatabase = new DiveSiteOnlineDatabaseLink(
 						getActivity());
 				diveSiteOnlineDatabase
@@ -294,9 +297,11 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 											message, Toast.LENGTH_LONG).show();
 								}
 
-                                if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData && mRefreshMenuItem != null) {
-                                    mRefreshMenuItem.setActionView(null);
+                                if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData) {
+                                    mRefreshLayout.setRefreshing(false);
                                 }
+
+                                mRefreshingOnlineNDBCData = false;
 							}
 
 							@Override
@@ -508,8 +513,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
             mNDBCWaveDataGrid.setColumnCount(1);
         }
 
-        if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData && mRefreshMenuItem != null) {
-            mRefreshMenuItem.setActionView(null);
+        if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData) {
+            mRefreshLayout.setRefreshing(false);
         }
 	}
 
@@ -566,10 +571,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
         title = getResources().getString(R.string.waveDataTitle).concat(" - "
                 + getResources().getString(R.string.loading));
         mNDBCWaveDataTitle.setText(title);
-
-        if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData && mRefreshMenuItem != null) {
-            mRefreshMenuItem.setActionView(null);
-        }
     }
 
 	private void hideCurrentlyDisplayedData() {
@@ -635,8 +636,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_divesites_map, menu);
-
-		mRefreshMenuItem = menu.findItem(R.id.menu_item_refresh_divesites);
 
 		// Associate searchable configuration with the SearchView
 		SearchManager searchManager = (SearchManager) Objects.requireNonNull(getActivity()).getSystemService(Context.SEARCH_SERVICE);
@@ -724,11 +723,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
-		if (mRefreshingOnlineDiveSites || mRefreshingOnlineNDBCData) {
-			mRefreshMenuItem
-					.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
-
 		MenuItem showNDCPBuoysMenuItem = menu
 				.findItem(R.id.menu_item_showNDBCBuoys);
 		MenuItem hideNDCPBuoysMenuItem = menu
@@ -772,10 +766,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-
-		case R.id.menu_item_refresh_divesites:
-			refreshOnlineDiveSites();
-			return true;
 
 		case R.id.menu_item_showNDBCBuoys:
 			mNDCPBuoysDisplayed = true;
@@ -828,9 +818,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
             }
 		}
 
-        if (mRefreshMenuItem != null) {
-            mRefreshMenuItem.setActionView(R.layout.actionbar_indeterminate_progress);
-        }
+        mRefreshLayout.setRefreshing(true);
 
 		mDiveSiteOnlineDatabase = new DiveSiteOnlineDatabaseLink(getActivity());
 		mDiveSiteOnlineDatabase
@@ -848,10 +836,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 						}
 
 						mRefreshingOnlineDiveSites = false;
-
-						if (!mRefreshingOnlineNDBCData && mRefreshMenuItem != null) {
-							mRefreshMenuItem.setActionView(null);
-						}
+                        mRefreshLayout.setRefreshing(false);
 					}
 
 					@Override
@@ -902,12 +887,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 
 	private void refreshVisibleNDBCStations() {
 		if (mNDCPBuoysDisplayed) {
-			if (mRefreshMenuItem != null) {
-				mRefreshMenuItem
-						.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-				mRefreshMenuItem
-						.setActionView(R.layout.actionbar_indeterminate_progress);
-			}
+
+            mRefreshLayout.setRefreshing(true);
 
 			if (mRefreshingOnlineNDBCData) {
 				mNDBCDataOnlineDatabase.stopBackground();
@@ -946,10 +927,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 							}
 
 							mRefreshingOnlineNDBCData = false;
-
-							if (!mRefreshingOnlineDiveSites && mRefreshMenuItem != null) {
-								mRefreshMenuItem.setActionView(null);
-							}
+                            mRefreshLayout.setRefreshing(false);
 						}
 
 						@Override
@@ -1289,8 +1267,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 			cursor.moveToNext();
 		}
 
-		if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData && mRefreshMenuItem != null) {
-			mRefreshMenuItem.setActionView(null);
+		if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData) {
+            mRefreshLayout.setRefreshing(false);
 		}
 	}
 
