@@ -32,7 +32,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -90,10 +89,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 
     private LinearLayout mDiveSiteLatestMeteorologicalData;
 	private LinearLayout mDiveSiteLatestWaveData;
-
-	private LinearLayout mDiveSiteDataToolbar;
-	private Button mMeteorologicalDataButton;
-	private Button mWaveDataButton;
 
 	private TextView mNDBCMeteorologicalDataTitle;
 	private GridLayout mNDBCMeteorologicalDataGrid;
@@ -173,39 +168,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 				.findViewById(R.id.ndbc_station_data_item_title);
 		mNDBCWaveDataGrid = mDiveSiteLatestWaveData
                 .findViewById(R.id.ndbc_station_data_table);
-
-		mDiveSiteDataToolbar = v
-				.findViewById(R.id.diveSite_fullMap_data_toolbar);
-
-		mMeteorologicalDataButton = v
-				.findViewById(R.id.diveSite_fullMap_meteorological);
-		mMeteorologicalDataButton
-				.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						if (mDiveSiteLatestMeteorologicalData.getVisibility() == View.GONE) {
-							mDiveSiteLatestMeteorologicalData
-									.setVisibility(View.VISIBLE);
-						} else {
-							mDiveSiteLatestMeteorologicalData
-									.setVisibility(View.GONE);
-						}
-					}
-				});
-
-		mWaveDataButton = v.findViewById(R.id.diveSite_fullMap_wave);
-		mWaveDataButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (mDiveSiteLatestWaveData.getVisibility() == View.GONE) {
-					mDiveSiteLatestWaveData.setVisibility(View.VISIBLE);
-				} else {
-					mDiveSiteLatestWaveData.setVisibility(View.GONE);
-				}
-			}
-		});
 
 		initializeMap();
 
@@ -291,7 +253,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                                         }
                                     }
 
-									showDataForStation(updatedNDBCStation);
+									initialDisplayDataForStation(updatedNDBCStation);
 								} else {
 									Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
 											message, Toast.LENGTH_LONG).show();
@@ -302,6 +264,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                                 }
 
                                 mRefreshingOnlineNDBCData = false;
+                                showAvailableNDBCData();
 							}
 
 							@Override
@@ -320,16 +283,13 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 
 				diveSiteOnlineDatabase.updateNDBCDataForStation(station, "1");
 			} else {
-				showDataForStation(station);
+				initialDisplayDataForStation(station);
 			}
 		}
 	}
     
-	private void showDataForStation(NDBCStation station) {
+	private void initialDisplayDataForStation(NDBCStation station) {
         clearStationData();
-
-		// Show toolbar
-		mDiveSiteDataToolbar.setVisibility(View.VISIBLE);
 
 		// Show valid buttons and latest data for station
 		if (station.getMeteorologicalDataCount() > 0) {
@@ -373,7 +333,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                     data.getTide(),
                     R.string.distanceFTValue);
 
-			mMeteorologicalDataButton.setVisibility(View.VISIBLE);
 		} else if (station.getDriftingBuoyDataCount() > 0) {
 			NDBCDriftingBuoyData data = station.getLatestDriftingBuoyData();
 
@@ -469,7 +428,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                 addStationDataEntry(mNDBCWaveDataGrid, R.string.ndbc_station_data_wind_wave, windWaveValues.trim());
             }
 
-			mWaveDataButton.setVisibility(View.VISIBLE);
 		} else if (station.getMeteorologicalDataCount() > 0) {
 			// Spectral Wave data not available, display wave data from
 			// meteotrological data
@@ -501,17 +459,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                     R.string.ndbc_station_data_average_wave_period,
                     data.getAverageWavePeriod(),
                     R.string.timeSValue);
-
-			mWaveDataButton.setVisibility(View.VISIBLE);
 		}
-
-		if (mNDBCMeteorologicalDataGrid.getChildCount() == 1) {
-		    mNDBCMeteorologicalDataGrid.setColumnCount(1);
-        }
-
-        if (mNDBCWaveDataGrid.getChildCount() == 1) {
-            mNDBCWaveDataGrid.setColumnCount(1);
-        }
 
         if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData) {
             mRefreshLayout.setRefreshing(false);
@@ -554,11 +502,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
     }
 
     private void clearStationData() {
-        // Hide buttons
-        mMeteorologicalDataButton.setVisibility(View.GONE);
-        mWaveDataButton.setVisibility(View.GONE);
-        mDiveSiteDataToolbar.setVisibility(View.GONE);
-
         // Clear grids
         mNDBCMeteorologicalDataGrid.removeAllViewsInLayout();
         mNDBCWaveDataGrid.removeAllViewsInLayout();
@@ -573,10 +516,25 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
         mNDBCWaveDataTitle.setText(title);
     }
 
+    private void showAvailableNDBCData() {
+        if (mNDBCMeteorologicalDataGrid.getChildCount() > 0) {
+            mDiveSiteLatestMeteorologicalData.setVisibility(View.VISIBLE);
+        }
+        else {
+            mDiveSiteLatestMeteorologicalData.setVisibility(View.GONE);
+        }
+
+        if (mNDBCWaveDataGrid.getChildCount() > 0) {
+            mDiveSiteLatestWaveData.setVisibility(View.VISIBLE);
+        }
+        else {
+            mDiveSiteLatestWaveData.setVisibility(View.GONE);
+        }
+    }
+
 	private void hideCurrentlyDisplayedData() {
 		mDiveSiteLatestMeteorologicalData.setVisibility(View.GONE);
 		mDiveSiteLatestWaveData.setVisibility(View.GONE);
-		mDiveSiteDataToolbar.setVisibility(View.GONE);
 	}
 
 	private void toggleOnlineDiveSiteVisibility(boolean visible) {
