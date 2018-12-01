@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.GridLayout;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -74,8 +75,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	public static final String TAG = "DiveSiteFullMapFragment";
 	
 	private static final int REQUEST_NEW_DIVESITE = 0;
-
 	private static final int MINIMUM_ZOOM_LEVEL_FOR_DATA = 6;
+	private static final float GRID_COLUMN_WEIGHT = 1f;
 
 	protected DiveSiteManager mDiveSiteManager;
 
@@ -95,35 +96,10 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	private Button mWaveDataButton;
 
 	private TextView mNDBCMeteorologicalDataTitle;
-	private TextView mNDBCMeteorologicalDataLabel00,
-			mNDBCMeteorologicalDataValue00;
-	private TextView mNDBCMeteorologicalDataLabel01,
-			mNDBCMeteorologicalDataValue01;
-	private TextView mNDBCMeteorologicalDataLabel02,
-			mNDBCMeteorologicalDataValue02;
-	private TextView mNDBCMeteorologicalDataLabel10,
-			mNDBCMeteorologicalDataValue10;
-	private TextView mNDBCMeteorologicalDataLabel11,
-			mNDBCMeteorologicalDataValue11;
-	private TextView mNDBCMeteorologicalDataLabel12,
-			mNDBCMeteorologicalDataValue12;
-	private TextView mNDBCMeteorologicalDataLabel20,
-			mNDBCMeteorologicalDataValue20;
-	private TextView mNDBCMeteorologicalDataLabel21,
-			mNDBCMeteorologicalDataValue21;
-	private TextView mNDBCMeteorologicalDataLabel22,
-			mNDBCMeteorologicalDataValue22;
+	private GridLayout mNDBCMeteorologicalDataGrid;
 
 	private TextView mNDBCWaveDataTitle;
-	private TextView mNDBCWaveDataLabel00, mNDBCWaveDataValue00;
-	private TextView mNDBCWaveDataLabel01, mNDBCWaveDataValue01;
-	private TextView mNDBCWaveDataLabel02, mNDBCWaveDataValue02;
-	private TextView mNDBCWaveDataLabel10, mNDBCWaveDataValue10;
-	private TextView mNDBCWaveDataLabel11, mNDBCWaveDataValue11;
-	private TextView mNDBCWaveDataLabel12, mNDBCWaveDataValue12;
-	private TextView mNDBCWaveDataLabel20, mNDBCWaveDataValue20;
-	private TextView mNDBCWaveDataLabel21, mNDBCWaveDataValue21;
-	private TextView mNDBCWaveDataLabel22, mNDBCWaveDataValue22;
+	private GridLayout mNDBCWaveDataGrid;
 
 	private HashMap<DiveSite, Marker> mVisibleDiveSiteMarkers;
 	private Marker mAddDiveSiteMarker;
@@ -181,42 +157,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 
 		mNDBCMeteorologicalDataTitle = mDiveSiteLatestMeteorologicalData
 				.findViewById(R.id.ndbc_station_data_item_title);
-		mNDBCMeteorologicalDataLabel00 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_00);
-		mNDBCMeteorologicalDataValue00 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_00);
-		mNDBCMeteorologicalDataLabel01 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_01);
-		mNDBCMeteorologicalDataValue01 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_01);
-		mNDBCMeteorologicalDataLabel02 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_02);
-		mNDBCMeteorologicalDataValue02 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_02);
-		mNDBCMeteorologicalDataLabel10 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_10);
-		mNDBCMeteorologicalDataValue10 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_10);
-		mNDBCMeteorologicalDataLabel11 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_11);
-		mNDBCMeteorologicalDataValue11 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_11);
-		mNDBCMeteorologicalDataLabel12 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_12);
-		mNDBCMeteorologicalDataValue12 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_12);
-		mNDBCMeteorologicalDataLabel20 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_20);
-		mNDBCMeteorologicalDataValue20 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_20);
-		mNDBCMeteorologicalDataLabel21 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_21);
-		mNDBCMeteorologicalDataValue21 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_21);
-		mNDBCMeteorologicalDataLabel22 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_label_22);
-		mNDBCMeteorologicalDataValue22 = mDiveSiteLatestMeteorologicalData
-				.findViewById(R.id.ndbc_data_item_value_22);
+        mNDBCMeteorologicalDataGrid = mDiveSiteLatestMeteorologicalData
+                .findViewById(R.id.ndbc_station_data_table);
 
 		mDiveSiteLatestWaveData = (LinearLayout) inflater.inflate(
 				R.layout.ndbc_station_data_item, diveSiteDataViewContainer,
@@ -226,42 +168,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 
 		mNDBCWaveDataTitle = mDiveSiteLatestWaveData
 				.findViewById(R.id.ndbc_station_data_item_title);
-		mNDBCWaveDataLabel00 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_00);
-		mNDBCWaveDataValue00 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_00);
-		mNDBCWaveDataLabel01 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_01);
-		mNDBCWaveDataValue01 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_01);
-		mNDBCWaveDataLabel02 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_02);
-		mNDBCWaveDataValue02 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_02);
-		mNDBCWaveDataLabel10 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_10);
-		mNDBCWaveDataValue10 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_10);
-		mNDBCWaveDataLabel11 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_11);
-		mNDBCWaveDataValue11 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_11);
-		mNDBCWaveDataLabel12 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_12);
-		mNDBCWaveDataValue12 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_12);
-		mNDBCWaveDataLabel20 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_20);
-		mNDBCWaveDataValue20 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_20);
-		mNDBCWaveDataLabel21 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_21);
-		mNDBCWaveDataValue21 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_21);
-		mNDBCWaveDataLabel22 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_label_22);
-		mNDBCWaveDataValue22 = mDiveSiteLatestWaveData
-				.findViewById(R.id.ndbc_data_item_value_22);
+		mNDBCWaveDataGrid = mDiveSiteLatestWaveData
+                .findViewById(R.id.ndbc_station_data_table);
 
 		mDiveSiteDataToolbar = v
 				.findViewById(R.id.diveSite_fullMap_data_toolbar);
@@ -334,6 +242,9 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	}
 
 	public void loadDataForStation(NDBCStation station) {
+	    // Show loading incase user clicks between stations, don't show past station's data
+        clearStationData();
+
 		// Load new data if user update time is less than station's online
 		// update time
 		if (station != null) {
@@ -410,9 +321,7 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 	}
     
 	private void showDataForStation(NDBCStation station) {
-		// Hide buttons first
-		mMeteorologicalDataButton.setVisibility(View.GONE);
-		mWaveDataButton.setVisibility(View.GONE);
+        clearStationData();
 
 		// Show toolbar
 		mDiveSiteDataToolbar.setVisibility(View.VISIBLE);
@@ -420,7 +329,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 		// Show valid buttons and latest data for station
 		if (station.getMeteorologicalDataCount() > 0) {
 			NDBCMeteorologicalData data = station.getLatestMeteorologicalData();
-			String naString = getResources().getString(R.string.na_string);
 
 			String title = String.format(
 					getResources().getString(R.string.stationTitle),
@@ -430,103 +338,39 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 							.getString(R.string.meteorologicalDataTitle));
 			mNDBCMeteorologicalDataTitle.setText(title);
 
-			mNDBCMeteorologicalDataLabel00.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel00.setText(getResources().getString(
-					R.string.ndbc_station_data_air_temp));
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_air_temp,
+                    data.getAirTemperature(),
+                    R.string.temperatureDegCValue);
 
-			mNDBCMeteorologicalDataValue00.setVisibility(View.VISIBLE);
-			if (data.getAirTemperature() == null) {
-				mNDBCMeteorologicalDataValue00.setText(naString);
-			} else {
-				String value = String
-						.format(getResources().getString(
-								R.string.temperatureDegCValue),
-								data.getAirTemperature());
-				mNDBCMeteorologicalDataValue00.setText(value);
-			}
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_water_temp,
+                    data.getWaterTemperature(),
+                    R.string.temperatureDegCValue);
 
-			mNDBCMeteorologicalDataLabel01.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel01.setText(getResources().getString(
-					R.string.ndbc_station_data_water_temp));
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_wind_direction,
+                    data.getWindDirection(),
+                    R.string.directionDegTValue);
 
-			mNDBCMeteorologicalDataValue01.setVisibility(View.VISIBLE);
-			if (data.getWaterTemperature() == null) {
-				mNDBCMeteorologicalDataValue01.setText(naString);
-			} else {
-				String value = String
-						.format(getResources().getString(
-								R.string.temperatureDegCValue),
-								data.getWaterTemperature());
-				mNDBCMeteorologicalDataValue01.setText(value);
-			}
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_wind_speed,
+                    data.getWindSpeed(),
+                    R.string.speedMSValue);
 
-			mNDBCMeteorologicalDataLabel10.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel10.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_direction));
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_wind_gust,
+                    data.getWindGust(),
+                    R.string.speedMSValue);
 
-			mNDBCMeteorologicalDataValue10.setVisibility(View.VISIBLE);
-			if (data.getWindDirection() == null) {
-				mNDBCMeteorologicalDataValue10.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.directionDegTValue),
-						data.getWindDirection());
-				mNDBCMeteorologicalDataValue10.setText(value);
-			}
-
-			mNDBCMeteorologicalDataLabel11.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel11.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_speed));
-
-			mNDBCMeteorologicalDataValue11.setVisibility(View.VISIBLE);
-			if (data.getWindSpeed() == null) {
-				mNDBCMeteorologicalDataValue11.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.speedMSValue),
-						data.getWindSpeed());
-				mNDBCMeteorologicalDataValue11.setText(value);
-			}
-
-			mNDBCMeteorologicalDataLabel12.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel12.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_gust));
-
-			mNDBCMeteorologicalDataValue12.setVisibility(View.VISIBLE);
-			if (data.getWindGust() == null) {
-				mNDBCMeteorologicalDataValue12.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.speedMSValue),
-						data.getWindGust());
-				mNDBCMeteorologicalDataValue12.setText(value);
-			}
-
-			mNDBCMeteorologicalDataLabel02.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel02.setText(getResources().getString(
-					R.string.ndbc_station_data_tide));
-
-			mNDBCMeteorologicalDataValue02.setVisibility(View.VISIBLE);
-			if (data.getTide() == null) {
-				mNDBCMeteorologicalDataValue02.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.distanceFTValue),
-						data.getTide());
-				mNDBCMeteorologicalDataValue02.setText(value);
-			}
-
-			mNDBCMeteorologicalDataLabel20.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataLabel21.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataLabel22.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataValue20.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataValue21.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataValue22.setVisibility(View.GONE);
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_tide,
+                    data.getTide(),
+                    R.string.distanceFTValue);
 
 			mMeteorologicalDataButton.setVisibility(View.VISIBLE);
 		} else if (station.getDriftingBuoyDataCount() > 0) {
 			NDBCDriftingBuoyData data = station.getLatestDriftingBuoyData();
-			String naString = getResources().getString(R.string.na_string);
 
 			String title = String.format(
 					getResources().getString(R.string.stationTitle),
@@ -536,93 +380,34 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 							.getString(R.string.meteorologicalDataTitle));
 			mNDBCMeteorologicalDataTitle.setText(title);
 
-			mNDBCMeteorologicalDataLabel00.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel00.setText(getResources().getString(
-					R.string.ndbc_station_data_air_temp));
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_air_temp,
+                    data.getAirTemperature(),
+                    R.string.temperatureDegCValue);
 
-			mNDBCMeteorologicalDataValue00.setVisibility(View.VISIBLE);
-			if (data.getAirTemperature() == null) {
-				mNDBCMeteorologicalDataValue00.setText(naString);
-			} else {
-				String value = String
-						.format(getResources().getString(
-								R.string.temperatureDegCValue),
-								data.getAirTemperature());
-				mNDBCMeteorologicalDataValue00.setText(value);
-			}
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_water_temp,
+                    data.getWaterTemperature(),
+                    R.string.temperatureDegCValue);
 
-			mNDBCMeteorologicalDataLabel01.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel01.setText(getResources().getString(
-					R.string.ndbc_station_data_water_temp));
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_wind_direction,
+                    data.getWindDirection(),
+                    R.string.directionDegTValue);
 
-			mNDBCMeteorologicalDataValue01.setVisibility(View.VISIBLE);
-			if (data.getWaterTemperature() == null) {
-				mNDBCMeteorologicalDataValue01.setText(naString);
-			} else {
-				String value = String
-						.format(getResources().getString(
-								R.string.temperatureDegCValue),
-								data.getWaterTemperature());
-				mNDBCMeteorologicalDataValue01.setText(value);
-			}
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_wind_speed,
+                    data.getWindSpeed(),
+                    R.string.speedMSValue);
 
-			mNDBCMeteorologicalDataLabel10.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel10.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_direction));
-
-			mNDBCMeteorologicalDataValue10.setVisibility(View.VISIBLE);
-			if (data.getWindDirection() == null) {
-				mNDBCMeteorologicalDataValue10.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.directionDegTValue),
-						data.getWindDirection());
-				mNDBCMeteorologicalDataValue10.setText(value);
-			}
-
-			mNDBCMeteorologicalDataLabel11.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel11.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_speed));
-
-			mNDBCMeteorologicalDataValue11.setVisibility(View.VISIBLE);
-			if (data.getWindSpeed() == null) {
-				mNDBCMeteorologicalDataValue11.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.speedMSValue),
-						data.getWindSpeed());
-				mNDBCMeteorologicalDataValue11.setText(value);
-			}
-
-			mNDBCMeteorologicalDataLabel12.setVisibility(View.VISIBLE);
-			mNDBCMeteorologicalDataLabel12.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_gust));
-
-			mNDBCMeteorologicalDataValue12.setVisibility(View.VISIBLE);
-			if (data.getWindGust() == null) {
-				mNDBCMeteorologicalDataValue12.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.speedMSValue),
-						data.getWindGust());
-				mNDBCMeteorologicalDataValue12.setText(value);
-			}
-
-			mNDBCMeteorologicalDataLabel02.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataLabel20.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataLabel21.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataLabel22.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataValue02.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataValue20.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataValue21.setVisibility(View.GONE);
-			mNDBCMeteorologicalDataValue22.setVisibility(View.GONE);
-
-			mMeteorologicalDataButton.setVisibility(View.VISIBLE);
+            addStationDataEntry(mNDBCMeteorologicalDataGrid,
+                    R.string.ndbc_station_data_wind_gust,
+                    data.getWindGust(),
+                    R.string.speedMSValue);
 		}
 
 		if (station.getSpectralWaveDataCount() > 0) {
 			NDBCSpectralWaveData data = station.getLatestSpectralWaveData();
-			String naString = getResources().getString(R.string.na_string);
 
 			String title = String.format(
 					getResources().getString(R.string.stationTitle),
@@ -631,132 +416,59 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 					+ getResources().getString(R.string.waveDataTitle));
 			mNDBCWaveDataTitle.setText(title);
 
-			mNDBCWaveDataLabel00.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel00.setText(getResources().getString(
-					R.string.ndbc_station_data_swell_height));
+            String swellValues = " ";
+            if (data.getSwellHeight() != null) {
+                swellValues = swellValues.concat(String.format(getResources().getString(R.string.distanceMValue),
+                        data.getSwellHeight())).concat(" ");
+            }
+            if (data.getSwellPeriod() != null) {
+                swellValues = swellValues.concat(String.format(getResources().getString(R.string.timeSValue),
+                        data.getSwellPeriod())).concat(" ");
+            }
+            if (data.getSwellDirection() != null) {
+                swellValues = swellValues.concat(data.getSwellDirection()).concat(" ");
+            }
+            if (!swellValues.trim().isEmpty()) {
+                addStationDataEntry(mNDBCWaveDataGrid, R.string.ndbc_station_data_swell, swellValues.trim());
+            }
 
-			mNDBCWaveDataValue00.setVisibility(View.VISIBLE);
-			if (data.getSwellHeight() == null) {
-				mNDBCWaveDataValue00.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.distanceMValue),
-						data.getSwellHeight());
-				mNDBCWaveDataValue00.setText(value);
-			}
+            String waveValues = " ";
+            if (data.getWaveHeight() != null) {
+                waveValues = waveValues.concat(String.format(getResources().getString(R.string.distanceMValue),
+                        data.getWaveHeight())).concat(" ");
+            }
+            if (data.getAverageWavePeriod() != null) {
+                waveValues = waveValues.concat(String.format(getResources().getString(R.string.timeSValue),
+                        data.getAverageWavePeriod())).concat(" ");
+            }
+            if (data.getWaveSteepness() != null) {
+                waveValues = waveValues.concat(data.getWaveSteepness()).concat(" ");
+            }
+            if (!waveValues.trim().isEmpty()) {
+                addStationDataEntry(mNDBCWaveDataGrid, R.string.ndbc_station_data_wave, waveValues.trim());
+            }
 
-			mNDBCWaveDataLabel01.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel01.setText(getResources().getString(
-					R.string.ndbc_station_data_swell_period));
-
-			mNDBCWaveDataValue01.setVisibility(View.VISIBLE);
-			if (data.getSwellPeriod() == null) {
-				mNDBCWaveDataValue01.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.timeSValue),
-						data.getSwellPeriod());
-				mNDBCWaveDataValue01.setText(value);
-			}
-
-			mNDBCWaveDataLabel02.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel02.setText(getResources().getString(
-					R.string.ndbc_station_data_swell_direction));
-
-			mNDBCWaveDataValue02.setVisibility(View.VISIBLE);
-			if (data.getSwellDirection() == null) {
-				mNDBCWaveDataValue02.setText(naString);
-			} else {
-				String value = data.getSwellDirection();
-				mNDBCWaveDataValue02.setText(value);
-			}
-
-			mNDBCWaveDataLabel10.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel10.setText(getResources().getString(
-					R.string.ndbc_station_data_wave_height));
-
-			mNDBCWaveDataValue10.setVisibility(View.VISIBLE);
-			if (data.getWaveHeight() == null) {
-				mNDBCWaveDataValue10.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.distanceMValue),
-						data.getWaveHeight());
-				mNDBCWaveDataValue10.setText(value);
-			}
-
-			mNDBCWaveDataLabel11.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel11.setText(getResources().getString(
-					R.string.ndbc_station_data_average_wave_period));
-
-			mNDBCWaveDataValue11.setVisibility(View.VISIBLE);
-			if (data.getAverageWavePeriod() == null) {
-				mNDBCWaveDataValue11.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.timeSValue),
-						data.getAverageWavePeriod());
-				mNDBCWaveDataValue11.setText(value);
-			}
-
-			mNDBCWaveDataLabel12.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel12.setText(getResources().getString(
-					R.string.ndbc_station_data_wave_steepness));
-
-			mNDBCWaveDataValue12.setVisibility(View.VISIBLE);
-			if (data.getWaveSteepness() == null) {
-				mNDBCWaveDataValue12.setText(naString);
-			} else {
-				String value = data.getWaveSteepness();
-				mNDBCWaveDataValue12.setText(value);
-			}
-
-			mNDBCWaveDataLabel20.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel20.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_wave_height));
-
-			mNDBCWaveDataValue20.setVisibility(View.VISIBLE);
-			if (data.getWindWaveHeight() == null) {
-				mNDBCWaveDataValue20.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.distanceMValue),
-						data.getWindWaveHeight());
-				mNDBCWaveDataValue20.setText(value);
-			}
-
-			mNDBCWaveDataLabel21.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel21.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_wave_period));
-
-			mNDBCWaveDataValue21.setVisibility(View.VISIBLE);
-			if (data.getWindWavePeriod() == null) {
-				mNDBCWaveDataValue21.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.timeSValue),
-						data.getWindWavePeriod());
-				mNDBCWaveDataValue21.setText(value);
-			}
-
-			mNDBCWaveDataLabel22.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel22.setText(getResources().getString(
-					R.string.ndbc_station_data_wind_wave_direction));
-
-			mNDBCWaveDataValue22.setVisibility(View.VISIBLE);
-			if (data.getWindWaveDirection() == null) {
-				mNDBCWaveDataValue22.setText(naString);
-			} else {
-				String value = data.getWindWaveDirection();
-				mNDBCWaveDataValue22.setText(value);
-			}
+            String windWaveValues = " ";
+            if (data.getWindWaveHeight() != null) {
+                windWaveValues = windWaveValues.concat(String.format(getResources().getString(R.string.distanceMValue),
+                        data.getWindWaveHeight())).concat(" ");
+            }
+            if (data.getWindWavePeriod() != null) {
+                windWaveValues = windWaveValues.concat(String.format(getResources().getString(R.string.timeSValue),
+                        data.getWindWavePeriod())).concat(" ");
+            }
+            if (data.getWindWaveDirection() != null) {
+                windWaveValues = windWaveValues.concat(data.getWindWaveDirection()).concat(" ");
+            }
+            if (!windWaveValues.trim().isEmpty()) {
+                addStationDataEntry(mNDBCWaveDataGrid, R.string.ndbc_station_data_wind_wave, windWaveValues.trim());
+            }
 
 			mWaveDataButton.setVisibility(View.VISIBLE);
 		} else if (station.getMeteorologicalDataCount() > 0) {
 			// Spectral Wave data not available, display wave data from
 			// meteotrological data
 			NDBCMeteorologicalData data = station.getLatestMeteorologicalData();
-			String naString = getResources().getString(R.string.na_string);
 
 			String title = String.format(
 					getResources().getString(R.string.stationTitle),
@@ -765,84 +477,100 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 					+ getResources().getString(R.string.waveDataTitle));
 			mNDBCWaveDataTitle.setText(title);
 
-			mNDBCWaveDataLabel00.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel00.setText(getResources().getString(
-					R.string.ndbc_station_data_wave_height));
+            addStationDataEntry(mNDBCWaveDataGrid,
+                    R.string.ndbc_station_data_wave_height,
+                    data.getSignificantWaveHeight(),
+                    R.string.distanceMValue);
 
-			mNDBCWaveDataValue00.setVisibility(View.VISIBLE);
-			if (data.getSignificantWaveHeight() == null) {
-				mNDBCWaveDataValue00.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.distanceMValue),
-						data.getSignificantWaveHeight());
-				mNDBCWaveDataValue00.setText(value);
-			}
+            addStationDataEntry(mNDBCWaveDataGrid,
+                    R.string.ndbc_station_data_dominant_wave_period,
+                    data.getDominantWavePeriod(),
+                    R.string.timeSValue);
 
-			mNDBCWaveDataLabel01.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel01.setText(getResources().getString(
-					R.string.ndbc_station_data_dominant_wave_period));
+            addStationDataEntry(mNDBCWaveDataGrid,
+                    R.string.ndbc_station_data_dominant_wave_direction,
+                    data.getDominantWaveDirection(),
+                    R.string.distanceMValue);
 
-			mNDBCWaveDataValue01.setVisibility(View.VISIBLE);
-			if (data.getDominantWavePeriod() == null) {
-				mNDBCWaveDataValue01.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.timeSValue),
-						data.getDominantWavePeriod());
-				mNDBCWaveDataValue01.setText(value);
-			}
-
-			mNDBCWaveDataLabel10.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel10.setText(getResources().getString(
-					R.string.ndbc_station_data_dominant_wave_direction));
-
-			mNDBCWaveDataValue10.setVisibility(View.VISIBLE);
-			if (data.getDominantWaveDirection() == null) {
-				mNDBCWaveDataValue10.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.distanceMValue),
-						data.getDominantWaveDirection());
-				mNDBCWaveDataValue10.setText(value);
-			}
-
-			mNDBCWaveDataLabel11.setVisibility(View.VISIBLE);
-			mNDBCWaveDataLabel11.setText(getResources().getString(
-					R.string.ndbc_station_data_average_wave_period));
-
-			mNDBCWaveDataValue11.setVisibility(View.VISIBLE);
-			if (data.getAverageWavePeriod() == null) {
-				mNDBCWaveDataValue11.setText(naString);
-			} else {
-				String value = String.format(
-						getResources().getString(R.string.timeSValue),
-						data.getAverageWavePeriod());
-				mNDBCWaveDataValue11.setText(value);
-			}
-
-			mNDBCWaveDataLabel02.setVisibility(View.GONE);
-			mNDBCWaveDataValue02.setVisibility(View.GONE);
-
-			mNDBCWaveDataLabel12.setVisibility(View.GONE);
-			mNDBCWaveDataValue12.setVisibility(View.GONE);
-
-			mNDBCWaveDataLabel20.setVisibility(View.GONE);
-			mNDBCWaveDataValue20.setVisibility(View.GONE);
-
-			mNDBCWaveDataLabel21.setVisibility(View.GONE);
-			mNDBCWaveDataValue21.setVisibility(View.GONE);
-
-			mNDBCWaveDataLabel22.setVisibility(View.GONE);
-			mNDBCWaveDataValue22.setVisibility(View.GONE);
+            addStationDataEntry(mNDBCWaveDataGrid,
+                    R.string.ndbc_station_data_average_wave_period,
+                    data.getAverageWavePeriod(),
+                    R.string.timeSValue);
 
 			mWaveDataButton.setVisibility(View.VISIBLE);
 		}
+
+		if (mNDBCMeteorologicalDataGrid.getChildCount() == 1) {
+		    mNDBCMeteorologicalDataGrid.setColumnCount(1);
+        }
+
+        if (mNDBCWaveDataGrid.getChildCount() == 1) {
+            mNDBCWaveDataGrid.setColumnCount(1);
+        }
 
         if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData && mRefreshMenuItem != null) {
             mRefreshMenuItem.setActionView(null);
         }
 	}
+
+	private void addStationDataEntry(ViewGroup parentView, int titleID, Double value, int valueFormatID) {
+        if (value != null)
+        {
+            LinearLayout ndbcStationDataItemEntry = (LinearLayout) getLayoutInflater().
+                    inflate(R.layout.ndbc_station_data_item_entry, parentView, false);
+
+            ((GridLayout.LayoutParams) ndbcStationDataItemEntry.getLayoutParams()).columnSpec =
+                    GridLayout.spec(GridLayout.UNDEFINED, GRID_COLUMN_WEIGHT);
+
+            TextView itemTitle = ndbcStationDataItemEntry.findViewById(R.id.ndbc_station_data_item_entry_header);
+            TextView itemValue = ndbcStationDataItemEntry.findViewById(R.id.ndbc_station_data_item_entry_value);
+
+            itemTitle.setText(getResources().getString(titleID));
+            itemValue.setText(String.format(getResources().getString(valueFormatID), value));
+
+            parentView.addView(ndbcStationDataItemEntry);
+        }
+    }
+
+    private void addStationDataEntry(ViewGroup parentView, int titleID, String value) {
+        if (value != null)
+        {
+            LinearLayout ndbcStationDataItemEntry = (LinearLayout) getLayoutInflater().
+                    inflate(R.layout.ndbc_station_data_item_entry, parentView, false);
+
+            TextView itemTitle = ndbcStationDataItemEntry.findViewById(R.id.ndbc_station_data_item_entry_header);
+            TextView itemValue = ndbcStationDataItemEntry.findViewById(R.id.ndbc_station_data_item_entry_value);
+
+            itemTitle.setText(getResources().getString(titleID));
+            itemValue.setText(value);
+
+            parentView.addView(ndbcStationDataItemEntry);
+        }
+    }
+
+    private void clearStationData() {
+        // Hide buttons
+        mMeteorologicalDataButton.setVisibility(View.GONE);
+        mWaveDataButton.setVisibility(View.GONE);
+        mDiveSiteDataToolbar.setVisibility(View.GONE);
+
+        // Clear grids
+        mNDBCMeteorologicalDataGrid.removeAllViewsInLayout();
+        mNDBCWaveDataGrid.removeAllViewsInLayout();
+
+        // Set Loading titles
+        String title = getResources().getString(R.string.meteorologicalDataTitle).concat(" - "
+                + getResources().getString(R.string.loading));
+        mNDBCMeteorologicalDataTitle.setText(title);
+
+        title = getResources().getString(R.string.waveDataTitle).concat(" - "
+                + getResources().getString(R.string.loading));
+        mNDBCWaveDataTitle.setText(title);
+
+        if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData && mRefreshMenuItem != null) {
+            mRefreshMenuItem.setActionView(null);
+        }
+    }
 
 	private void hideCurrentlyDisplayedData() {
 		mDiveSiteLatestMeteorologicalData.setVisibility(View.GONE);
@@ -1296,16 +1024,14 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
 					});
 
 			// Show buoys in range with data from last day at least only
-			String coordinateRange[] = getCoordinateRange(mGoogleMap);
-			
-			Date minLastUpdateTimestamp = new Date();
+            Date minLastUpdateTimestamp = new Date();
 			Calendar c = Calendar.getInstance();
 			c.setTime(minLastUpdateTimestamp);
 			c.add(Calendar.DATE, -1);
 			minLastUpdateTimestamp = c.getTime();
-			
-			mNDBCDataOnlineDatabase.getNDBCStations(coordinateRange[0],
-					coordinateRange[1], coordinateRange[2], coordinateRange[3],
+
+			mNDBCDataOnlineDatabase.getNDBCStations("",
+					"", "", "",
 					"1", String.valueOf(minLastUpdateTimestamp.getTime()),
 					"", "", "", "", "");
 		} else {
@@ -1455,7 +1181,6 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                             // enough, otherwise display message
                             if (mGoogleMap.getCameraPosition().zoom >= MINIMUM_ZOOM_LEVEL_FOR_DATA) {
                                 refreshDiveSiteList();
-                                refreshVisibleNDBCStations();
                                 if (!mArchives) {
                                     refreshOnlineDiveSites();
                                 }
@@ -1474,6 +1199,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                         mGoogleMap.animateCamera(CameraUpdateFactory
                                 .newCameraPosition(cameraPosition));
                     }
+
+                    refreshVisibleNDBCStations();
                 }
             });
 

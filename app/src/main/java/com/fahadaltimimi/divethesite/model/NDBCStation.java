@@ -593,6 +593,9 @@ public class NDBCStation {
 		}
 
 		public String getWaveSteepness() {
+			if (mWaveSteepness.equals(NAString)) {
+				return null;
+			}
 			return mWaveSteepness;
 		}
 

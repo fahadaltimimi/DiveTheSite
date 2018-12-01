@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.fahadaltimimi.divethesite.R;
 import com.fahadaltimimi.divethesite.controller.DiveSiteManager;

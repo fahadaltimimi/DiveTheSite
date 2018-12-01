@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="fill"
+    android:orientation="horizontal"
+    app:layout_gravity="fill" >
+
+    <TextView
+        android:id="@+id/ndbc_station_data_item_entry_header"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:textColor="@color/Black"
+        android:gravity="start"
+        android:textAlignment="textStart"
+        android:layout_weight="0">
+    </TextView>
+
+    <TextView
+        android:id="@+id/ndbc_station_data_item_entry_value"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:textColor="@color/Black"
+        android:gravity="end"
+        android:textAlignment="textEnd"
+        android:layout_weight="1">
+    </TextView>
+
+</LinearLayout>
