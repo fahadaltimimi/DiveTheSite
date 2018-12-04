@@ -370,6 +370,13 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                     R.string.speedMSValue);
 		}
 
+		if (mNDBCMeteorologicalDataGrid.getChildCount() == 1) {
+			mNDBCMeteorologicalDataGrid.setColumnCount(1);
+		}
+		else {
+			mNDBCMeteorologicalDataGrid.setColumnCount(2);
+		}
+
 		if (station.getSpectralWaveDataCount() > 0) {
 			NDBCSpectralWaveData data = station.getLatestSpectralWaveData();
 
@@ -428,6 +435,8 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                 addStationDataEntry(mNDBCWaveDataGrid, R.string.ndbc_station_data_wind_wave, windWaveValues.trim());
             }
 
+            mNDBCWaveDataGrid.setColumnCount(1);
+
 		} else if (station.getMeteorologicalDataCount() > 0) {
 			// Spectral Wave data not available, display wave data from
 			// meteotrological data
@@ -459,21 +468,14 @@ public class DiveSiteFullMapFragment extends LocationFragment implements LoaderM
                     R.string.ndbc_station_data_average_wave_period,
                     data.getAverageWavePeriod(),
                     R.string.timeSValue);
+
+			if (mNDBCWaveDataGrid.getChildCount() == 1) {
+				mNDBCWaveDataGrid.setColumnCount(1);
+			}
+			else {
+				mNDBCWaveDataGrid.setColumnCount(2);
+			}
 		}
-
-		if (mNDBCMeteorologicalDataGrid.getChildCount() == 1) {
-		    mNDBCMeteorologicalDataGrid.setColumnCount(1);
-        }
-        else {
-            mNDBCMeteorologicalDataGrid.setColumnCount(2);
-        }
-
-        if (mNDBCWaveDataGrid.getChildCount() == 1) {
-            mNDBCWaveDataGrid.setColumnCount(1);
-        }
-        else {
-            mNDBCWaveDataGrid.setColumnCount(2);
-        }
 
         if (!mRefreshingOnlineDiveSites && !mRefreshingOnlineNDBCData) {
             mRefreshLayout.setRefreshing(false);
